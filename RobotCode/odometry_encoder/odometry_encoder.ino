@@ -1,10 +1,10 @@
+#define DIAM 2.0 //diameter in inches
+#define WIDTH 12.0 //distance between wheels in inches
+#define RESOLUTION 64 //encoder resolution
+#define RATIO 19 //gearbox ratio
+
 enc1 = Encoder(pinA, pinB); //left encoder, clockwise
 enc2 = Encoder(pinC, pinD); //right encoder, counterclockwise
-
-void setup() {
-   enc1.init();
-   enc2.init();
-}
 
 //distance between left and right wheels
 int rldiff = 0;
@@ -17,44 +17,33 @@ double y = 0;
 //change in angle
 double theta = 0;
 
-#define diam 2.0 //diameter in inches
-#define width 12.0 //distance between wheels in inches
-#define resolution 64 //encoder resolution
-#define ratio 19 //gearbox ratio
+void setup() {
+   enc1.init();
+   enc2.init();
+}
 
 void loop() {
   //clockwise encoder
   int L = enc1.read();
   //counterclockwise encoder
-  int R = -1 * enc2.read();
+  int R = -enc2.read();
   
   //forward difference between left and right wheels in ticks
-  if (R > L)
-    rldiff += abs(R - L);
-  else if (R < L)
+  
+//  if (R > L)
+//    rldiff += abs(R - L);
+//  else if (R < L)
     rldiff += abs(L - R);
   
   //convert ticks to inches
-  double rl_length = (rldiff * PI * diam) / (resolution * ratio);
+  double rl_length = (rldiff * PI * DIAM) / (RESOLUTION * RATIO);
   
   /* Finding distance travelled by center point of axle
   ------------------------------------------------------ */
   
-  //if both wheels move same distance, center point also moves this distance
-  if (R == L) 
-    d += (R * PI * diam) / (resolution * ratio);
-    
-  //otherwise, average of left and right wheel motion == movement of center of axle
-  /*forward case */
-  else if (L > 0 && R > 0                  // both move forward
-        || L > 0 && R < 0 && L > abs(R)    // L moves forward more than R moves backward
-        || L < 0 && R > 0 && R > abs(L)    // R moves forward more than L moves backward
-        || R == 0 && L > 0                 // L moves forward and R doesn't move
-        || L == 0 && R > 0)                // R moves forward anf L doesn't move
-          d += rl_length / 2;        
-  /*backward case */
-  else 
-          d -= rl_length / 2;  
+  //center moves average of L and R
+  
+  d = ((R + L) / 2) * (PI * DIAM) / (RESOLUTION * RATIO);  
    
   
   /* Find change in angle
@@ -63,7 +52,7 @@ void loop() {
   //new slope of robot m == difference in wheel position / distance between wheels or rl_length / width
   //treat original slope n as 0, so tan(theta) == (m-0)/(1+0) == m
   //either find arctan or use small angle approximation
-  theta += atan(rl_length/width);
+  theta += atan(rl_length/WIDTH);
   
   //with distance d and angle theta, find x and y change of center point
   x += d * sin(theta); //component of d in lateral direction
@@ -72,7 +61,7 @@ void loop() {
 
   if (Serial.available() > 0)
   {
-    incoming = Serial.read();
+    char incoming = Serial.read();
     
     if (incoming == 'r')
     {
