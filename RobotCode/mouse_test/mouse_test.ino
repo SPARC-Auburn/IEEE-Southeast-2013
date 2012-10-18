@@ -6,9 +6,6 @@
  * and report what it finds.
  */
  
-// This value is calculated from the theoretic robot measurements as detailed in the loop().
-#define RADIUS 7.2111
-#define POINTSPERINCH 764
 
 /*
  * Mice should be initialized using PS2 mouse(Data, Clock);
@@ -41,18 +38,22 @@ void mouse_init()
 void setup()
 {
   Serial.begin(9600);
-  Serial.println("Assuming starting coordinates (0,0) with angle 0 radians.");
   mouse_init();
 }
 
 /*
- * get a reading from the mouse and report it back to the
- * host via the serial line.
+ * Collects movement data in an array
+ * for testing purposes.
  */
  
- float posX = 0;
- float posY = 0;
- float angle = 0;
+ // I can't find a way to create an "infinite" array, so I just made them all 1000 objects long.
+ char m1xArray[1000], m1yArray[1000];
+ char m2xArray[1000], m2yArray[1000];
+ char totalX1 = 0;
+ char totalY1 = 0;
+ char totalX2 = 0;
+ char totalY2 = 0;
+ int count = 0;
 
 void loop()
 {
@@ -72,49 +73,56 @@ void loop()
   m2x = mouse2.read();
   m2y = mouse2.read();
   
-  // The following assumes a 10" square robot, with wheels mounted 8" apart, 6" in front of the mice, similarly mounted 8" apart.
-  // The sensors on the mice are therefore mounted sqrt(6^2 + 4^2)", or ~7.2111", from the center of rotation of the robot.
+  // Update total positions.
+  totalX1 += m1x;
+  totalX2 += m2x;
+  totalY1 += m1y;
+  totalY2 += m2y;
   
+  // Add values to the array.
+  m1xArray[count] = m1x;
+  m1yArray[count] = m1y;
+  m2xArray[count] = m2x;
+  m2yArray[count] = m2y;
   
-  // Assuming that if either of the x values we read in is greater than the y, we are in a rotation.
-  if ( m1x > m1y || m2x > m2y)
-  {
-    // Since the mice are mounted parallel with the robot's frame, rather than oriented towards the center, the net movement of the mouse is sqrt(mx^2 + my^2).
-    // I am averaging the net movement of both mice.
-    // This value is analogous to the movement along the theoretical circle of rotation around the center of the axle that contains both mice on its boundary.
-    float netRotation = (sqrt(m1x * m1x + m1y * m1y) + sqrt(m2x * m2x + m2y * m2y))/2;
-    // Ideally the average displacement would accurately reflect the displacement of the robot in any scenario.
-    
-    // This value is the change, in radians, of the angle of the robot. 
-    // netRotation is converted into inches, then divided by the circumference (2piRADIUS) then this ratio is converted into radians (*2pi).
-    float angularDisplacement = (netRotation/POINTSPERINCH)/RADIUS;
-    
-    angle += angularDisplacement;
-  }       
-  else 
-  {
-    // Averaging forward displacements.
-    float avgY = (m1y/POINTSPERINCH + m2y/POINTSPERINCH)/2;
-    
-    // Angles in programming languages start at the positive Y-axis and increase clockwise.
-    posY += avgY/cos(angle);
-    posX += avgY/sin(angle);
-  }
+  count++;
   
+  // Print arrays and totals.
   if (Serial.available() > 0)
   {
     incoming = Serial.read();
     
     if (incoming == 'r')
     {
-      // Print angle and position on command.
-      // Values should be in inches.
-      Serial.print(angle, DEC);
-      Serial.print("\tX=");
-      Serial.print(posX, DEC);
-      Serial.print("\tY=");
-      Serial.print(posY, DEC);
+      for (int i = 0; i < count; i++)
+      {
+        Serial.print("X1=");
+        Serial.print(m1xArray[i], DEC);
+        Serial.print("\tY1=");
+        Serial.print(m1yArray[i], DEC);
+        Serial.print("\tX2=");
+        Serial.print(m2xArray[i], DEC);
+        Serial.print("\tY2=");
+        Serial.print(m2yArray[i], DEC);
+        Serial.println();
+      }
+      
+      Serial.print("TotalX1=");
+      Serial.print(totalX1, DEC);
+      Serial.print("\tTotalY1=");
+      Serial.print(totalY1, DEC);
+      Serial.print("\tTotalX2=");
+      Serial.print(totalX2, DEC);
+      Serial.print("\tTotalY2=");
+      Serial.print(totalY2, DEC);
       Serial.println();
+      
+      // Reintialize values.
+      totalX1 = 0;
+      totalX2 = 0;
+      totalY1 = 0;
+      totalY2 = 0;
+      count = 0;
     }
   }
 //  delay(20);  /* twiddle */
