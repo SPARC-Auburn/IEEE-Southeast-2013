@@ -8,7 +8,7 @@ int E3n4 = 11;
 // ---------------------------------------------------------
 char incoming;
 int motorDelay = 500;
-int motorSpeed = 3;
+int motorSpeed = 10;
 int wheelSpeedL = 0;
 int wheelSpeedR = 0;
 
@@ -34,7 +34,7 @@ void MotorControllerSetup() // Enable motor controller and pins, set motors to '
   digitalWrite(L3, LOW);
   digitalWrite(L4, LOW);
   
-  Serial.println("Type 'h' for HELP.\nInitial speed: 30%");
+  Serial.println("Type 'h' for HELP.\nInitial speed: 100%");
 }
 
 void loop()
@@ -80,16 +80,16 @@ void ProcessInput()
         break;
       case 'q': // Up and left.
         digitalWrite(L1, LOW);
-        digitalWrite(L2, LOW);
+        digitalWrite(L2, HIGH);
         digitalWrite(L3, LOW);
-        digitalWrite(L4, HIGH);
+        digitalWrite(L4, LOW);
         delay(motorDelay);
         break;
       case 'e': // Up and right.
         digitalWrite(L1, LOW);
-        digitalWrite(L2, HIGH);
+        digitalWrite(L2, LOW);
         digitalWrite(L3, LOW);
-        digitalWrite(L4, LOW);
+        digitalWrite(L4, HIGH);
         delay(motorDelay);
         break;
       case 'z': // Back and left.
@@ -114,18 +114,23 @@ void ProcessInput()
         delay(motorDelay);
         break;
       case 'h': // HELP.
-        Serial.print("HELP:\n\tW: Move forward.\n\tA: Turn left.\n\tS: Move backward. \n\tD: Turn left.\n\tQ: Move forward and left (right wheel drive only).\n\tE: Move forward and right (left wheel drive only).\n\tZ: Move backwards and left (left wheel drive only).\n\tC: Move backwards and right (right wheel drive only).\n\tX: Wait.\n\tM: Custom movement.\n\tP: Edit parameters: Want to go faster? Check here.\n");
+        Serial.print("HELP:\n\tW: Move forward.\n\tA: Turn left.\n\tS: Move backward. \n\tD: Turn left.\n");
+        Serial.print("\tQ: Move forward and left (right wheel drive only).\n\tE: Move forward and right (left wheel drive only).\n");
+        Serial.print("\tZ: Move backwards and left (left wheel drive only).\n\tC: Move backwards and right (right wheel drive only).\n\tX: Wait.\n");
+        //Serial.print("\tM: Custom movement.\n\tP: Edit parameters: Want to go faster? Check here.\n");        
         delay(1000);
         break;
-      case 'p': // Parameters. (bars for readability)--------------------------------------------------------
+      /*case 'p': // Parameters. (bars for readability)--------------------------------------------------------
         Serial.print("Change drive time (positive int in half-seconds (int * 500 ms)):\n");
+        while (!Serial.available());
         motorDelay = Serial.read() * 500;
-        delay(50);
+        delay(500);
         do
         {
           Serial.print("Enter drive speed (int 1 to 10):\n");
+          while (!Serial.available());
           motorSpeed = Serial.read();
-          delay(50);
+          delay(1000);
         } while (motorSpeed < 1 || motorSpeed > 10);
         delay(1000);
         break;
@@ -171,8 +176,8 @@ void ProcessInput()
         analogWrite(E1n2, 25*abs(wheelSpeedL));
         analogWrite(E3n4, 25*abs(wheelSpeedR));
         delay(motorDelay);
-        break; // -------------------------------------------------------------------------------------------
-      default:
+        break; // -------------------------------------------------------------------------------------------*/
+        default:
         digitalWrite(L1, LOW);
         digitalWrite(L2, LOW);
         digitalWrite(L3, LOW);
