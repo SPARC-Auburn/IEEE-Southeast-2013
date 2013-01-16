@@ -14,7 +14,7 @@ void motorControllerSetup() // Enable motor controller and pins, set motors to '
   digitalWrite(L3, LOW);
   digitalWrite(L4, LOW);
   
-  Serial.println("Type 'h' for HELP.\nInitial speed: 100%");
+  //Serial.println("Type 'h' for HELP.\nInitial speed: 100%");
 }
 
 void motorFwd()

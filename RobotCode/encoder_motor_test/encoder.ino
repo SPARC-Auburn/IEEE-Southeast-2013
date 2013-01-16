@@ -1,14 +1,14 @@
 #include <PinChangeInt.h>
 
-uint8_t pinChLA;
-uint8_t pinChLB;
-volatile uint8_t * portChLA;
-volatile uint8_t * portChLB;
-volatile uint8_t maskChLA;
-volatile uint8_t maskChLB;
-volatile int countL;
+uint8_t pinChLA;  //Left wheel, channel A pin
+uint8_t pinChLB;  //Left wheel, channel B pin
+volatile uint8_t * portChLA; //port of left ch A
+volatile uint8_t * portChLB; //port of left ch B
+volatile uint8_t maskChLA; //mask for that port that selects that pin
+volatile uint8_t maskChLB; 
+volatile int countL; //the count of the left encoder
 
-uint8_t pinChRA;
+uint8_t pinChRA; //same as above stuff, but for right wheel
 uint8_t pinChRB;
 volatile uint8_t * portChRA;
 volatile uint8_t * portChRB;
@@ -16,13 +16,17 @@ volatile uint8_t maskChRA;
 volatile uint8_t maskChRB;
 volatile int countR;
 
+//initializes the left wheel encoder
+//tell it what pins to use
+//If you swap the ch A and ch B pins, it will change the sign on the
+// encoder count (as if it were going the opposite direction.
 void encoderInitL(int chAPin, int chBPin)
 {
   pinChLA = chAPin;
   pinChLB = chBPin;
-  portChLA=portInputRegister(digitalPinToPort(chAPin));
+  portChLA=portInputRegister(digitalPinToPort(chAPin)); //gets the port
   portChLB=portInputRegister(digitalPinToPort(chBPin));
-  maskChLA = digitalPinToBitMask(chAPin);
+  maskChLA = digitalPinToBitMask(chAPin); //gets the mask
   maskChLB = digitalPinToBitMask(chBPin);
   pinMode(pinChLA, INPUT);
   pinMode(pinChLB, INPUT);
@@ -31,7 +35,8 @@ void encoderInitL(int chAPin, int chBPin)
   PCintPort::attachInterrupt(pinChLA, &intEncLA, CHANGE);
   PCintPort::attachInterrupt(pinChLB, &intEncLB, CHANGE);
 }
-  
+
+//same as above, but for right wheel
 void encoderInitR(int chAPin, int chBPin)
 {  
   pinChRA = chAPin;
@@ -48,6 +53,7 @@ void encoderInitR(int chAPin, int chBPin)
   PCintPort::attachInterrupt(pinChRB, &intEncRB, CHANGE);
 }
 
+//reads the current count on the left encoder and resets it to 0
 int encoderReadL()
 {
   int temp = countL;
@@ -55,6 +61,7 @@ int encoderReadL()
   return temp;
 }
 
+//interrupt for left ch A
 void intEncLA()
 {   //aka if chA == chB
   if (((*portChLA & maskChLA) == 0) == ((*portChLB & maskChLB) == 0))
@@ -63,6 +70,7 @@ void intEncLA()
     countL--;
 }
 
+//interrupt for left ch B
 void intEncLB()
 {  //aka if chA == chB
   if (((*portChLA & maskChLA) == 0) == ((*portChLB & maskChLB) == 0))
@@ -71,6 +79,7 @@ void intEncLB()
     countL++;
 }
 
+//reads the current count on the right encoder and resets it to 0
 int encoderReadR()
 {
   int temp = countR;
@@ -78,6 +87,7 @@ int encoderReadR()
   return temp;
 }
 
+//interrupt for rught ch A
 void intEncRA()
 {   //aka if chA == chB
   if (((*portChRA & maskChRA) == 0) == ((*portChRB & maskChRB) == 0))
@@ -86,7 +96,8 @@ void intEncRA()
     countR--;
 }
 
-void intEncBR()
+//interrupt for right ch B
+void intEncRB()
 {  //aka if chA == chB
   if (((*portChRA & maskChRA) == 0) == ((*portChRB & maskChRB) == 0))
     countR--;
