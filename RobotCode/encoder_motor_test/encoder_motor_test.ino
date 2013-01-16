@@ -1,10 +1,15 @@
-// Pins: L's should be digital, Enables should be PWM.---
-int PinML1 = 6;
-int PinML2 = 7;
-int PinMR1 = 8;
-int PinMR2 = 9;
-int PinEnL = 10;
-int PinEnR = 11;
+//encoder pins:
+#define PinEncLA 2
+#define PinEncLB 3
+#define PinEncRA 4
+#define PinEncRB 5
+//motor control pins
+#define PinML1 6
+#define PinML2 7
+#define PinMR1 8
+#define PinMR2 9
+#define PinEnL 10 //should be PWM
+#define PinEnR 11 //should be PWM
 // ---------------------------------------------------------
 char incoming;
 int motorDelay = 500;
@@ -16,11 +21,13 @@ void setup()
 {
   Serial.begin(9600);
   motorControllerSetup();
+  encSetup();
 }
 
 void loop()
 {
   processIn();
+  encCalc();
 }
 
 void processIn()
