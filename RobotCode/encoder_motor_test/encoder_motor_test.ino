@@ -1,10 +1,10 @@
 // Pins: L's should be digital, Enables should be PWM.---
-int L1 = 6;
-int L2 = 7;
-int L3 = 8;
-int L4 = 9;
-int E1n2 = 10;
-int E3n4 = 11;
+int PinML1 = 6;
+int PinML2 = 7;
+int PinMR1 = 8;
+int PinMR2 = 9;
+int PinEnL = 10;
+int PinEnR = 11;
 // ---------------------------------------------------------
 char incoming;
 int motorDelay = 500;
@@ -27,8 +27,8 @@ void processIn()
 {
   if (Serial.available() > 0)
   {
-    analogWrite(E1n2, 0);
-    analogWrite(E3n4, 0);
+    analogWrite(PinEnL, 0);
+    analogWrite(PinEnR, 0);
     incoming = Serial.read();
     
     switch (incoming)
@@ -83,8 +83,8 @@ void processIn()
         break;
       case 'm': // Movement (custom). -----------------------------------------------------------------------
         // Disable motors.
-        digitalWrite(E1n2, LOW);
-        digitalWrite(E3n4, LOW);
+        digitalWrite(PinEnL, LOW);
+        digitalWrite(PinEnR, LOW);
         
         do // Adjust for left wheel speed.
         {
@@ -94,13 +94,13 @@ void processIn()
         } while (wheelSpeedL < -10 || wheelSpeedL > 10);
         if (wheelSpeedL > 0) // Prepare to move left wheel forward.
         {
-          digitalWrite(L1, LOW);
-          digitalWrite(L2, HIGH);
+          digitalWrite(PinML1, LOW);
+          digitalWrite(PinML2, HIGH);
         }
         else // Prepare to move left wheel backward.
         {
-          digitalWrite(L1, HIGH);
-          digitalWrite(L2, LOW);
+          digitalWrite(PinML1, HIGH);
+          digitalWrite(PinML2, LOW);
         }
         
         do // Adjust for right wheel speed.
@@ -111,17 +111,17 @@ void processIn()
         } while (wheelSpeedR < -10 || wheelSpeedR > 10);
         if (wheelSpeedR > 0) // Prepare to move right wheel forward.
         {
-          digitalWrite(L3, LOW);
-          digitalWrite(L4, HIGH);
+          digitalWrite(PinMR1, LOW);
+          digitalWrite(PinMR2, HIGH);
         }
         else // Prepare to move right wheel backward.
         {
-          digitalWrite(L3, HIGH);
-          digitalWrite(L4, LOW);
+          digitalWrite(PinMR1, HIGH);
+          digitalWrite(PinMR2, LOW);
         }
         // Re-enable prepped motors.
-        analogWrite(E1n2, 25*abs(wheelSpeedL));
-        analogWrite(E3n4, 25*abs(wheelSpeedR));
+        analogWrite(PinEnL, 25*abs(wheelSpeedL));
+        analogWrite(PinEnR, 25*abs(wheelSpeedR));
         delay(motorDelay);
         break; // -------------------------------------------------------------------------------------------*/
         default:
@@ -129,14 +129,14 @@ void processIn()
         break;
     }
     
-  analogWrite(E1n2, motorSpeed);
-  analogWrite(E3n4, motorSpeed);
+  analogWrite(PinEnL, motorSpeed);
+  analogWrite(PinEnR, motorSpeed);
   delay(motorDelay);
   motorBrake();
-  analogWrite(E1n2, 255);
-  analogWrite(E3n4, 255);
-  //analogWrite(E1n2, 0);
-  //analogWrite(E3n4, 0);
+  analogWrite(PinEnL, 255);
+  analogWrite(PinEnR, 255);
+  //analogWrite(PinEnL, 0);
+  //analogWrite(PinEnR, 0);
 
   }
 }
