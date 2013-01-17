@@ -23,9 +23,9 @@ void encSetup()
 void encCalc()
 {
   //clockwise encoder
-  int L = enc1.read();
+  int L = encoderReadL();
   //counterclockwise encoder
-  int R = -enc2.read(); //may or may not need to do this, we'll see.
+  int R = -encoderReadR(); //may or may not need to do this, we'll see.
   
   //forward difference between left and right wheels in ticks
   rldiff += abs(L - R);
@@ -55,11 +55,11 @@ void encCalc()
   y += d * cos(temp_theta); //component of d in longitudinal direction (ex: if angle doesn't change, theta = 0 so y = d)
 }
 
-double getEncX() {return x;}
-double getEncY() {return y;}
-double getEncThetat() {return theta;}
+double encGetX() {return x;}
+double encGetY() {return y;}
+double encGetTheta() {return theta;}
 
-void setEncX( double newX ) { x = newX; }
-void setEncY( double newY ) { y = newY; }
-void setEncTheta( double newTheta ) { theta = newTheta; }
+void encSetX( double newX ) { x = newX; }
+void encSetY( double newY ) { y = newY; }
+void encSetTheta( double newTheta ) { theta = newTheta; }
 

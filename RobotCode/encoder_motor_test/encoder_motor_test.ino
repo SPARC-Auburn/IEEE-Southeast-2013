@@ -12,10 +12,11 @@
 #define PinEnR 11 //should be PWM
 // ---------------------------------------------------------
 char incoming;
-int motorDelay = 500;
-int motorSpeed = 100;
+unsigned int motorDelay = 500;
+unsigned int motorSpeed = 100;
 //int wheelSpeedL = 0;
 //int wheelSpeedR = 0;
+unsigned int tempNum;
 
 void setup()
 {
@@ -68,71 +69,40 @@ void processIn()
         motorBrake();
         break;
       case 'h': // HELP.
-        Serial.print("HELP:\n\tW: Move forward.\n\tA: Turn left.\n\tS: Move backward. \n\tD: Turn left.\n");
-        Serial.print("\tQ: Move forward and left (right wheel drive only).\n\tE: Move forward and right (left wheel drive only).\n");
-        Serial.print("\tZ: Move backwards and left (left wheel drive only).\n\tC: Move backwards and right (right wheel drive only).\n\tX: Wait.\n");
+        Serial.print("HELP:\n\tw: Move forward.\n\ta: Turn left.\n\ts: Move backward. \n\td: Turn left.\n");
+        Serial.print("\tq: Move forward and left (right wheel drive only).\n\te: Move forward and right (left wheel drive only).\n");
+        Serial.print("\tz: Move backwards and left (left wheel drive only).\n\tc: Move backwards and right (right wheel drive only).\n\tx: Wait.\n");
+        Serial.print("\t[number]D: Set motor delay to [number] ms.\n\t[number]S: Set motor speed to [number], 0 to 255.\n");
+        Serial.print("\tp: Print the data from the encoder odometry.");
         //Serial.print("\tM: Custom movement.\n\tP: Edit parameters: Want to go faster? Check here.\n");        
         delay(1000);
         break;
-      /*case 'p': // Parameters. (bars for readability)--------------------------------------------------------
-        Serial.print("Change drive time (positive int in half-seconds (int * 500 ms)):\n");
-        while (!Serial.available());
-        motorDelay = Serial.read() * 500;
-        delay(500);
-        do
-        {
-          Serial.print("Enter drive speed (int 1 to 10):\n");
-          while (!Serial.available());
-          motorSpeed = Serial.read();
-          delay(1000);
-        } while (motorSpeed < 1 || motorSpeed > 10);
-        delay(1000);
+      case '0': case '1': case '2': case '3': case '4':
+      case '5': case '6': case '7': case '8': case '9':
+        tempNum = tempNum * 10 + (incoming - 0x30);
         break;
-      case 'm': // Movement (custom). -----------------------------------------------------------------------
-        // Disable motors.
-        digitalWrite(PinEnL, LOW);
-        digitalWrite(PinEnR, LOW);
-        
-        do // Adjust for left wheel speed.
-        {
-          Serial.print("Left wheel speed (int -10 to 10):\n");
-          wheelSpeedL = Serial.read();
-          delay(50);
-        } while (wheelSpeedL < -10 || wheelSpeedL > 10);
-        if (wheelSpeedL > 0) // Prepare to move left wheel forward.
-        {
-          digitalWrite(PinML1, LOW);
-          digitalWrite(PinML2, HIGH);
-        }
-        else // Prepare to move left wheel backward.
-        {
-          digitalWrite(PinML1, HIGH);
-          digitalWrite(PinML2, LOW);
-        }
-        
-        do // Adjust for right wheel speed.
-        { 
-          Serial.print("Right wheel speed (int -10 to 10):\n");
-          wheelSpeedR = Serial.read();
-          delay(50);
-        } while (wheelSpeedR < -10 || wheelSpeedR > 10);
-        if (wheelSpeedR > 0) // Prepare to move right wheel forward.
-        {
-          digitalWrite(PinMR1, LOW);
-          digitalWrite(PinMR2, HIGH);
-        }
-        else // Prepare to move right wheel backward.
-        {
-          digitalWrite(PinMR1, HIGH);
-          digitalWrite(PinMR2, LOW);
-        }
-        // Re-enable prepped motors.
-        analogWrite(PinEnL, 25*abs(wheelSpeedL));
-        analogWrite(PinEnR, 25*abs(wheelSpeedR));
-        delay(motorDelay);
-        break; // -------------------------------------------------------------------------------------------*/
-        default:
-        motorBrake();
+      case '-':
+        tempNum = 0;
+        break;
+      case 'S':
+        motorSpeed = constrain(tempNum, 0, 255);\
+        tempNum = 0;
+        Serial.print("Speed: ");
+        Serial.println(motorSpeed);
+        break;
+      case 'D':
+        motorDelay = tempNum;
+        tempNum = 0;
+        Serial.print("Delay: ");
+        Serial.println(motorDelay);
+        break;
+      case 'p':
+        Serial.print("(x,y): ( ");
+        printDouble(encGetX(), 2);
+        Serial.print(" , ");
+        printDouble(encGetY(), 2);
+        Serial.print(" )\ntheta: ");
+        printDouble(encGetTheta(), 4);
         break;
     }
     
@@ -145,5 +115,34 @@ void processIn()
   //analogWrite(PinEnL, 0);
   //analogWrite(PinEnR, 0);
 
+  }
+}
+
+//used to print the encoder statistics
+//function written by user "mem" on the Arduino forums: http://arduino.cc/forum/index.php/topic,44216.0.html
+void printDouble( double val, byte precision){
+  // prints val with number of decimal places determine by precision
+  // precision is a number from 0 to 6 indicating the desired decimial places
+  // example: printDouble( 3.1415, 2); // prints 3.14 (two decimal places)
+
+  Serial.print (int(val));  //prints the int part
+  if( precision > 0) {
+    Serial.print("."); // print the decimal point
+    unsigned long frac;
+    unsigned long mult = 1;
+    byte padding = precision -1;
+    while(precision--)
+       mult *=10;
+       
+    if(val >= 0)
+      frac = (val - int(val)) * mult;
+    else
+      frac = (int(val)- val ) * mult;
+    unsigned long frac1 = frac;
+    while( frac1 /= 10 )
+      padding--;
+    while(  padding--)
+      Serial.print("0");
+    Serial.print(frac,DEC) ;
   }
 }
