@@ -4,10 +4,10 @@
 #define PinEncRA 4
 #define PinEncRB 5
 //motor control pins
-#define PinML1 6
-#define PinML2 7
-#define PinMR1 8
-#define PinMR2 9
+#define PinML1 7
+#define PinML2 6
+#define PinMR1 9
+#define PinMR2 8
 #define PinEnL 10 //should be PWM
 #define PinEnR 11 //should be PWM
 // ---------------------------------------------------------

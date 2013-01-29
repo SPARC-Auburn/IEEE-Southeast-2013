@@ -8,11 +8,11 @@
  
 
 /*
- * Mice should be initialized using PS2 mouse(Data, Clock);
+ * Mice should be initialized using PS2 mouse(Clock, Data);
  * Feel free to use whatever pins are convenient.
  */
 PS2 mouse1(13, 12); // These values are theory.
-PS2 mouse2(10, 11); // Please update.
+PS2 mouse2(A1, A0); // Please update.
 
 /*
  * initialize the mouse. Reset it, and place it into remote
@@ -38,6 +38,7 @@ void mouse_init()
 void setup()
 {
   Serial.begin(9600);
+  Serial.println("I'm Here!");
   mouse_init();
 }
 
@@ -47,8 +48,8 @@ void setup()
  */
  
  // I can't find a way to create an "infinite" array, so I just made them all 1000 objects long.
- char m1xArray[1000], m1yArray[1000];
- char m2xArray[1000], m2yArray[1000];
+ char m1xArray[200], m1yArray[200];
+ char m2xArray[200], m2yArray[200];
  char totalX1 = 0;
  char totalY1 = 0;
  char totalX2 = 0;
@@ -60,7 +61,7 @@ void loop()
   char m1x, m2x;
   char m1y, m2y;
   char incoming;
-  
+    
   /* get a reading from the mouse */
   mouse1.write(0xeb);  // give me data!
   mouse1.read();       // ignore ack
@@ -84,6 +85,15 @@ void loop()
   m1yArray[count] = m1y;
   m2xArray[count] = m2x;
   m2yArray[count] = m2y;
+  Serial.print("X1=");
+  Serial.print(m1x, DEC);
+  Serial.print("\tY1=");
+  Serial.print(m1y, DEC);
+  Serial.print("\tX2=");
+  Serial.print(m2x, DEC);
+  Serial.print("\tY2=");
+  Serial.print(m2y, DEC);
+  Serial.println();
   
   count++;
   
@@ -94,7 +104,8 @@ void loop()
     
     if (incoming == 'r')
     {
-      for (int i = 0; i < count; i++)
+      int i;
+      for (i = 0; i < count; i++)
       {
         Serial.print("X1=");
         Serial.print(m1xArray[i], DEC);
@@ -125,5 +136,5 @@ void loop()
       count = 0;
     }
   }
-//  delay(20);  /* twiddle */
+  delay(20);  /* twiddle */
 }
