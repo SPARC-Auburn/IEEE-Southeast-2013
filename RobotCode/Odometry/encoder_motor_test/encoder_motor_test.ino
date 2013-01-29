@@ -101,8 +101,9 @@ void processIn()
         printDouble(encGetX(), 2);
         Serial.print(" , ");
         printDouble(encGetY(), 2);
-        Serial.print(" )\ntheta: ");
+        Serial.print(" )\ntheta * 1000: ");
         printDouble(encGetTheta(), 4);
+        Serial.println();
         break;
     }
     

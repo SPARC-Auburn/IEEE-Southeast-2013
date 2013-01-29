@@ -1,5 +1,6 @@
-#define DIAM 2.0 //diameter in inches
-#define WIDTH 12.0 //distance between wheels in inches
+//THESE VALUES ARE ROUGH AND SHOULD BE TWEAKED FOR BEST RESULTS
+#define DIAM 1.9 //diameter in inches.
+#define WIDTH 9.25 //distance between wheels in inches
 #define RESOLUTION 64 //encoder resolution
 #define RATIO 19 //gearbox ratio
 
@@ -28,7 +29,7 @@ void encCalc()
   int R = -encoderReadR(); //may or may not need to do this, we'll see.
   
   //forward difference between left and right wheels in ticks
-  rldiff += abs(L - R);
+  rldiff = (L - R);
   
   //convert ticks to inches
   double rl_length = (rldiff * PI * DIAM) / (RESOLUTION * RATIO);
