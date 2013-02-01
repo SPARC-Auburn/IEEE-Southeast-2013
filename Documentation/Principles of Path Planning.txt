@@ -1,0 +1,23 @@
+Principles of Path Planning
+January 29, 2013
+---------------------------
+
+MASTER PATH PLANNING
+1) Will be done on base station
+2) Calcuates Position of Mobile Unit (vision and LIDAR <-> encoders/mouse)
+3) Sends position, destination, and end action to mobile unit
+4) May break goal into simpler steps, as mobile unit will be taking simple path from position and destination
+5) Optimizes picking up two blocks at a time and dropping off in reverse order
+6) Will handle error messages from mobile unit.
+7) Will begin air sequence with time remaining.
+
+MOBILE UNIT PATH PLANNING
+1) If not communication can be heard, the mobile unit must be able to (less optimally) make some progress with the course.
+2) Receives position, destination, and end action from base
+3) Plans path only based on these and a few flags received from mobile unit.
+4) Tracks encoder and mouse data to estimate location.
+5) Performs end action with sensors.
+6) Reports location for encoders/mouse.
+7) In case of error, report to base.
+
+For more about communication, see the protocol.
