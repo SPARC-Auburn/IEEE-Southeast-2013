@@ -3,11 +3,13 @@
  * Student Project and Research Committee (SPaRC)
  * MobileUnit Code for IEEE Secon 2013 Hardware Competition
  * 
- * Version: 2/1/2013
+ * Version: 2/5/2013
  */
  
 // Libraries and Headers
 #include "location.h"
+#include <ps2.h>
+#include <PinChangeInt.h>
 
 // Constants
 #define THETA_RESOLUTION   10000    // Multiply radians by this to get stored theta value
@@ -17,6 +19,10 @@
 // Pin Definitions begin with P_
 #define P_XBEE_IN   14
 #define P_XBEE_OUT  15
+#define P_LEFT_MOUSE_CLOCK 2
+#define P_LEFT_MOUSE_DATA 3
+#define P_RIGHT_MOUSE_CLOCK 4
+#define P_RIGHT_MOUSE_DATA 5
 
 // Motor Logical States begin with M_
 #define M_BRAKE            0
@@ -29,7 +35,7 @@
 #define M_PIVOT_LEFT       7
 #define M_BACK_LEFT        8
 
-// Global Variable Declarations
+// Global Variable and Object Declarations
 byte globalError;            // This will be reported by any function in loop to cancel the command and go straight to communication
 location currentLocation;    // Where we are right now.  This can be updated by the odometry function.
 location start;              // Where we are at the beginning of the block.
@@ -38,6 +44,14 @@ int motorPath[3];            // The three motor positions of the moves, set by c
 boolean linesPath[3];        // The boolean values for whether to look for lines in the three moves, set by commandConversion.
 location partOneDest;        // Where we are going for the first move.
 location partTwoDest;        // Where we are going for the second move.
+byte commandStatus;          // The flags as received from base station (or made up)
+int commandEndAction;        // The end action of the current command (high 3 bits)
+int commandEndColor;         // The color block as reported from base station (middle 3 bits of end action byte)
+int commandEndLength;        // The length of block as reported from base station (low 2 bits of end action byte)
+
+// Odometry-related Objects and Variables
+PS2 leftMouse(P_LEFT_MOUSE_CLOCK, P_LEFT_MOUSE_DATA);
+PS2 rightMouse(P_RIGHT_MOUSE_CLOCK, P_RIGHT_MOUSE_DATA);
 
 // Method Declarations
 void openHandshake();        // For the first communication until first command is determined.
@@ -54,6 +68,7 @@ int endAction();             // Manages claw and color, length sensors to pick u
  * Setup Function
  * This will assign pins as input/output.
  * Initializes global variables.
+ * Sets up tools using appropriate functions
  * Then, calls opening handshake sequence.
  */ 
 void setup() {
@@ -61,6 +76,9 @@ void setup() {
    
    
    // Initialize global variables.
+
+   
+   // Setup Functions
    
    
    // Call opening handshake sequence
