@@ -3,7 +3,7 @@
  * Student Project and Research Committee (SPaRC)
  * MobileUnit Code for IEEE Secon 2013 Hardware Competition
  * 
- * Version: 2/5/2013
+ * Version: 2/6/2013
  */
  
 // Libraries and Headers
@@ -15,6 +15,8 @@
 #define THETA_RESOLUTION   10000    // Multiply radians by this to get stored theta value
 #define X_RESOLUTION         500    // Multiply inches by this to get stored x value
 #define Y_RESOLUTION         500    // Multiply inches by this to get stored y value
+#define COMM_TIMEOUT         500    // Timeout listening for response
+#define COMM_LONG_TIMEOUT   5000    // After this give up
 
 // Pin Definitions begin with P_
 #define P_XBEE_IN   14
@@ -63,6 +65,7 @@ boolean getBaseCommand();    // Communicates with base station and gets command,
 void getBackupCommand();     // Figures out best command from backup list.
 int odometry();              // Runs the math to update currentLocation, returns global error (0 = success)
 int endAction();             // Manages claw and color, length sensors to pick up or drop off blocks.
+byte commError(byte message[], int length);  // Calculates error for communication.
 
 /*
  * Setup Function
@@ -73,7 +76,7 @@ int endAction();             // Manages claw and color, length sensors to pick u
  */ 
 void setup() {
    // Assign pins
-   
+   Serial3.begin(9600);
    
    // Initialize global variables.
 
