@@ -3,7 +3,7 @@
  * Student Project and Research Committee (SPaRC)
  * MobileUnit Code for IEEE Secon 2013 Hardware Competition
  * 
- * Version: 2/6/2013
+ * Version: 2/7/2013
  */
  
 // Libraries and Headers
@@ -15,8 +15,8 @@
 #define THETA_RESOLUTION   10000    // Multiply radians by this to get stored theta value
 #define X_RESOLUTION         500    // Multiply inches by this to get stored x value
 #define Y_RESOLUTION         500    // Multiply inches by this to get stored y value
-#define COMM_TIMEOUT         500    // Timeout listening for response
-#define COMM_LONG_TIMEOUT   5000    // After this give up
+#define COMM_TIMEOUT        2000    // Timeout listening for response
+#define COMM_LONG_TIMEOUT  10000    // After this give up
 
 // Pin Definitions begin with P_
 #define P_XBEE_IN   14
@@ -65,7 +65,7 @@ boolean getBaseCommand();    // Communicates with base station and gets command,
 void getBackupCommand();     // Figures out best command from backup list.
 int odometry();              // Runs the math to update currentLocation, returns global error (0 = success)
 int endAction();             // Manages claw and color, length sensors to pick up or drop off blocks.
-byte commError(byte message[], int length);  // Calculates error for communication.
+byte commError(byte message[], int thisLength);  // Calculates error for communication.
 
 /*
  * Setup Function
@@ -75,6 +75,9 @@ byte commError(byte message[], int length);  // Calculates error for communicati
  * Then, calls opening handshake sequence.
  */ 
 void setup() {
+   // Only for debugging
+   // Serial.begin(9600);
+   
    // Assign pins
    Serial3.begin(9600);
    
@@ -102,6 +105,7 @@ void setup() {
  */
 void loop() {
   
+  
   globalError = 0;
   
   // The first time this runs, the first command will already be set.
@@ -126,4 +130,14 @@ void loop() {
   if (!getBaseCommand()) {
     getBackupCommand();
   }
+  
+  /* 
+  //Debug functions
+  commTest();
+  Serial.println("WAITING");
+  while(Serial.available()){Serial.read();}
+  while(!Serial.available()){}
+  while(Serial.available()){Serial.read();}
+  Serial.println("GO!");
+  */
 }

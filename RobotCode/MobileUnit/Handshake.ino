@@ -20,5 +20,8 @@
  */
 
 void openHandshake() {
+  currentLocation.x = 20;
+  currentLocation.y = 5;
+  currentLocation.theta = 12;  
   return;
 }

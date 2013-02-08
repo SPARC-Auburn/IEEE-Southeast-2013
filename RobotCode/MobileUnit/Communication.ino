@@ -14,11 +14,16 @@
  * Once message is properly received, it sends an Ack message.
  * If a timeout occurs, the function returns false.
  */
+int commTimesSent, commPacketsReceived; // For debugging
+byte receivedMessage[16];
+byte reportMessage[14];
+
 boolean getBaseCommand() {
   long finalTime = millis() + COMM_LONG_TIMEOUT;
+  commTimesSent = 0;
+  commPacketsReceived = 0;
   while(true) {
-    byte reportMessage[14];
-    byte receivedMessage[16];
+    commTimesSent++;
     long i = 8, j = 0;
     reportMessage[0] = globalError;
     reportMessage[1] = ((int)(currentLocation.x * X_RESOLUTION)) / 256;
@@ -31,21 +36,27 @@ boolean getBaseCommand() {
     else {
       reportMessage[7] = commError(reportMessage, 7); // Error Checking
     }
+    while(Serial3.available()) {Serial3.read();}
     for (j = 0; j < i; j++) {
       Serial3.write(reportMessage[j]);
     }
     Serial3.flush();
     i = millis();
-    while(i < millis() + COMM_TIMEOUT) {
+    while(millis() < i + COMM_TIMEOUT) {
       if (millis() > finalTime) {
         return false;
       }
       if (Serial3.available()) {
         // Get message sent
         j = 0;
+        commPacketsReceived++;
         while (Serial3.available()) {
           receivedMessage[j] = Serial3.read();
           j++;
+          if(j>15) break;
+          if(!Serial3.available()) {
+            delay(20);
+          }
         }
         if(receivedMessage[0] == 0xFE) { // Again message sent.
           break;
@@ -53,7 +64,8 @@ boolean getBaseCommand() {
         if(receivedMessage[15] != commError(receivedMessage, 15)) { // Check error of received message;
            Serial3.write(0xFB); // Error message
            Serial3.flush();
-           break; 
+           i = millis();
+           continue; 
         }
         // Acknowledge received
         Serial3.write(0xFD); // Ack
@@ -84,11 +96,11 @@ boolean getBaseCommand() {
   return false;
 }
 
-byte commError(byte message[], int length) {
+byte commError(byte message[], int thisLength) {
   int thisByte;
   byte result = 0;
-  for (thisByte = 0; thisByte < length; thisByte++) {
-    result = result ^ thisByte; // XOR with next byte
+  for (thisByte = 0; thisByte < thisLength; thisByte++) {
+    result = result ^ message[thisByte]; // XOR with next byte
   }
   return result;
 }
