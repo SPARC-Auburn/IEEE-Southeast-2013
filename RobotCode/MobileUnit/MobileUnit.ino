@@ -3,7 +3,7 @@
  * Student Project and Research Committee (SPaRC)
  * MobileUnit Code for IEEE Secon 2013 Hardware Competition
  * 
- * Version: 2/7/2013
+ * Version: 2/12/2013
  */
  
 // Libraries and Headers
@@ -17,7 +17,8 @@
 #define Y_RESOLUTION         500    // Multiply inches by this to get stored y value
 #define COMM_TIMEOUT        2000    // Timeout listening for response
 #define COMM_LONG_TIMEOUT  10000    // After this give up
-
+#define HALF_WIDTH             5 
+ 
 // Pin Definitions begin with P_
 #define P_XBEE_IN   14
 #define P_XBEE_OUT  15
@@ -25,6 +26,12 @@
 #define P_LEFT_MOUSE_DATA 3
 #define P_RIGHT_MOUSE_CLOCK 4
 #define P_RIGHT_MOUSE_DATA 5
+#define P_RIGHT_MOTOR_L1 6
+#define P_RIGHT_MOTOR_L2 7
+#define P_RIGHT_MOTOR_EN 8
+#define P_LEFT_MOTOR_L1 9
+#define P_LEFT_MOTOR_L2 10
+#define P_LEFT_MOTOR_EN 11
 
 // Motor Logical States begin with M_
 #define M_BRAKE            0
@@ -58,6 +65,7 @@ PS2 rightMouse(P_RIGHT_MOUSE_CLOCK, P_RIGHT_MOUSE_DATA);
 // Method Declarations
 void openHandshake();        // For the first communication until first command is determined.
 byte commandConversion();    // Will convert command to three moves for the drive functions, returns global error
+byte doublePivot();          // Daughter function of commandConversion
 void setMotorPosition(int whichPosition);  // Just changes motor directions.
 int driveTurn(double newTheta, boolean useLines);  // Return error
 int driveStraight(location target, boolean useLines);  // Return error
@@ -65,7 +73,15 @@ boolean getBaseCommand();    // Communicates with base station and gets command,
 void getBackupCommand();     // Figures out best command from backup list.
 int odometry();              // Runs the math to update currentLocation, returns global error (0 = success)
 int endAction();             // Manages claw and color, length sensors to pick up or drop off blocks.
+double error(location target, location current);
+double dist(location a, location b);
+double arcdist(double theta1, double theta2, double radius);
+
+// Functions (math-related, not really methods)
 byte commError(byte message[], int thisLength);  // Calculates error for communication.
+double adjustTheta( double theta ); // !!! should probably go somewhere more universal
+location relativeCoordinates(location origin, location absoluteTarget);
+location absoluteCoordinates(location origin, location relativeTarget);
 
 /*
  * Setup Function
@@ -80,6 +96,12 @@ void setup() {
    
    // Assign pins
    Serial3.begin(9600);
+   pinMode(P_RIGHT_MOTOR_L1, OUTPUT);  
+   pinMode(P_RIGHT_MOTOR_L2, OUTPUT);
+   pinMode(P_RIGHT_MOTOR_EN, OUTPUT);
+   pinMode(P_LEFT_MOTOR_L1, OUTPUT);
+   pinMode(P_LEFT_MOTOR_L2, OUTPUT);
+   pinMode(P_LEFT_MOTOR_EN, OUTPUT);
    
    // Initialize global variables.
 
@@ -115,13 +137,13 @@ void loop() {
     if (commandConversion() > 0) break;
     // First turn
     setMotorPosition(motorPath[0]);
-    driveTurn(partOneDest.theta, linesPath[0]);
+    if(driveTurn(partOneDest.theta, linesPath[0]) > 0) break;
     // Straight move
     setMotorPosition(motorPath[1]);
-    driveStraight(partTwoDest, linesPath[1]);
+    if(driveStraight(partTwoDest, linesPath[1]) > 0) break;
     // Second turn
     setMotorPosition(motorPath[2]);
-    driveTurn(destination.theta, linesPath[2]);
+    if(driveTurn(destination.theta, linesPath[2]) > 0) break;
     // End action
     endAction();
   } while(false);
