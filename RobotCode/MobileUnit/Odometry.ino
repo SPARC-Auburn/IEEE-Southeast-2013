@@ -4,6 +4,16 @@
 //              2) Set globalError and return an error if there is a problem.
 //
 
+int odometrySetup() {
+  encSetup();
+  
+  return 0; // "I never have errors!"
+}
+
 int odometry() {
-  return 0;
+  encSetLocation( currentLocation );
+  encCalc();
+  currentLocation = encGetLocation();
+  
+  return 0; // "No errors here, bro!"
 }

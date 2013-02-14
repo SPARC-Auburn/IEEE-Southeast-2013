@@ -32,6 +32,10 @@
 #define P_LEFT_MOTOR_L1 9
 #define P_LEFT_MOTOR_L2 10
 #define P_LEFT_MOTOR_EN 11
+#define P_ENC_LEFT_A 18    //left wheel, channel A
+#define P_ENC_LEFT_B 19    //etc.
+#define P_ENC_RIGHT_A 20   //these "ENC" pins MUST
+#define P_ENC_RIGHT_B 21   // BE INTERRUPT PINS!!!!
 
 // Motor Logical States begin with M_
 #define M_BRAKE            0
@@ -107,7 +111,7 @@ void setup() {
 
    
    // Setup Functions
-   
+   odometrySetup();
    
    // Call opening handshake sequence
    openHandshake();
