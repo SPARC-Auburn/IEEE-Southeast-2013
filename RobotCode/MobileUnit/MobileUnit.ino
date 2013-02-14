@@ -32,10 +32,18 @@
 #define P_LEFT_MOTOR_L1 9
 #define P_LEFT_MOTOR_L2 10
 #define P_LEFT_MOTOR_EN 11
-#define P_ENC_LEFT_A 18    //left wheel, channel A
-#define P_ENC_LEFT_B 19    //etc.
-#define P_ENC_RIGHT_A 20   //these "ENC" pins MUST
-#define P_ENC_RIGHT_B 21   // BE INTERRUPT PINS!!!!
+//encoder pins:
+#define PinEncLA 2
+#define PinEncLB 3
+#define PinEncRA 4
+#define PinEncRB 5
+//motor control pins
+#define PinML1 7
+#define PinML2 6
+#define PinMR1 9
+#define PinMR2 8
+#define PinEnL 10 //should be PWM
+#define PinEnR 11 //should be PWM
 
 // Motor Logical States begin with M_
 #define M_BRAKE            0
@@ -47,6 +55,11 @@
 #define M_FORWARD_LEFT     6
 #define M_PIVOT_LEFT       7
 #define M_BACK_LEFT        8
+
+//End action Enum
+enum Command_Status {CS_SPIN_BEGINNING, CS_SPIN_END, CS_GO_UP_RAMP, CS_ON_RAMP};
+enum End_action {EA_NONE, EA_PU_1_BLOCK, EA_PU_2_BLOCK, EA_DO_STACKED, EA_DO_SINGLE, EA_AIR_WAY, EA_FINISHED};
+enum End_color {EC_NONE, EC_YELLOW, EC_ORANGE, EC_BROWN, EC_GREEN, EC_RED, EC_BLUE};
 
 // Global Variable and Object Declarations
 byte globalError;            // This will be reported by any function in loop to cancel the command and go straight to communication
@@ -96,7 +109,7 @@ location absoluteCoordinates(location origin, location relativeTarget);
  */ 
 void setup() {
    // Only for debugging
-   // Serial.begin(9600);
+   //Serial.begin(9600);
    
    // Assign pins
    Serial3.begin(9600);
@@ -151,19 +164,19 @@ void loop() {
     // End action
     endAction();
   } while(false);
-  
   // Communicate with base station and determine next move.  
   if (!getBaseCommand()) {
     getBackupCommand();
   }
   
-  /* 
+  
   //Debug functions
+  /*
   commTest();
   Serial.println("WAITING");
   while(Serial.available()){Serial.read();}
   while(!Serial.available()){}
   while(Serial.available()){Serial.read();}
   Serial.println("GO!");
-  */
+  */  
 }

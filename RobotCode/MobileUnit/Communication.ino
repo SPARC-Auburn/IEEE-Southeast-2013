@@ -30,8 +30,8 @@ boolean getBaseCommand() {
     reportMessage[2] = ((int)(currentLocation.x * X_RESOLUTION)) % 256;
     reportMessage[3] = ((int)(currentLocation.y * Y_RESOLUTION)) / 256;
     reportMessage[4] = ((int)(currentLocation.y * Y_RESOLUTION)) % 256;
-    reportMessage[5] = ((int)(currentLocation.theta * THETA_RESOLUTION)) / 256;
-    reportMessage[6] = ((int)(currentLocation.theta * THETA_RESOLUTION)) % 256;
+    reportMessage[5] = highByte(int(currentLocation.theta * THETA_RESOLUTION));
+    reportMessage[6] = lowByte(int(currentLocation.theta * THETA_RESOLUTION));
     if(false) {} // Possible extra data
     else {
       reportMessage[7] = commError(reportMessage, 7); // Error Checking
