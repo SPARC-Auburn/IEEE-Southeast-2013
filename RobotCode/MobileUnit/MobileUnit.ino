@@ -3,7 +3,7 @@
  * Student Project and Research Committee (SPaRC)
  * MobileUnit Code for IEEE Secon 2013 Hardware Competition
  * 
- * Version: 2/12/2013
+ * Version: 2/14/2013
  */
  
 // Libraries and Headers
