@@ -15,45 +15,45 @@
 #define THETA_RESOLUTION   10000    // Multiply radians by this to get stored theta value
 #define X_RESOLUTION         500    // Multiply inches by this to get stored x value
 #define Y_RESOLUTION         500    // Multiply inches by this to get stored y value
-#define COMM_TIMEOUT        2000    // Timeout listening for response
-#define COMM_LONG_TIMEOUT  10000    // After this give up
+#define COMM_TIMEOUT         500    // Timeout listening for response
+#define COMM_LONG_TIMEOUT   2000    // After this give up
 #define HALF_WIDTH             5 
  
 // Pin Definitions begin with P_
 #define P_XBEE_IN   14
 #define P_XBEE_OUT  15
-#define P_LEFT_MOUSE_CLOCK 2
-#define P_LEFT_MOUSE_DATA 3
-#define P_RIGHT_MOUSE_CLOCK 4
-#define P_RIGHT_MOUSE_DATA 5
-#define P_RIGHT_MOTOR_L1 6
-#define P_RIGHT_MOTOR_L2 7
-#define P_RIGHT_MOTOR_EN 8
-#define P_LEFT_MOTOR_L1 9
-#define P_LEFT_MOTOR_L2 10
-#define P_LEFT_MOTOR_EN 11
+#define P_LEFT_MOUSE_CLOCK 52
+#define P_LEFT_MOUSE_DATA 53
+#define P_RIGHT_MOUSE_CLOCK 54
+#define P_RIGHT_MOUSE_DATA 55
+#define P_RIGHT_MOTOR_L1 5
+#define P_RIGHT_MOTOR_L2 6
+#define P_RIGHT_MOTOR_EN 7  //should be PWM
+#define P_LEFT_MOTOR_L1 2
+#define P_LEFT_MOTOR_L2 3
+#define P_LEFT_MOTOR_EN 4  //should be PWM
 //encoder pins:
-#define PinEncLA 2
-#define PinEncLB 3
-#define PinEncRA 4
-#define PinEncRB 5
+#define PinEncLA 18
+#define PinEncLB 19
+#define PinEncRA 20
+#define PinEncRB 21
 //motor control pins
-#define PinML1 7
-#define PinML2 6
-#define PinMR1 9
-#define PinMR2 8
-#define PinEnL 10 //should be PWM
-#define PinEnR 11 //should be PWM
+//#define PinML1 7
+//#define PinML2 6
+//#define PinMR1 9
+//#define PinMR2 8
+//#define PinEnL 10 //should be PWM
+//#define PinEnR 11 //should be PWM
 
 // Motor Logical States begin with M_
 #define M_BRAKE            0
 #define M_FORWARD          1
 #define M_BACKWARD         2
 #define M_FORWARD_RIGHT    3
-#define M_PIVOT_RIGHT      4
+#define M_SPIN_RIGHT       4
 #define M_BACK_RIGHT       5
 #define M_FORWARD_LEFT     6
-#define M_PIVOT_LEFT       7
+#define M_SPIN_LEFT        7
 #define M_BACK_LEFT        8
 
 //End action Enum
@@ -82,7 +82,7 @@ PS2 rightMouse(P_RIGHT_MOUSE_CLOCK, P_RIGHT_MOUSE_DATA);
 // Method Declarations
 void openHandshake();        // For the first communication until first command is determined.
 byte commandConversion();    // Will convert command to three moves for the drive functions, returns global error
-byte doublePivot();          // Daughter function of commandConversion
+byte doubleSpin();          // Daughter function of commandConversion
 void setMotorPosition(int whichPosition);  // Just changes motor directions.
 int driveTurn(double newTheta, boolean useLines);  // Return error
 int driveStraight(location target, boolean useLines);  // Return error
@@ -93,6 +93,7 @@ int endAction();             // Manages claw and color, length sensors to pick u
 double error(location target, location current);
 double dist(location a, location b);
 double arcdist(double theta1, double theta2, double radius);
+void debugging();
 
 // Functions (math-related, not really methods)
 byte commError(byte message[], int thisLength);  // Calculates error for communication.
@@ -120,9 +121,9 @@ void setup() {
    pinMode(P_LEFT_MOTOR_L2, OUTPUT);
    pinMode(P_LEFT_MOTOR_EN, OUTPUT);
    
+   setMotorPosition(M_BRAKE);
    // Initialize global variables.
 
-   
    // Setup Functions
    odometrySetup();
    
@@ -143,15 +144,15 @@ void setup() {
  * command in case commmunication fails, and report to base station.
  */
 void loop() {
-  
-  
+  //  debugging();
   globalError = 0;
   
   // The first time this runs, the first command will already be set.
   
   do {  // This is only run once but is used so break command will work.  
     // Command conversion
-    if (commandConversion() > 0) break;
+    
+     if (commandConversion() > 0) break;
     // First turn
     setMotorPosition(motorPath[0]);
     if(driveTurn(partOneDest.theta, linesPath[0]) > 0) break;
@@ -161,22 +162,15 @@ void loop() {
     // Second turn
     setMotorPosition(motorPath[2]);
     if(driveTurn(destination.theta, linesPath[2]) > 0) break;
+    setMotorPosition(M_BRAKE);
     // End action
+    
     endAction();
   } while(false);
+  
   // Communicate with base station and determine next move.  
   if (!getBaseCommand()) {
+    Serial.println("backup");
     getBackupCommand();
   }
-  
-  
-  //Debug functions
-  /*
-  commTest();
-  Serial.println("WAITING");
-  while(Serial.available()){Serial.read();}
-  while(!Serial.available()){}
-  while(Serial.available()){Serial.read();}
-  Serial.println("GO!");
-  */  
 }

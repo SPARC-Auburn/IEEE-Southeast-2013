@@ -11,8 +11,8 @@ location encoderLoc = {0,0,0};
 
 void encSetup()
 {
-  encoderInitL(P_ENC_LEFT_A,  P_ENC_LEFT_B );
-  encoderInitR(P_ENC_RIGHT_A, P_ENC_RIGHT_B);
+  encoderInitL(PinEncLA, PinEncLB);
+  encoderInitR(PinEncRA, PinEncRB);
 }
 
 void encCalc()
@@ -48,6 +48,7 @@ void encCalc()
   //with distance d and angle theta, find x and y change of center point
   encoderLoc.x += d * sin(temp_theta); //component of d in lateral direction
   encoderLoc.y += d * cos(temp_theta); //component of d in longitudinal direction (ex: if angle doesn't change, theta = 0 so y = d)
+  encoderLoc.theta = adjustTheta(encoderLoc.theta);
 }
 
 double encGetX() {return encoderLoc.x;}

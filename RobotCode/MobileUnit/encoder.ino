@@ -54,8 +54,8 @@ void encoderInitL(int chAPin, int chBPin)
   pinMode(pinChLB, INPUT);
   digitalWrite(pinChLA, HIGH); //pullup
   digitalWrite(pinChLB, HIGH); //pullup
-  PCintPort::attachInterrupt(intChLA, &intEncLA, CHANGE);
-  PCintPort::attachInterrupt(intChLB, &intEncLB, CHANGE);
+  attachInterrupt(intChLA, &intEncLA, CHANGE);
+  attachInterrupt(intChLB, &intEncLB, CHANGE);
 }
 
 //same as above, but for right wheel
@@ -71,8 +71,8 @@ void encoderInitR(int chAPin, int chBPin)
   pinMode(pinChRB, INPUT);
   digitalWrite(pinChRA, HIGH); //pullup
   digitalWrite(pinChRB, HIGH); //pullup
-  PCintPort::attachInterrupt(pinChRA, &intEncRA, CHANGE);
-  PCintPort::attachInterrupt(pinChRB, &intEncRB, CHANGE);
+  attachInterrupt(pinChRA, &intEncRA, CHANGE);
+  attachInterrupt(pinChRB, &intEncRB, CHANGE);
 }
 
 //reads the current count on the left encoder and resets it to 0

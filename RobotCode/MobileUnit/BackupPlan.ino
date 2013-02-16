@@ -6,8 +6,11 @@
  */
 
 void getBackupCommand() {
-  destination.x = currentLocation.x;
-  destination.y = currentLocation.y + 10;
-  destination.theta = currentLocation.theta;
+  currentLocation.x = 20;
+  currentLocation.y = 30;
+  currentLocation.theta = 0;
+  destination.x = 20;
+  destination.y = 30;
+  destination.theta = 0;
   return;
 }

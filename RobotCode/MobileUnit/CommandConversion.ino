@@ -15,7 +15,7 @@
  *        If destination is in front of current location, first move will be forward turn.
  *        If destination is behind current location, first move will be backward turn.
  * Exception: If destination is within turning diameter of current location,
- * use two pivots and one straight move.
+ * use two spins and one straight move.
  */
 
 //method declaration
@@ -26,10 +26,12 @@ byte commandConversion() {
   linesPath[0] = 0;
   linesPath[1] = 0;
   linesPath[2] = 0;
-  return doublePivot(); // For now, assume two pivots and a straight move.
+  doubleSpin();
+  return 0;
+  //return doubleSpin(); // For now, assume two spins and a straight move.
 }
 
-byte doublePivot() {
+byte doubleSpin() {
   double midTheta = adjustTheta(atan2(destination.y - currentLocation.y, destination.x - currentLocation.x));
   partOneDest.x = currentLocation.x;
   partOneDest.y = currentLocation.y;
@@ -38,29 +40,41 @@ byte doublePivot() {
   partTwoDest.y = destination.y;
   partTwoDest.theta = midTheta;
   if (adjustTheta(midTheta - partOneDest.theta) > 0) {
-    motorPath[0] = M_PIVOT_LEFT;
+    motorPath[0] = M_SPIN_LEFT;
   }
   else {
-    motorPath[0] = M_PIVOT_RIGHT;
+    motorPath[0] = M_SPIN_RIGHT;
   }
   motorPath[1] = M_FORWARD;
   if (adjustTheta(partTwoDest.theta - midTheta) > 0) {
-    motorPath[2] = M_PIVOT_LEFT;
+    motorPath[2] = M_SPIN_LEFT;
   }
   else {
-    motorPath[2] = M_PIVOT_RIGHT;
+    motorPath[2] = M_SPIN_RIGHT;
   }
+  return 0;
 }
 
 // return.theta gives the 
-location calcWaypoint(location A, location B, signed char& dir) {
+byte calcWaypoint(location A, location B) {
   location wp; //waypoint to be returned
-  dir = signbit(adjustTheta(atan2((B.y-A.y),(B.x-A.x))-A.theta));
-  wp.theta = atan2( (B.y-A.y+HALF_WIDTH*(cos(B.theta)-cos(A.theta))*dir),
-                    (B.x-A.x-HALF_WIDTH*(sin(B.theta)-sin(A.theta))*dir));
-  wp.x = B.x - dir*HALF_WIDTH*(sin(B.theta)-sin(wp.theta));
-  wp.y = B.y + dir*HALF_WIDTH*(cos(B.theta)-cos(wp.theta));  
-  return wp;
+  signed char dir = signbit(adjustTheta(atan2((destination.y-currentLocation.y),
+                      (destination.x-currentLocation.x))-currentLocation.theta));
+  if (dir == 1)
+    motorPath[0] = M_FORWARD_LEFT;
+  else
+    motorPath[0] = M_FORWARD_RIGHT;
+  motorPath[2] = 
+  //motorPath[0]
+  
+  partOneDest.theta = atan2( (destination.y-currentLocation.y+HALF_WIDTH*(cos(destination.theta)-cos(currentLocation.theta))*dir),
+                    (destination.x-currentLocation.x-HALF_WIDTH*(sin(destination.theta)-sin(currentLocation.theta))*dir));
+  partOneDest.x = currentLocation.x + dir*HALF_WIDTH*(sin(partOneDest.theta)-sin(currentLocation.theta));
+  partOneDest.y = currentLocation.y - dir*HALF_WIDTH*(cos(partOneDest.theta)-cos(currentLocation.theta));
+  partTwoDest.theta = partOneDest.theta;
+  partTwoDest.x = destination.x - dir*HALF_WIDTH*(sin(destination.theta)-sin(partOneDest.theta));
+  partTwoDest.y = destination.y + dir*HALF_WIDTH*(cos(destination.theta)-cos(partOneDest.theta));  
+  return 0;
 }
 
 double adjustTheta( double theta )
