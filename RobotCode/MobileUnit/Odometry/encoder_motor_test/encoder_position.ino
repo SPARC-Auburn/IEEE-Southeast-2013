@@ -1,13 +1,19 @@
 //THESE VALUES ARE ROUGH AND SHOULD BE TWEAKED FOR BEST RESULTS
-#define DIAM 2 //diameter in inches.
+#define DIAM 1.9 //diameter in inches.
 #define WIDTH 9.25 //distance between wheels in inches
 #define RESOLUTION 64 //encoder resolution
-#define RATIO 18.75 //gearbox ratio
-#define MAGIC_SCALE_FACTOR 0.005235987756 // = pi * DIAM / (RESOLUTION * RATIO),  uses D = 2.0
+#define RATIO 19 //gearbox ratio
 
+//distance between left and right wheels
+int rldiff = 0;
 
+//displacement of center point (d) and its x and y components
+double d = 0;
+double x = 0;
+double y = 0;
 
-location encoderLoc = {0,0,0};
+//change in angle
+double theta = 0;
 
 void encSetup()
 {
@@ -23,15 +29,15 @@ void encCalc()
   int R = -encoderReadR(); //may or may not need to do this, we'll see.
   
   //forward difference between left and right wheels in ticks
-  int rldiff = (L - R);
+  rldiff = (L - R);
   
   //convert ticks to inches
-  double rl_length = rldiff * MAGIC_SCALE_FACTOR;
+  double rl_length = (rldiff * PI * DIAM) / (RESOLUTION * RATIO);
   
   /* Finding distance travelled by center point of axle
   ------------------------------------------------------ */
   //center moves average of L and R
-  double d = ((R + L) / 2.0) * MAGIC_SCALE_FACTOR; 
+  d = ((R + L) / 2) * (PI * DIAM) / (RESOLUTION * RATIO);  
   
   /* Find change in angle
   ------------------------------------------------------ */
@@ -40,25 +46,21 @@ void encCalc()
   //treat original slope n as 0, so tan(theta) == (m-0)/(1+0) == m
   //either find arctan or use small angle approximation
   
-  double temp_theta = encoderLoc.theta; //hold old theta
-  encoderLoc.theta -= atan(rl_length/WIDTH);
-  temp_theta = (temp_theta + encoderLoc.theta)/2; //hold the average of the old and new thetas.
+  double temp_theta = theta; //hold old theta
+  theta += atan(rl_length/WIDTH);
+  temp_theta = (temp_theta + theta)/2; //hold the average of the old and new thetas.
     //we'll use this as an approximation for the direction of the movement
   
   //with distance d and angle theta, find x and y change of center point
-  encoderLoc.y += d * sin(temp_theta); //component of d in lateral direction
-  encoderLoc.x += d * cos(temp_theta); //component of d in longitudinal direction (ex: if angle doesn't change, theta = 0 so y = d)
-  encoderLoc.theta = adjustTheta(encoderLoc.theta);
+  x += d * sin(temp_theta); //component of d in lateral direction
+  y += d * cos(temp_theta); //component of d in longitudinal direction (ex: if angle doesn't change, theta = 0 so y = d)
 }
 
-double encGetX() {return encoderLoc.x;}
-double encGetY() {return encoderLoc.y;}
-double encGetTheta() {return encoderLoc.theta;}
-location encGetLocation() {return encoderLoc;}
+double encGetX() {return x;}
+double encGetY() {return y;}
+double encGetTheta() {return theta;}
 
-void encSetX( double newX ) { encoderLoc.x = newX; }
-void encSetY( double newY ) { encoderLoc.y = newY; }
-void encSetTheta( double newTheta ) { encoderLoc.theta = newTheta; }
-void encSetLocation( location newLoc ) { encoderLoc = newLoc; }
-  
+void encSetX( double newX ) { x = newX; }
+void encSetY( double newY ) { y = newY; }
+void encSetTheta( double newTheta ) { theta = newTheta; }
 

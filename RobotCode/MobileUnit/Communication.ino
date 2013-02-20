@@ -82,10 +82,10 @@ boolean getBaseCommand() {
         commandStatus = receivedMessage[0];
         currentLocation.x = ((double)receivedMessage[1]*256 + receivedMessage[2]) / X_RESOLUTION;
         currentLocation.y = ((double)receivedMessage[3]*256 + receivedMessage[4]) / Y_RESOLUTION;
-        currentLocation.theta = ((double)receivedMessage[5]*256 + receivedMessage[6]) / THETA_RESOLUTION;
+        currentLocation.theta = adjustTheta(((double)receivedMessage[5]*256 + receivedMessage[6]) / THETA_RESOLUTION);
         destination.x = ((double)receivedMessage[7]*256 + receivedMessage[8]) / X_RESOLUTION;
         destination.y = ((double)receivedMessage[9]*256 + receivedMessage[10]) / Y_RESOLUTION;
-        destination.theta = ((double)receivedMessage[11]*256 + receivedMessage[12]) / THETA_RESOLUTION;
+        destination.theta = adjustTheta(((double)receivedMessage[11]*256 + receivedMessage[12]) / THETA_RESOLUTION);
         commandEndAction = bitRead(receivedMessage[13], 7)*4 + bitRead(receivedMessage[13], 6)*2 + bitRead(receivedMessage[13], 5);
         commandEndColor = bitRead(receivedMessage[13], 4)*4 + bitRead(receivedMessage[13], 3)*2 + bitRead(receivedMessage[13], 2);
         commandEndLength = bitRead(receivedMessage[13], 1)*2 + bitRead(receivedMessage[13], 0);

@@ -12,7 +12,15 @@
 #define THETA_PRECISION  .03 // Must be this many radians from target angle for success
 #define STRAY_ERROR_TH   .01 // If we get this much farther form target than we were before, return an error
 #define STRAIGHT_TIMEOUT 5000 // No moves for longer than 15 seconds
- 
+
+#define MIN_SPEED 20
+#define MAX_SPEED 230
+#define ADDED_DISTANCE  0.1 //in inches, the amount to add to the forward distance to have the effect of adding some initial velocity
+#define ACCELERATION_CONSTANT 51.4 //really, the sqrt of the acceleration
+      //  = 51.4  corresponds to an accelleration of 0 to full speed (230) in about 20 inches
+      //  = 59.4  corresponds to an accelleration of 0 to full speed (230) in about 15 inches
+      //  = 72.7  corresponds to an accelleration of 0 to full speed (230) in about 10 inches
+
 int driveTurn(double newTheta, boolean useLines) {
   int motorSpeed = 0;
   double umbrella = newTheta - currentLocation.theta; // This is the closest we've been so far
@@ -27,7 +35,7 @@ int driveTurn(double newTheta, boolean useLines) {
       // Will need to add useLines conditions
       
       // Accelleration Algorithm
-      motorSpeed = 255;  // Full steam ahead!
+      motorSpeed = 150;  // not Full steam ahead!
   }
   setMotorPosition(M_BRAKE);
   analogWrite(P_LEFT_MOTOR_EN, 255);
@@ -38,20 +46,47 @@ int driveTurn(double newTheta, boolean useLines) {
 int driveStraight(location target, boolean useLines) {
   long straightTime = millis();
   int motorSpeed = 0;
-  double umbrella = dist(currentLocation, target); // This is the closest we've been so far
-  while(dist(currentLocation, target) > TARGET_PRECISION) {
+  start = currentLocation;
+  double maxDist = dist(start, target); //total trip distance
+  double umbrella = maxDist; // This is the closest we've been so far
+  double halfwayDist = maxDist/2;  // The halfway point
+  double remainingDist = maxDist;  // How much further we have left to gp
+  double temp = MAX_SPEED/ACCELERATION_CONSTANT;
+  double accelerationDist = temp*temp - ADDED_DISTANCE;
+  double forwardDist = 0;
+  while(remainingDist > TARGET_PRECISION) {
       if (odometry() > 0) return globalError;
-      analogWrite(P_LEFT_MOTOR_EN, motorSpeed);
-      analogWrite(P_RIGHT_MOTOR_EN, motorSpeed);
+      analogWrite(P_LEFT_MOTOR_EN, motorSpeed*1.1);
+      analogWrite(P_RIGHT_MOTOR_EN, motorSpeed*0.9);
       
       // Escape conditions
-      if (dist(currentLocation, target) < umbrella) umbrella = dist(currentLocation, target); // Umbrella update
-      //else if (dist(currentLocation, target) > umbrella + STRAY_ERROR) {globalError = 5; return 5;} // Stray error
+      if (remainingDist < umbrella) umbrella = remainingDist; // Umbrella update
+      //else if (remainingDist > umbrella + STRAY_ERROR) {globalError = 5; return 5;} // Stray error
       if (millis() > straightTime + STRAIGHT_TIMEOUT) break;
       // Will need to add useLines conditions
       
+      
       // Accelleration Algorithm
-      motorSpeed = 255;  // Full steam ahead!
+      if (forwardDist < halfwayDist)
+      {
+        if (forwardDist >= accelerationDist)
+          motorSpeed = MAX_SPEED;  //keep at max
+        else
+          motorSpeed = constrain(sqrt(forwardDist+ADDED_DISTANCE)*ACCELERATION_CONSTANT, MIN_SPEED, MAX_SPEED);
+      }
+      if (remainingDist < halfwayDist)
+      {
+        if (remainingDist >= accelerationDist)
+          motorSpeed = MAX_SPEED;
+        else
+          motorSpeed = constrain(sqrt(remainingDist+ADDED_DISTANCE)*ACCELERATION_CONSTANT, MIN_SPEED, MAX_SPEED);
+      }
+  
+      
+        
+      //motorSpeed = 150;  // not Full steam ahead!
+      forwardDist = dist(start, currentLocation);
+      remainingDist = dist(currentLocation, target);
   }
   setMotorPosition(M_BRAKE);
   analogWrite(P_LEFT_MOTOR_EN, 255);

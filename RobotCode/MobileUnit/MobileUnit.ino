@@ -8,7 +8,7 @@
  
 // Libraries and Headers
 #include "location.h"
-#include <ps2.h>
+//#include <ps2.h>
 #include <PinChangeInt.h>
 
 // Constants
@@ -22,10 +22,10 @@
 // Pin Definitions begin with P_
 #define P_XBEE_IN   14
 #define P_XBEE_OUT  15
-#define P_LEFT_MOUSE_CLOCK 52
+/*#define P_LEFT_MOUSE_CLOCK 52
 #define P_LEFT_MOUSE_DATA 53
 #define P_RIGHT_MOUSE_CLOCK 54
-#define P_RIGHT_MOUSE_DATA 55
+#define P_RIGHT_MOUSE_DATA 55*/
 #define P_RIGHT_MOTOR_L1 5
 #define P_RIGHT_MOTOR_L2 6
 #define P_RIGHT_MOTOR_EN 7  //should be PWM
@@ -76,8 +76,8 @@ int commandEndColor;         // The color block as reported from base station (m
 int commandEndLength;        // The length of block as reported from base station (low 2 bits of end action byte)
 
 // Odometry-related Objects and Variables
-PS2 leftMouse(P_LEFT_MOUSE_CLOCK, P_LEFT_MOUSE_DATA);
-PS2 rightMouse(P_RIGHT_MOUSE_CLOCK, P_RIGHT_MOUSE_DATA);
+/*PS2 leftMouse(P_LEFT_MOUSE_CLOCK, P_LEFT_MOUSE_DATA);
+PS2 rightMouse(P_RIGHT_MOUSE_CLOCK, P_RIGHT_MOUSE_DATA);*/
 
 // Method Declarations
 void openHandshake();        // For the first communication until first command is determined.
@@ -109,11 +109,13 @@ location absoluteCoordinates(location origin, location relativeTarget);
  * Then, calls opening handshake sequence.
  */ 
 void setup() {
+   setMotorPosition(M_BRAKE); 
    // Only for debugging
    //Serial.begin(9600);
    
    // Assign pins
    Serial3.begin(9600);
+   setMotorPosition(M_BRAKE);
    pinMode(P_RIGHT_MOTOR_L1, OUTPUT);  
    pinMode(P_RIGHT_MOTOR_L2, OUTPUT);
    pinMode(P_RIGHT_MOTOR_EN, OUTPUT);
@@ -123,7 +125,7 @@ void setup() {
    
    setMotorPosition(M_BRAKE);
    // Initialize global variables.
-
+   while(true);
    // Setup Functions
    odometrySetup();
    
@@ -144,7 +146,7 @@ void setup() {
  * command in case commmunication fails, and report to base station.
  */
 void loop() {
-  //  debugging();
+  //debugging();
   globalError = 0;
   
   // The first time this runs, the first command will already be set.
