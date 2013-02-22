@@ -20,10 +20,18 @@
       //  = 51.4  corresponds to an accelleration of 0 to full speed (230) in about 20 inches
       //  = 59.4  corresponds to an accelleration of 0 to full speed (230) in about 15 inches
       //  = 72.7  corresponds to an accelleration of 0 to full speed (230) in about 10 inches
+#define TURN_RADIUS 9.25
 
 int driveTurn(double newTheta, boolean useLines) {
   int motorSpeed = 0;
-  double umbrella = newTheta - currentLocation.theta; // This is the closest we've been so far
+  double maxTheta = newTheta - currentLocation.theta;
+  double umbrella = maxTheta; // This is the closest we've been so far
+  double halfwayTheta = maxTheta / 2;
+  double startTheta = currentLocation.theta;
+  double forwardTheta = 0;
+  double remainingTheta = maxTheta;
+  double temp = MAX_SPEED/ACCELERATION_CONSTANT;
+  double accelerationTheta = (temp*temp - ADDED_DISTANCE)/TURN_RADIUS;
   while(newTheta - currentLocation.theta > THETA_PRECISION) {
       if (odometry() > 0) return globalError;
       analogWrite(P_LEFT_MOTOR_EN, motorSpeed);
@@ -35,6 +43,22 @@ int driveTurn(double newTheta, boolean useLines) {
       // Will need to add useLines conditions
       
       // Accelleration Algorithm
+      forwardTheta = currentLocation.theta - startTheta;
+      remainingTheta = newTheta - currentLocation.theta;
+      if (forwardTheta < halfwayTheta)
+      {
+        if (forwardTheta >= accelerationTheta)
+          motorSpeed = MAX_SPEED;  //keep at max
+        else
+          motorSpeed = constrain(sqrt((forwardTheta*TURN_RADIUS)+ADDED_DISTANCE)*ACCELERATION_CONSTANT, MIN_SPEED, MAX_SPEED);
+      }
+      if (remainingTheta < halfwayTheta)
+      {
+        if (remainingTheta >= accelerationTheta)
+          motorSpeed = MAX_SPEED;
+        else
+          motorSpeed = constrain(sqrt((remainingTheta*TURN_RADIUS)+ADDED_DISTANCE)*ACCELERATION_CONSTANT, MIN_SPEED, MAX_SPEED);
+      }
       motorSpeed = 150;  // not Full steam ahead!
   }
   setMotorPosition(M_BRAKE);
@@ -84,7 +108,7 @@ int driveStraight(location target, boolean useLines) {
   
       
         
-      //motorSpeed = 150;  // not Full steam ahead!
+      motorSpeed = 150;  // not Full steam ahead!
       forwardDist = dist(start, currentLocation);
       remainingDist = dist(currentLocation, target);
   }
