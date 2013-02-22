@@ -22,6 +22,11 @@ void encCalc()
   //counterclockwise encoder
   int R = -encoderReadR(); //may or may not need to do this, we'll see.
   
+  //Serial.print("L:");
+  //Serial.println(L);
+  //Serial.print("R:");
+  //Serial.println(R);
+  
   //forward difference between left and right wheels in ticks
   int rldiff = (L - R);
   

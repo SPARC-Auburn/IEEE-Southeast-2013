@@ -131,6 +131,8 @@ void setup() {
    // Initialize global variables.
    // Setup Functions
    odometrySetup();
+   PIDSetpoint = 0;
+   odomPID.SetOutputLimits(-25, 25);
    
    // Call opening handshake sequence
    openHandshake();
@@ -149,11 +151,11 @@ void setup() {
  * command in case commmunication fails, and report to base station.
  */
 void loop() {
-  debugging();
+  //debugging();
   globalError = 0;
   
   // The first time this runs, the first command will already be set.
-  
+  Serial.println("About to do initial move");
   do {  // This is only run once but is used so break command will work.  
     // Command conversion
     
@@ -169,10 +171,11 @@ void loop() {
     if(driveTurn(destination.theta, linesPath[2]) > 0) break;
     setMotorPosition(M_BRAKE);
     // End action
-    
+    Serial.println("about to initial end action");
     endAction();
   } while(false);
   
+  Serial.println("trying to get command");
   // Communicate with base station and determine next move.  
   if (!getBaseCommand()) {
     Serial.println("backup");
