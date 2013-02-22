@@ -42,14 +42,16 @@ int driveTurn(double newTheta, boolean useLines) {
       analogWrite(P_LEFT_MOTOR_EN, motorSpeed);
       analogWrite(P_RIGHT_MOTOR_EN, motorSpeed);
       
+      forwardTheta = abs2(adjustTheta(currentLocation.theta - startTheta));
+      remainingTheta = abs2(adjustTheta(newTheta - currentLocation.theta));
       // Escape conditions
-      if (newTheta - currentLocation.theta < umbrella) umbrella = newTheta - currentLocation.theta; // Umbrella update
+      if (remainingTheta < umbrella) umbrella = remainingTheta; // Umbrella update
       //else if (newTheta - currentLocation.theta > umbrella + STRAY_ERROR_TH) {globalError = 5; return 5;} // Stray error
       // Will need to add useLines conditions
       //Serial.println(currentLocation.theta);
+      
+      
       // Accelleration Algorithm
-      forwardTheta = currentLocation.theta - startTheta;
-      remainingTheta = newTheta - currentLocation.theta;
       if (forwardTheta < halfwayTheta)
       {
         if (forwardTheta >= accelerationTheta)

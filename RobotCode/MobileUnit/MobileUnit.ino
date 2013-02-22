@@ -151,7 +151,7 @@ void setup() {
  * command in case commmunication fails, and report to base station.
  */
 void loop() {
-  //debugging();
+  debugging();
   globalError = 0;
   
   // The first time this runs, the first command will already be set.
