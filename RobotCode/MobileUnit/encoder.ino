@@ -44,6 +44,8 @@ int pinToInt( int pin )
 // encoder count (as if it were going the opposite direction.
 void encoderInitL(int chAPin, int chBPin)
 {
+  pinChLA = chAPin;
+  pinChLB = chBPin;
   int intChLA = pinToInt(chAPin);
   int intChLB = pinToInt(chBPin);
   portChLA=portInputRegister(digitalPinToPort(chAPin)); //gets the port
@@ -63,6 +65,8 @@ void encoderInitR(int chAPin, int chBPin)
 {  
   pinChRA = chAPin;
   pinChRB = chBPin;
+  int intChRA = pinToInt(chAPin);
+  int intChRB = pinToInt(chBPin);
   portChRA=portInputRegister(digitalPinToPort(chAPin));
   portChRB=portInputRegister(digitalPinToPort(chBPin));
   maskChRA = digitalPinToBitMask(chAPin);
@@ -71,8 +75,8 @@ void encoderInitR(int chAPin, int chBPin)
   pinMode(pinChRB, INPUT);
   digitalWrite(pinChRA, HIGH); //pullup
   digitalWrite(pinChRB, HIGH); //pullup
-  attachInterrupt(pinChRA, &intEncRA, CHANGE);
-  attachInterrupt(pinChRB, &intEncRB, CHANGE);
+  attachInterrupt(intChRA, &intEncRA, CHANGE);
+  attachInterrupt(intChRB, &intEncRB, CHANGE);
 }
 
 //reads the current count on the left encoder and resets it to 0
