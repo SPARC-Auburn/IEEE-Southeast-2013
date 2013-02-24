@@ -1,3 +1,4 @@
+
 /*
  * Auburn University Department of Electrical and Computer Engineering
  * Student Project and Research Committee (SPaRC)
@@ -8,8 +9,9 @@
  
 // Libraries and Headers
 #include "location.h"
-#include <ps2.h>
+//#include <ps2.h>
 #include <PinChangeInt.h>
+#include <PID_v1.h>
 
 // Constants
 #define THETA_RESOLUTION   10000    // Multiply radians by this to get stored theta value
@@ -22,16 +24,16 @@
 // Pin Definitions begin with P_
 #define P_XBEE_IN   14
 #define P_XBEE_OUT  15
-#define P_LEFT_MOUSE_CLOCK 52
+/*#define P_LEFT_MOUSE_CLOCK 52
 #define P_LEFT_MOUSE_DATA 53
 #define P_RIGHT_MOUSE_CLOCK 54
-#define P_RIGHT_MOUSE_DATA 55
-#define P_RIGHT_MOTOR_L1 5
-#define P_RIGHT_MOTOR_L2 6
-#define P_RIGHT_MOTOR_EN 7  //should be PWM
-#define P_LEFT_MOTOR_L1 2
-#define P_LEFT_MOTOR_L2 3
-#define P_LEFT_MOTOR_EN 4  //should be PWM
+#define P_RIGHT_MOUSE_DATA 55*/
+#define P_RIGHT_MOTOR_L1 12
+#define P_RIGHT_MOTOR_L2 11
+#define P_RIGHT_MOTOR_EN 13  //should be PWM
+#define P_LEFT_MOTOR_L1 8//2
+#define P_LEFT_MOTOR_L2 9//3
+#define P_LEFT_MOTOR_EN 10//4  //should be PWM
 //encoder pins:
 #define PinEncLA 18
 #define PinEncLB 19
@@ -75,9 +77,12 @@ int commandEndAction;        // The end action of the current command (high 3 bi
 int commandEndColor;         // The color block as reported from base station (middle 3 bits of end action byte)
 int commandEndLength;        // The length of block as reported from base station (low 2 bits of end action byte)
 
+double PIDSetpoint, PIDInput, PIDOutput;
+PID odomPID(&PIDInput, &PIDOutput, &PIDSetpoint, 4, 0, 0, DIRECT);
+
 // Odometry-related Objects and Variables
-PS2 leftMouse(P_LEFT_MOUSE_CLOCK, P_LEFT_MOUSE_DATA);
-PS2 rightMouse(P_RIGHT_MOUSE_CLOCK, P_RIGHT_MOUSE_DATA);
+/*PS2 leftMouse(P_LEFT_MOUSE_CLOCK, P_LEFT_MOUSE_DATA);
+PS2 rightMouse(P_RIGHT_MOUSE_CLOCK, P_RIGHT_MOUSE_DATA);*/
 
 // Method Declarations
 void openHandshake();        // For the first communication until first command is determined.
@@ -110,10 +115,11 @@ location absoluteCoordinates(location origin, location relativeTarget);
  */ 
 void setup() {
    // Only for debugging
-   //Serial.begin(9600);
+   Serial.begin(9600);
    
    // Assign pins
    Serial3.begin(9600);
+   setMotorPosition(M_BRAKE);
    pinMode(P_RIGHT_MOTOR_L1, OUTPUT);  
    pinMode(P_RIGHT_MOTOR_L2, OUTPUT);
    pinMode(P_RIGHT_MOTOR_EN, OUTPUT);
@@ -123,9 +129,10 @@ void setup() {
    
    setMotorPosition(M_BRAKE);
    // Initialize global variables.
-
    // Setup Functions
    odometrySetup();
+   PIDSetpoint = 0;
+   odomPID.SetOutputLimits(-25, 25);
    
    // Call opening handshake sequence
    openHandshake();
@@ -144,11 +151,11 @@ void setup() {
  * command in case commmunication fails, and report to base station.
  */
 void loop() {
-  //  debugging();
+  debugging();
   globalError = 0;
   
   // The first time this runs, the first command will already be set.
-  
+  Serial.println("About to do initial move");
   do {  // This is only run once but is used so break command will work.  
     // Command conversion
     
@@ -164,10 +171,11 @@ void loop() {
     if(driveTurn(destination.theta, linesPath[2]) > 0) break;
     setMotorPosition(M_BRAKE);
     // End action
-    
+    Serial.println("about to initial end action");
     endAction();
   } while(false);
   
+  Serial.println("trying to get command");
   // Communicate with base station and determine next move.  
   if (!getBaseCommand()) {
     Serial.println("backup");

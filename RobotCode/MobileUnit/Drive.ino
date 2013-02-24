@@ -7,27 +7,66 @@
  * escape condition when either target has been reached or line detected,
  * and acceleration calculation adjustment.
  */
-#define TARGET_PRECISION 5 // Must be this distance from target to return success
+#define TARGET_PRECISION 2 // Must be this distance from target to return success
 #define STRAY_ERROR      1 // If we get this much farther from target than we were before, return an error.
 #define THETA_PRECISION  .03 // Must be this many radians from target angle for success
 #define STRAY_ERROR_TH   .01 // If we get this much farther form target than we were before, return an error
 #define STRAIGHT_TIMEOUT 5000 // No moves for longer than 15 seconds
- 
+#define TURN_TIMEOUT     10000
+
+#define MIN_SPEED 60
+#define MAX_SPEED 230
+#define ADDED_DISTANCE  0.3 //in inches, the amount to add to the forward distance to have the effect of adding some initial velocity
+#define ACCELERATION_CONSTANT 51.4 //really, the sqrt of the acceleration
+      //  = 51.4  corresponds to an accelleration of 0 to full speed (230) in about 20 inches
+      //  = 59.4  corresponds to an accelleration of 0 to full speed (230) in about 15 inches
+      //  = 72.7  corresponds to an accelleration of 0 to full speed (230) in about 10 inches
+#define TURN_RADIUS 9.25
+
+double abs2( double blah ) { double res = abs(blah); return res; }
+
 int driveTurn(double newTheta, boolean useLines) {
   int motorSpeed = 0;
-  double umbrella = newTheta - currentLocation.theta; // This is the closest we've been so far
-  while(newTheta - currentLocation.theta > THETA_PRECISION) {
+  double maxTheta = newTheta - currentLocation.theta;
+  double umbrella = maxTheta; // This is the closest we've been so far
+  double halfwayTheta = maxTheta / 2;
+  double startTheta = currentLocation.theta;
+  double forwardTheta = 0;
+  double remainingTheta = maxTheta;
+  double temp = MAX_SPEED/ACCELERATION_CONSTANT;
+  double accelerationTheta = (temp*temp - ADDED_DISTANCE)/TURN_RADIUS;
+  //Serial.println(adjustTheta(newTheta - currentLocation.theta));
+  //Serial.println(abs2(adjustTheta(newTheta - currentLocation.theta)));
+  while(abs2(adjustTheta(newTheta - currentLocation.theta)) > THETA_PRECISION) {
       if (odometry() > 0) return globalError;
       analogWrite(P_LEFT_MOTOR_EN, motorSpeed);
       analogWrite(P_RIGHT_MOTOR_EN, motorSpeed);
       
+      forwardTheta = abs2(adjustTheta(currentLocation.theta - startTheta));
+      remainingTheta = abs2(adjustTheta(newTheta - currentLocation.theta));
       // Escape conditions
-      if (newTheta - currentLocation.theta < umbrella) umbrella = newTheta - currentLocation.theta; // Umbrella update
+      if (remainingTheta < umbrella) umbrella = remainingTheta; // Umbrella update
       //else if (newTheta - currentLocation.theta > umbrella + STRAY_ERROR_TH) {globalError = 5; return 5;} // Stray error
       // Will need to add useLines conditions
+      //Serial.println(currentLocation.theta);
+      
       
       // Accelleration Algorithm
-      motorSpeed = 255;  // Full steam ahead!
+      if (forwardTheta < halfwayTheta)
+      {
+        if (forwardTheta >= accelerationTheta)
+          motorSpeed = MAX_SPEED;  //keep at max
+        else
+          motorSpeed = constrain(sqrt((forwardTheta*TURN_RADIUS)+ADDED_DISTANCE)*ACCELERATION_CONSTANT, MIN_SPEED, MAX_SPEED);
+      }
+      if (remainingTheta < halfwayTheta)
+      {
+        if (remainingTheta >= accelerationTheta)
+          motorSpeed = MAX_SPEED;
+        else
+          motorSpeed = constrain(sqrt((remainingTheta*TURN_RADIUS)+ADDED_DISTANCE)*ACCELERATION_CONSTANT, MIN_SPEED, MAX_SPEED);
+      }
+      motorSpeed = 150;  // not Full steam ahead!
   }
   setMotorPosition(M_BRAKE);
   analogWrite(P_LEFT_MOTOR_EN, 255);
@@ -38,20 +77,49 @@ int driveTurn(double newTheta, boolean useLines) {
 int driveStraight(location target, boolean useLines) {
   long straightTime = millis();
   int motorSpeed = 0;
-  double umbrella = dist(currentLocation, target); // This is the closest we've been so far
-  while(dist(currentLocation, target) > TARGET_PRECISION) {
+  start = currentLocation;
+  double maxDist = dist(start, target); //total trip distance
+  double umbrella = maxDist; // This is the closest we've been so far
+  double halfwayDist = maxDist/2;  // The halfway point
+  double remainingDist = maxDist;  // How much further we have left to gp
+  double temp = MAX_SPEED/ACCELERATION_CONSTANT;
+  double accelerationDist = temp*temp - ADDED_DISTANCE;
+  double forwardDist = 0;
+  while(remainingDist > TARGET_PRECISION) {
       if (odometry() > 0) return globalError;
-      analogWrite(P_LEFT_MOTOR_EN, motorSpeed);
-      analogWrite(P_RIGHT_MOTOR_EN, motorSpeed);
+      analogWrite(P_LEFT_MOTOR_EN, motorSpeed-PIDOutput);
+      analogWrite(P_RIGHT_MOTOR_EN, motorSpeed+PIDOutput);
       
       // Escape conditions
-      if (dist(currentLocation, target) < umbrella) umbrella = dist(currentLocation, target); // Umbrella update
-      //else if (dist(currentLocation, target) > umbrella + STRAY_ERROR) {globalError = 5; return 5;} // Stray error
+      if (remainingDist < umbrella) umbrella = remainingDist; // Umbrella update
+      //else if (remainingDist > umbrella + STRAY_ERROR) {globalError = 5; return 5;} // Stray error
       if (millis() > straightTime + STRAIGHT_TIMEOUT) break;
       // Will need to add useLines conditions
       
+      
       // Accelleration Algorithm
-      motorSpeed = 255;  // Full steam ahead!
+      if (forwardDist < halfwayDist)
+      {
+        if (forwardDist >= accelerationDist)
+          motorSpeed = MAX_SPEED;  //keep at max
+        else
+          motorSpeed = constrain(sqrt(forwardDist+ADDED_DISTANCE)*ACCELERATION_CONSTANT, MIN_SPEED, MAX_SPEED);
+      }
+      if (remainingDist < halfwayDist)
+      {
+        if (remainingDist >= accelerationDist)
+          motorSpeed = MAX_SPEED;
+        else
+          motorSpeed = constrain(sqrt(remainingDist+ADDED_DISTANCE)*ACCELERATION_CONSTANT, MIN_SPEED, MAX_SPEED);
+      }
+  
+        
+      //motorSpeed = 150;  // not Full steam ahead!
+      forwardDist = dist(start, currentLocation);
+      remainingDist = dist(currentLocation, target);
+      
+      PIDInput = error(target, start, currentLocation);
+      odomPID.Compute();
   }
   setMotorPosition(M_BRAKE);
   analogWrite(P_LEFT_MOTOR_EN, 255);
@@ -60,6 +128,7 @@ int driveStraight(location target, boolean useLines) {
   return 0; // Success
 }
 
+//positive error means you're too far to the right, neg means left
 double error(location target, location start, location current) {
   return (((current.x-start.x)*(target.y-start.y))-((current.y-start.y)*(target.x-start.x)))/dist(start, target);
 }

@@ -39,14 +39,14 @@ byte doubleSpin() {
   partTwoDest.x = destination.x;
   partTwoDest.y = destination.y;
   partTwoDest.theta = midTheta;
-  if (adjustTheta(midTheta - partOneDest.theta) > 0) {
+  if (adjustTheta(midTheta - currentLocation.theta) > 0) {
     motorPath[0] = M_SPIN_LEFT;
   }
   else {
     motorPath[0] = M_SPIN_RIGHT;
   }
   motorPath[1] = M_FORWARD;
-  if (adjustTheta(partTwoDest.theta - midTheta) > 0) {
+  if (adjustTheta(destination.theta - midTheta) > 0) {
     motorPath[2] = M_SPIN_LEFT;
   }
   else {
@@ -80,9 +80,9 @@ byte calcWaypoint(location A, location B) {
 double adjustTheta( double theta )
 {
   while (theta > PI)
-    theta -= PI;
+    theta -= 2*PI;
   while (theta < -PI)
-    theta += PI;
+    theta += 2*PI;
   return theta;
 }
 
