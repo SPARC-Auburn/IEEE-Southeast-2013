@@ -1,6 +1,6 @@
 ## Author: Patrick Berry
 ## Purpose: Find the Mininum, Maximum, Average, Standard Deviation of the HueSatVal channels given a list of images in a file
-## Last Updated 2013-02-21
+## Last Updated 2013-02-23
 ## 
 
 ## Cats
@@ -12,7 +12,7 @@ from sys import argv
 def main():
 	## CHecks to make sure there is the correct number of command line arguments
 	if( argv.__len__() != 2):
-		print "\nError\nUsage: MinMaxAvgSdv_HSV.py fileList.txt\n"
+		print "\nError\nUsage: MinMaxAvgSdv_cv2_HSV.py fileList.txt\n"
 		return -1
 	####
 
