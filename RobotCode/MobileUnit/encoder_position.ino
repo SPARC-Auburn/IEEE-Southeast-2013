@@ -56,6 +56,12 @@ void encCalc()
   encoderLoc.theta = adjustTheta(encoderLoc.theta);
 }
 
+void encClearReg() {
+  encoderReadL(); //clears the encoder count register, don't care about the return value
+  encoderReadR(); // ditto
+}
+  
+
 double encGetX() {return encoderLoc.x;}
 double encGetY() {return encoderLoc.y;}
 double encGetTheta() {return encoderLoc.theta;}

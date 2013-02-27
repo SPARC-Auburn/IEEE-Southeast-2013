@@ -7,11 +7,11 @@
  * escape condition when either target has been reached or line detected,
  * and acceleration calculation adjustment.
  */
-#define TARGET_PRECISION 2 // Must be this distance from target to return success
-#define STRAY_ERROR      1 // If we get this much farther from target than we were before, return an error.
+#define TARGET_PRECISION .1 // Must be this distance from target to return success
+#define UMBRELLA_ERROR      1 // If we get this much farther from target than we were before, return an error.
 #define THETA_PRECISION  .03 // Must be this many radians from target angle for success
 #define STRAY_ERROR_TH   .01 // If we get this much farther form target than we were before, return an error
-#define STRAIGHT_TIMEOUT 5000 // No moves for longer than 15 seconds
+#define STRAIGHT_TIMEOUT 50000 // No moves for longer than 15 seconds
 #define TURN_TIMEOUT     10000
 
 #define MIN_SPEED 60
@@ -85,15 +85,15 @@ int driveStraight(location target, boolean useLines) {
   double temp = MAX_SPEED/ACCELERATION_CONSTANT;
   double accelerationDist = temp*temp - ADDED_DISTANCE;
   double forwardDist = 0;
-  while(remainingDist > TARGET_PRECISION) {
+  if (remainingDist < TARGET_PRECISION) {setMotorPosition(M_BRAKE); return 0;}
+  while(remainingDist < umbrella + UMBRELLA_ERROR) {
       if (odometry() > 0) return globalError;
       analogWrite(P_LEFT_MOTOR_EN, motorSpeed-PIDOutput);
       analogWrite(P_RIGHT_MOTOR_EN, motorSpeed+PIDOutput);
       
       // Escape conditions
       if (remainingDist < umbrella) umbrella = remainingDist; // Umbrella update
-      //else if (remainingDist > umbrella + STRAY_ERROR) {globalError = 5; return 5;} // Stray error
-      if (millis() > straightTime + STRAIGHT_TIMEOUT) break;
+      if (millis() > straightTime + STRAIGHT_TIMEOUT) {globalError = 5; break;}
       // Will need to add useLines conditions
       
       
@@ -125,7 +125,7 @@ int driveStraight(location target, boolean useLines) {
   analogWrite(P_LEFT_MOTOR_EN, 255);
   analogWrite(P_RIGHT_MOTOR_EN, 255);
   
-  return 0; // Success
+  return globalError; // Success
 }
 
 //positive error means you're too far to the right, neg means left

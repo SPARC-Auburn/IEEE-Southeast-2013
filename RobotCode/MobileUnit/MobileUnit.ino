@@ -57,6 +57,7 @@
 #define M_FORWARD_LEFT     6
 #define M_SPIN_LEFT        7
 #define M_BACK_LEFT        8
+#define M_CORRECT_ME       9 // Needs to be corrected based on current location
 
 //End action Enum
 enum Command_Status {CS_SPIN_BEGINNING, CS_SPIN_END, CS_GO_UP_RAMP, CS_ON_RAMP};
@@ -99,6 +100,7 @@ double error(location target, location current);
 double dist(location a, location b);
 double arcdist(double theta1, double theta2, double radius);
 void debugging();
+void rcTest();
 
 // Functions (math-related, not really methods)
 byte commError(byte message[], int thisLength);  // Calculates error for communication.
@@ -151,6 +153,7 @@ void setup() {
  * command in case commmunication fails, and report to base station.
  */
 void loop() {
+  //rcTest();
   debugging();
   globalError = 0;
   
@@ -167,6 +170,7 @@ void loop() {
     setMotorPosition(motorPath[1]);
     if(driveStraight(partTwoDest, linesPath[1]) > 0) break;
     // Second turn
+    correctTurn();
     setMotorPosition(motorPath[2]);
     if(driveTurn(destination.theta, linesPath[2]) > 0) break;
     setMotorPosition(M_BRAKE);
@@ -181,4 +185,5 @@ void loop() {
     Serial.println("backup");
     getBackupCommand();
   }
+  odometryClear();
 }

@@ -17,3 +17,7 @@ int odometry() {
   
   return 0; // "No errors here, bro!"
 }
+
+void odometryClear() {
+  encClearReg();
+}

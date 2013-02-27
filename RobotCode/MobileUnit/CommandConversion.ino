@@ -52,6 +52,7 @@ byte doubleSpin() {
   else {
     motorPath[2] = M_SPIN_RIGHT;
   }
+  motorPath[2] = M_CORRECT_ME; // will correct
   return 0;
 }
 
@@ -97,4 +98,15 @@ location relativeCoordinates(location origin, location absoluteTarget) {
 // what would be the absolute location of the target
 location absoluteCoordinates(location origin, location relativeTarget) {
   return relativeTarget;
+}
+
+void correctTurn() {
+  if(motorPath[2] == M_CORRECT_ME) {
+    if (adjustTheta(destination.theta - currentLocation.theta) > 0) {
+      motorPath[2] = M_SPIN_LEFT;
+    }
+    else {
+      motorPath[2] = M_SPIN_RIGHT;
+    }
+  }
 }
