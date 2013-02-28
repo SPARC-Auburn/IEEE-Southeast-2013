@@ -17,24 +17,38 @@
 #define MIN_SPEED 60
 #define MAX_SPEED 230
 #define ADDED_DISTANCE  0.3 //in inches, the amount to add to the forward distance to have the effect of adding some initial velocity
+#define ADDED_DISTANCE_REV  0
 #define ACCELERATION_CONSTANT 51.4 //really, the sqrt of the acceleration
       //  = 51.4  corresponds to an accelleration of 0 to full speed (230) in about 20 inches
       //  = 59.4  corresponds to an accelleration of 0 to full speed (230) in about 15 inches
       //  = 72.7  corresponds to an accelleration of 0 to full speed (230) in about 10 inches
+#define DECELERATION_CONSTANT 72.7
+      //  = 46.0 means 0 to 230 in 25 inches
+      //  = 42.0 means 0 to 230 in 30 inches
 #define TURN_RADIUS 9.25
+
+//calculate some stuff ahead of time
+const double ACC_SQ_RATIO = (DECELERATION_CONSTANT / ACCELERATION_CONSTANT) * (DECELERATION_CONSTANT / ACCELERATION_CONSTANT);
+const double FWD_TO_TOTAL_RATIO = ACC_SQ_RATIO / (1 + ACC_SQ_RATIO);
+const double SPD_ACC_RATIO = MAX_SPEED/ACCELERATION_CONSTANT;
+const double ACC_DIST = (SPD_ACC_RATIO*SPD_ACC_RATIO) - ADDED_DISTANCE;
+const double ACC_THETA = ACC_DIST / TURN_RADIUS;
+const double SPD_DEC_RATIO = MAX_SPEED/DECELERATION_CONSTANT;
+const double DEC_DIST = (SPD_DEC_RATIO*SPD_DEC_RATIO) - ADDED_DISTANCE_REV;
+const double DEC_THETA = DEC_DIST / TURN_RADIUS;
 
 double abs2( double blah ) { double res = abs(blah); return res; }
 
 int driveTurn(double newTheta, boolean useLines) {
   int motorSpeed = 0;
-  double maxTheta = newTheta - currentLocation.theta;
+  const double maxTheta = newTheta - currentLocation.theta;
   double umbrella = maxTheta; // This is the closest we've been so far
-  double halfwayTheta = maxTheta / 2;
+  const double halfwayThetaF = maxTheta * FWD_TO_TOTAL_RATIO; // NOTE: halway isn't really half the distance,
+                // it's actually the point at which the acceleration and deceleration curves meet.
+  const double halfwayThetaR = maxTheta - halfwayThetaR;
   double startTheta = currentLocation.theta;
   double forwardTheta = 0;
   double remainingTheta = maxTheta;
-  double temp = MAX_SPEED/ACCELERATION_CONSTANT;
-  double accelerationTheta = (temp*temp - ADDED_DISTANCE)/TURN_RADIUS;
   //Serial.println(adjustTheta(newTheta - currentLocation.theta));
   //Serial.println(abs2(adjustTheta(newTheta - currentLocation.theta)));
   while(abs2(adjustTheta(newTheta - currentLocation.theta)) > THETA_PRECISION) {
@@ -52,19 +66,19 @@ int driveTurn(double newTheta, boolean useLines) {
       
       
       // Accelleration Algorithm
-      if (forwardTheta < halfwayTheta)
+      if (forwardTheta < halfwayThetaF)
       {
-        if (forwardTheta >= accelerationTheta)
+        if (forwardTheta >= ACC_THETA)
           motorSpeed = MAX_SPEED;  //keep at max
         else
           motorSpeed = constrain(sqrt((forwardTheta*TURN_RADIUS)+ADDED_DISTANCE)*ACCELERATION_CONSTANT, MIN_SPEED, MAX_SPEED);
       }
-      if (remainingTheta < halfwayTheta)
+      if (remainingTheta < halfwayThetaR)
       {
-        if (remainingTheta >= accelerationTheta)
+        if (remainingTheta >= DEC_THETA)
           motorSpeed = MAX_SPEED;
         else
-          motorSpeed = constrain(sqrt((remainingTheta*TURN_RADIUS)+ADDED_DISTANCE)*ACCELERATION_CONSTANT, MIN_SPEED, MAX_SPEED);
+          motorSpeed = constrain(sqrt((remainingTheta*TURN_RADIUS)+ADDED_DISTANCE_REV)*DECELERATION_CONSTANT, MIN_SPEED, MAX_SPEED);
       }
       motorSpeed = 150;  // not Full steam ahead!
   }
@@ -78,12 +92,12 @@ int driveStraight(location target, boolean useLines) {
   long straightTime = millis();
   int motorSpeed = 0;
   start = currentLocation;
-  double maxDist = dist(start, target); //total trip distance
+  const double maxDist = dist(start, target); //total trip distance
   double umbrella = maxDist; // This is the closest we've been so far
-  double halfwayDist = maxDist/2;  // The halfway point
-  double remainingDist = maxDist;  // How much further we have left to gp
-  double temp = MAX_SPEED/ACCELERATION_CONSTANT;
-  double accelerationDist = temp*temp - ADDED_DISTANCE;
+  const double halfwayDistF = maxDist * FWD_TO_TOTAL_RATIO;  // NOTE: halway isn't really half the distance,
+                // it's actually the point at which the acceleration and deceleration curves meet.
+  const double halfwayDistR = maxDist - halfwayDistF;
+  double remainingDist = maxDist;  // How much further we have left to go
   double forwardDist = 0;
   if (remainingDist < TARGET_PRECISION) {setMotorPosition(M_BRAKE); return 0;}
   while(remainingDist < umbrella + UMBRELLA_ERROR) {
@@ -98,19 +112,19 @@ int driveStraight(location target, boolean useLines) {
       
       
       // Accelleration Algorithm
-      if (forwardDist < halfwayDist)
+      if (forwardDist < halfwayDistF)
       {
-        if (forwardDist >= accelerationDist)
+        if (forwardDist >= ACC_DIST)
           motorSpeed = MAX_SPEED;  //keep at max
         else
           motorSpeed = constrain(sqrt(forwardDist+ADDED_DISTANCE)*ACCELERATION_CONSTANT, MIN_SPEED, MAX_SPEED);
       }
-      if (remainingDist < halfwayDist)
+      if (remainingDist < halfwayDistR)
       {
-        if (remainingDist >= accelerationDist)
+        if (remainingDist >= DEC_DIST)
           motorSpeed = MAX_SPEED;
         else
-          motorSpeed = constrain(sqrt(remainingDist+ADDED_DISTANCE)*ACCELERATION_CONSTANT, MIN_SPEED, MAX_SPEED);
+          motorSpeed = constrain(sqrt(remainingDist+ADDED_DISTANCE_REV)*DECELERATION_CONSTANT, MIN_SPEED, MAX_SPEED);
       }
   
         
