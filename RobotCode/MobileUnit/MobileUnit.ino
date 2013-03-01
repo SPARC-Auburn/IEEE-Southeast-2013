@@ -79,7 +79,7 @@ int commandEndColor;         // The color block as reported from base station (m
 int commandEndLength;        // The length of block as reported from base station (low 2 bits of end action byte)
 
 double PIDSetpoint, PIDInput, PIDOutput;
-PID odomPID(&PIDInput, &PIDOutput, &PIDSetpoint, 4, 0, 0, DIRECT);
+PID odomPID(&PIDInput, &PIDOutput, &PIDSetpoint, 3, 2, 20, DIRECT); //
 
 // Odometry-related Objects and Variables
 /*PS2 leftMouse(P_LEFT_MOUSE_CLOCK, P_LEFT_MOUSE_DATA);
@@ -134,7 +134,9 @@ void setup() {
    // Setup Functions
    odometrySetup();
    PIDSetpoint = 0;
-   odomPID.SetOutputLimits(-25, 25);
+   odomPID.SetOutputLimits(-60, 60);
+   odomPID.SetMode(AUTOMATIC);
+   odomPID.SetSampleTime(50);
    
    // Call opening handshake sequence
    openHandshake();
@@ -158,11 +160,9 @@ void loop() {
   globalError = 0;
   
   // The first time this runs, the first command will already be set.
-  Serial.println("About to do initial move");
   do {  // This is only run once but is used so break command will work.  
     // Command conversion
-    
-     if (commandConversion() > 0) break;
+    if (commandConversion() > 0) break;
     // First turn
     setMotorPosition(motorPath[0]);
     if(driveTurn(partOneDest.theta, linesPath[0]) > 0) break;
@@ -175,14 +175,11 @@ void loop() {
     if(driveTurn(destination.theta, linesPath[2]) > 0) break;
     setMotorPosition(M_BRAKE);
     // End action
-    Serial.println("about to initial end action");
     endAction();
   } while(false);
   
-  Serial.println("trying to get command");
   // Communicate with base station and determine next move.  
   if (!getBaseCommand()) {
-    Serial.println("backup");
     getBackupCommand();
   }
   odometryClear();

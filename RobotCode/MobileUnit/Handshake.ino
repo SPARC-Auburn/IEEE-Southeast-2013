@@ -27,4 +27,6 @@ void openHandshake() {
   destination.y = 30;
   destination.theta = 0;
   return;
+  // Wait for opening start command
+  // 
 }
