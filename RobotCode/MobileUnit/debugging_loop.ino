@@ -88,7 +88,9 @@ void debugging() {
       Serial.print(", ");
       Serial.print(currentLocation.theta);
       Serial.println(")");
-      endAction();
+      Serial.print("End Action: ");
+      Serial.println(commandEndAction);
+      globalError = endAction();
     } while(false);
     Serial.print("Out of loop: ");
     Serial.println(globalError);

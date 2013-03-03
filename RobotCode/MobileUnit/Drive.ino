@@ -10,8 +10,8 @@
 #define TARGET_PRECISION .1 // Must be this distance from target to return success
 #define UMBRELLA_ERROR      1 // If we get this much farther from target than we were before, return an error.
 #define THETA_PRECISION  .03 // Must be this many radians from target angle for success
-#define STRAY_ERROR_TH   .01 // If we get this much farther form target than we were before, return an error
-#define STRAIGHT_TIMEOUT 50000 // No moves for longer than 15 seconds
+#define UMBRELLA_THETA   .03 // If we get this much farther form target than we were before, return an error
+#define STRAIGHT_TIMEOUT 20000 // No moves for longer than 20 seconds
 #define TURN_TIMEOUT     10000
 
 #define MIN_SPEED 60
@@ -44,9 +44,10 @@ const int DECEL_ARRAY[21] = {195, 195, 195, 180, 160, 138, 122, 108, 96, 86, 77,
 double abs2( double blah ) { double res = abs(blah); return res; }
 
 int driveTurn(double newTheta, boolean useLines) {
+  long turnTime = millis();
   int motorSpeed = 0;
   const double maxTheta = newTheta - currentLocation.theta;
-  double umbrella = maxTheta; // This is the closest we've been so far
+  double umbrella = abs(maxTheta); // This is the closest we've been so far
   const double halfwayThetaF = maxTheta * FWD_TO_TOTAL_RATIO; // NOTE: halway isn't really half the distance,
                 // it's actually the point at which the acceleration and deceleration curves meet.
   const double halfwayThetaR = maxTheta - halfwayThetaR;
@@ -63,11 +64,11 @@ int driveTurn(double newTheta, boolean useLines) {
       forwardTheta = abs2(adjustTheta(currentLocation.theta - startTheta));
       remainingTheta = abs2(adjustTheta(newTheta - currentLocation.theta));
       // Escape conditions
-      if (remainingTheta < umbrella) umbrella = remainingTheta; // Umbrella update
-      //else if (newTheta - currentLocation.theta > umbrella + STRAY_ERROR_TH) {break;}
+      if (abs(remainingTheta) < umbrella) umbrella = abs(remainingTheta); // Umbrella update
+      else if (abs(remainingTheta) > umbrella + UMBRELLA_THETA) {break;}
+      if (millis() > turnTime + TURN_TIMEOUT) {globalError = 5; break;}
       // Will need to add useLines conditions
       //Serial.println(currentLocation.theta);
-      
       
       // Accelleration Algorithm
       if (forwardTheta < halfwayThetaF)
@@ -105,10 +106,12 @@ int driveStraight(location target, boolean useLines) {
   double forwardDist = 0;
   if (remainingDist < TARGET_PRECISION) {setMotorPosition(M_BRAKE); return 0;}
   int pidCounter = 0;
+  int backwardCorrection = 1;
+  if (motorPath[1] == M_BACKWARD) backwardCorrection = -1;
   while(remainingDist < umbrella + UMBRELLA_ERROR) {
       if (odometry() > 0) return globalError;
-      analogWrite(P_LEFT_MOTOR_EN, motorSpeed+PIDOutput);
-      analogWrite(P_RIGHT_MOTOR_EN, motorSpeed-PIDOutput);
+      analogWrite(P_LEFT_MOTOR_EN, motorSpeed+PIDOutput * constrain(1-1/remainingDist, 0, 100)*backwardCorrection); // Added two correction factors, one for a backward move and the other to avoid last second quick adjustments
+      analogWrite(P_RIGHT_MOTOR_EN, motorSpeed-PIDOutput * constrain(1-1/remainingDist, 0, 100)*backwardCorrection);
       
       // Escape conditions
       if (remainingDist < umbrella) umbrella = remainingDist; // Umbrella update

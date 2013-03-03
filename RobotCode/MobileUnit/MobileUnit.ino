@@ -4,7 +4,7 @@
  * Student Project and Research Committee (SPaRC)
  * MobileUnit Code for IEEE Secon 2013 Hardware Competition
  * 
- * Version: 2/14/2013
+ * Version: 3/2/2013
  */
  
 // Libraries and Headers
@@ -60,7 +60,7 @@
 #define M_CORRECT_ME       9 // Needs to be corrected based on current location
 
 //End action Enum
-enum Command_Status {CS_SPIN_BEGINNING, CS_SPIN_END, CS_GO_UP_RAMP, CS_ON_RAMP};
+enum Command_Status {CS_SPIN_BEGINNING = 6, CS_SPIN_END = 5, CS_GO_UP_RAMP = 4, CS_ON_RAMP = 3, CS_EXPECT_LINE = 2, CS_USE_OWN_CURLOC = 1, CS_SPECIAL = 0};
 enum End_action {EA_NONE, EA_PU_1_BLOCK, EA_PU_2_BLOCK, EA_DO_STACKED, EA_DO_SINGLE, EA_AIR_WAY, EA_FINISHED};
 enum End_color {EC_NONE, EC_YELLOW, EC_ORANGE, EC_BROWN, EC_GREEN, EC_RED, EC_BLUE};
 
@@ -74,7 +74,7 @@ boolean linesPath[3];        // The boolean values for whether to look for lines
 location partOneDest;        // Where we are going for the first move.
 location partTwoDest;        // Where we are going for the second move.
 byte commandStatus;          // The flags as received from base station (or made up)
-int commandEndAction;        // The end action of the current command (high 3 bits)
+End_action commandEndAction;        // The end action of the current command (high 3 bits)
 int commandEndColor;         // The color block as reported from base station (middle 3 bits of end action byte)
 int commandEndLength;        // The length of block as reported from base station (low 2 bits of end action byte)
 
@@ -175,7 +175,7 @@ void loop() {
     if(driveTurn(destination.theta, linesPath[2]) > 0) break;
     setMotorPosition(M_BRAKE);
     // End action
-    endAction();
+    globalError = endAction();
   } while(false);
   
   // Communicate with base station and determine next move.  
