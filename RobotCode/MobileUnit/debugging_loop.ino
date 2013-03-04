@@ -75,6 +75,9 @@ void debugging() {
       prompt();
       // Second turn
       Serial.println("Starting second turn");
+      correctTurn();
+      Serial.print("Motor state 3 (corrected): ");
+      Serial.println(motorPath[2]);   
       setMotorPosition(motorPath[2]);
       if(driveTurn(destination.theta, linesPath[2]) > 0) break;
       // End action
@@ -85,7 +88,9 @@ void debugging() {
       Serial.print(", ");
       Serial.print(currentLocation.theta);
       Serial.println(")");
-      endAction();
+      Serial.print("End Action: ");
+      Serial.println(commandEndAction);
+      globalError = endAction();
     } while(false);
     Serial.print("Out of loop: ");
     Serial.println(globalError);

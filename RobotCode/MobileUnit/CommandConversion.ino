@@ -18,10 +18,33 @@
  * use two spins and one straight move.
  */
 
+//parameters
+#define SPECIAL_MOVE_DISTANCE 10
+
 //method declaration
 location calcWaypoint(location A, location B, signed char& dir); //may need to add some flags
 
 byte commandConversion() {
+  if (bitRead(commandStatus, CS_SPECIAL) && destination.x == 0) {
+    // Do special straight backwards move
+    destination.x = currentLocation.x - SPECIAL_MOVE_DISTANCE * cos(currentLocation.theta);
+    destination.y = currentLocation.y - SPECIAL_MOVE_DISTANCE * sin(currentLocation.theta);
+    destination.theta = currentLocation.theta;
+    motorPath[0] = M_CORRECT_ME;
+    motorPath[1] = M_BACKWARD;
+    motorPath[2] = M_CORRECT_ME;
+    partOneDest = currentLocation;
+    partTwoDest = destination;
+    return 0;
+  }
+  if(currentLocation.x == destination.x && currentLocation.y == destination.y) {
+    partOneDest = destination;
+    partTwoDest = destination;
+    motorPath[0] = M_CORRECT_ME;
+    motorPath[1] = M_FORWARD;
+    motorPath[2] = M_CORRECT_ME;
+    return 0;
+  }
   // For now, assume no lines to be used in navigation
   linesPath[0] = 0;
   linesPath[1] = 0;
@@ -52,6 +75,7 @@ byte doubleSpin() {
   else {
     motorPath[2] = M_SPIN_RIGHT;
   }
+  motorPath[2] = M_CORRECT_ME; // will correct
   return 0;
 }
 
@@ -97,4 +121,23 @@ location relativeCoordinates(location origin, location absoluteTarget) {
 // what would be the absolute location of the target
 location absoluteCoordinates(location origin, location relativeTarget) {
   return relativeTarget;
+}
+
+void correctTurn() {
+  if(motorPath[1] == M_CORRECT_ME) {
+    if (adjustTheta(partOneDest.theta - currentLocation.theta) > 0) {
+      motorPath[1] = M_SPIN_LEFT;
+    }
+    else {
+      motorPath[1] = M_SPIN_RIGHT;
+    }
+  }
+  else if(motorPath[2] == M_CORRECT_ME) {
+    if (adjustTheta(destination.theta - currentLocation.theta) > 0) {
+      motorPath[2] = M_SPIN_LEFT;
+    }
+    else {
+      motorPath[2] = M_SPIN_RIGHT;
+    }
+  }
 }

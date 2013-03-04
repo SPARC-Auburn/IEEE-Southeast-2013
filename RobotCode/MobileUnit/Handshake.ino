@@ -23,8 +23,11 @@ void openHandshake() {
   currentLocation.x = 20;
   currentLocation.y = 30;
   currentLocation.theta = 0;
-  destination.x = 30;
+  destination.x = 20;
   destination.y = 30;
   destination.theta = 0;
   return;
+  // Wait for opening start command
+  
+  // 
 }
