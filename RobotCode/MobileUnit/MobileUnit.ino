@@ -18,7 +18,7 @@
 #define X_RESOLUTION         500    // Multiply inches by this to get stored x value
 #define Y_RESOLUTION         500    // Multiply inches by this to get stored y value
 #define COMM_TIMEOUT         500    // Timeout listening for response
-#define COMM_LONG_TIMEOUT   2000    // After this give up
+#define COMM_LONG_TIMEOUT  20000    // After this give up
 #define HALF_WIDTH             5 
  
 // Pin Definitions begin with P_
@@ -46,6 +46,7 @@
 //#define PinMR2 8
 //#define PinEnL 10 //should be PWM
 //#define PinEnR 11 //should be PWM
+#define P_EBRAKE 7
 
 // Motor Logical States begin with M_
 #define M_BRAKE            0
@@ -101,6 +102,9 @@ double dist(location a, location b);
 double arcdist(double theta1, double theta2, double radius);
 void debugging();
 void rcTest();
+//int odomArrayIndex;
+//int LodomArray[100];
+//int RodomArray[100];
 
 // Functions (math-related, not really methods)
 byte commError(byte message[], int thisLength);  // Calculates error for communication.
@@ -156,7 +160,7 @@ void setup() {
  */
 void loop() {
   //rcTest();
-  debugging();
+  //debugging();
   globalError = 0;
   
   // The first time this runs, the first command will already be set.

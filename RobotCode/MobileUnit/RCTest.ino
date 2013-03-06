@@ -6,6 +6,7 @@ void rcTest() {
   while(true) {
     processIn();
     odometry();
+    //delay(100);
     if (millis() > nextUpdate) {
       nextUpdate = millis() + 1000;
       Serial.print("Current position: (");

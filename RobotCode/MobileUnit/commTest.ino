@@ -2,7 +2,6 @@
 
 void commTest() {
     Serial.println("\n\nCOMM TEST REPORT");
-    byte reportMessage[14];
     Serial.print("Times Sent: ");
     Serial.println(commTimesSent);
     int j;

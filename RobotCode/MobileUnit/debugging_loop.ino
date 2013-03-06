@@ -104,11 +104,20 @@ void debugging() {
     }
     commTest();
     prompt();
+//    Serial.println("OdomTestValues");
+//    for (odomArrayIndex = 0; odomArrayIndex < 100; odomArrayIndex++) {
+//      Serial.print("L: ");
+//      Serial.print(LodomArray[odomArrayIndex]);
+//      Serial.print(" R: ");
+//      Serial.println(RodomArray[odomArrayIndex]);
+//    }
   }
   Serial.println("Escaped");
 }
 
+// Prompt now does nothing!  This acts like a normal operation but sends responses
 void prompt() {
+    return;
     Serial.println("Waiting for continue command...");
     while(Serial.available()){Serial.read();}
     while(!Serial.available()){}

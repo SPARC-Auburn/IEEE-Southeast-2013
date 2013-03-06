@@ -12,7 +12,7 @@
 #define THETA_PRECISION  .03 // Must be this many radians from target angle for success
 #define UMBRELLA_THETA   .03 // If we get this much farther form target than we were before, return an error
 #define STRAIGHT_TIMEOUT 20000 // No moves for longer than 20 seconds
-#define TURN_TIMEOUT     10000
+#define TURN_TIMEOUT     15000
 
 #define MIN_SPEED 60
 #define MAX_SPEED 195
@@ -37,13 +37,15 @@ const double SPD_DEC_RATIO = MAX_SPEED/DECELERATION_CONSTANT;
 const double DEC_DIST = (SPD_DEC_RATIO*SPD_DEC_RATIO) - ADDED_DISTANCE_REV;
 const double DEC_THETA = DEC_DIST / TURN_RADIUS;
 const int ACCEL_ARRAY[21] = {65, 68, 80, 91, 100, 109, 117, 124, 131, 138, 144, 151, 156, 162, 168, 173, 178, 183, 188, 193, 195};
-const int DECEL_ARRAY[21] = {195, 195, 195, 180, 160, 138, 122, 108, 96, 86, 77, 69, 65, 60, 59, 57, 53, 47, 44, 40, 35};
+const int DECEL_ARRAY[21] = {195, 195, 195, 180, 160, 138, 122, 108, 96, 86, 77, 69, 65, 65, 65, 65, 65, 65, 65, 65, 65};
+//const int DECEL_ARRAY[21] = {195, 140, 110, 90, 75, 65, 65, 65, 65, 65, 65, 65, 65, 65, 65, 65, 65, 65, 65, 65, 65};
 //const int ACCEL_ARRAY[21] = {80, 80, 80, 80, 80, 80, 80, 80, 80, 80, 80, 80,80, 80, 80, 80,80, 80, 80, 80,80};
 //const int DECEL_ARRAY[21] = {80, 80, 80, 80, 80, 80, 80, 80, 80, 80, 80, 80, 80, 80, 80, 80, 80, 80, 80, 80,80};
 
 double abs2( double blah ) { double res = abs(blah); return res; }
 
 int driveTurn(double newTheta, boolean useLines) {
+  ebrakeOff();
   long turnTime = millis();
   int motorSpeed = 0;
   const double maxTheta = newTheta - currentLocation.theta;
@@ -90,10 +92,14 @@ int driveTurn(double newTheta, boolean useLines) {
   setMotorPosition(M_BRAKE);
   analogWrite(P_LEFT_MOTOR_EN, 255);
   analogWrite(P_RIGHT_MOTOR_EN, 255);
+  delay(100); // Brake, then set output to zero
+  analogWrite(P_LEFT_MOTOR_EN, 0);
+  analogWrite(P_RIGHT_MOTOR_EN, 0);
   return 0; // Success
 }
 
 int driveStraight(location target, boolean useLines) {
+  //odomArrayIndex = 0;
   long straightTime = millis();
   int motorSpeed = 0;
   start = currentLocation;
@@ -109,6 +115,7 @@ int driveStraight(location target, boolean useLines) {
   int backwardCorrection = 1;
   if (motorPath[1] == M_BACKWARD) backwardCorrection = -1;
   while(remainingDist < umbrella + UMBRELLA_ERROR) {
+      //odomArrayIndex++;
       if (odometry() > 0) return globalError;
       analogWrite(P_LEFT_MOTOR_EN, motorSpeed+PIDOutput * constrain(1-1/remainingDist, 0, 100)*backwardCorrection); // Added two correction factors, one for a backward move and the other to avoid last second quick adjustments
       analogWrite(P_RIGHT_MOTOR_EN, motorSpeed-PIDOutput * constrain(1-1/remainingDist, 0, 100)*backwardCorrection);
@@ -162,6 +169,10 @@ int driveStraight(location target, boolean useLines) {
   setMotorPosition(M_BRAKE);
   analogWrite(P_LEFT_MOTOR_EN, 255);
   analogWrite(P_RIGHT_MOTOR_EN, 255);
+  ebrakeOn();
+  delay(100); // Brake, then set output to zero
+  analogWrite(P_LEFT_MOTOR_EN, 0);
+  analogWrite(P_RIGHT_MOTOR_EN, 0);
   return globalError; // Success
 }
 
@@ -176,4 +187,18 @@ double dist(location a, location b) {
 
 double arcdist(double theta1, double theta2, double radius) {
   return (theta2 - theta1)*radius;
+}
+
+void ebrakeOn()
+{
+  pinMode(P_EBRAKE, OUTPUT);
+  analogWrite(P_EBRAKE, 30);
+  delay(400);
+}
+
+void ebrakeOff()
+{
+  analogWrite(P_EBRAKE, 200);
+ // delay(100);
+ // pinMode(P_EBRAKE, INPUT);
 }

@@ -15,12 +15,18 @@ void encSetup()
   encoderInitR(PinEncRA, PinEncRB);
 }
 
+
 void encCalc()
 {
   //clockwise encoder
   int L = encoderReadL();
   //counterclockwise encoder
   int R = -encoderReadR(); //may or may not need to do this, we'll see.
+//  if (odomArrayIndex < 100) {
+//    LodomArray[odomArrayIndex] = L;
+//    RodomArray[odomArrayIndex] = R;
+//  }
+  
   
   //Serial.print("L:");
   //Serial.println(L);
@@ -49,6 +55,7 @@ void encCalc()
   encoderLoc.theta -= atan(rl_length/WIDTH);
   temp_theta = (temp_theta + encoderLoc.theta)/2; //hold the average of the old and new thetas.
     //we'll use this as an approximation for the direction of the movement
+  
   
   //with distance d and angle theta, find x and y change of center point
   encoderLoc.y += d * sin(temp_theta); //component of d in lateral direction
