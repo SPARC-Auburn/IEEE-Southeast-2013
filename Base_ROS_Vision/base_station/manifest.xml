@@ -1,0 +1,14 @@
+<package>
+  <description brief="base_station">
+
+     base_station
+
+  </description>
+  <author>kevin</author>
+  <license>BSD</license>
+  <review status="unreviewed" notes=""/>
+  <url>http://ros.org/wiki/base_station</url>
+
+</package>
+
+

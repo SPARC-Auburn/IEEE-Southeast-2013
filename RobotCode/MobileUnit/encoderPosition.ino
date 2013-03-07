@@ -1,18 +1,11 @@
-//THESE VALUES ARE ROUGH AND SHOULD BE TWEAKED FOR BEST RESULTS
-#define DIAM 2 //diameter in inches.
-#define WIDTH 9.25 //distance between wheels in inches
-#define RESOLUTION 64 //encoder resolution
-#define RATIO 18.75 //gearbox ratio
-#define MAGIC_SCALE_FACTOR 0.005235987756 // = pi * DIAM / (RESOLUTION * RATIO),  uses D = 2.0
-
-
+// Uses encoder functions in "encoder" to convert to a position value
 
 location encoderLoc = {0,0,0};
 
 void encSetup()
 {
-  encoderInitL(PinEncLA, PinEncLB);
-  encoderInitR(PinEncRA, PinEncRB);
+  encoderInitL(P_ENC_LEFT_A, P_ENC_LEFT_B);
+  encoderInitR(P_ENC_RIGHT_A, P_ENC_RIGHT_B);
 }
 
 void encCalc()
@@ -20,12 +13,7 @@ void encCalc()
   //clockwise encoder
   int L = encoderReadL();
   //counterclockwise encoder
-  int R = -encoderReadR(); //may or may not need to do this, we'll see.
-  
-  //Serial.print("L:");
-  //Serial.println(L);
-  //Serial.print("R:");
-  //Serial.println(R);
+  int R = -encoderReadR();
   
   //forward difference between left and right wheels in ticks
   int rldiff = (L - R);
@@ -47,14 +35,22 @@ void encCalc()
   
   double temp_theta = encoderLoc.theta; //hold old theta
   encoderLoc.theta -= atan(rl_length/WIDTH);
+  //encoderLoc.theta -= (rl_length/WIDTH);
   temp_theta = (temp_theta + encoderLoc.theta)/2; //hold the average of the old and new thetas.
     //we'll use this as an approximation for the direction of the movement
+  
   
   //with distance d and angle theta, find x and y change of center point
   encoderLoc.y += d * sin(temp_theta); //component of d in lateral direction
   encoderLoc.x += d * cos(temp_theta); //component of d in longitudinal direction (ex: if angle doesn't change, theta = 0 so y = d)
   encoderLoc.theta = adjustTheta(encoderLoc.theta);
 }
+
+void encClearReg() {
+  encoderReadL(); //clears the encoder count register, don't care about the return value
+  encoderReadR(); // ditto
+}
+  
 
 double encGetX() {return encoderLoc.x;}
 double encGetY() {return encoderLoc.y;}

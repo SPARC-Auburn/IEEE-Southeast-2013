@@ -1,8 +1,6 @@
 // Communcation test file
-
 void commTest() {
     Serial.println("\n\nCOMM TEST REPORT");
-    byte reportMessage[14];
     Serial.print("Times Sent: ");
     Serial.println(commTimesSent);
     int j;
@@ -22,5 +20,4 @@ void commTest() {
       Serial.print((int)receivedMessage[j]);
       Serial.println();
     }
-    
 }

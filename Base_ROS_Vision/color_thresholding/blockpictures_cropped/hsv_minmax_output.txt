@@ -1,0 +1,128 @@
+Min/Max/Avg/Sdv for HSV values for images found in:
+/Users/patrickberry/secon2013/Base_ROS_Vision/color_thresholding/blockpictures_cropped/blockpictures_cropped_file_list.txt
+
+/Users/patrickberry/secon2013/Base_ROS_Vision/color_thresholding/blockpictures_cropped/black1.png
+	Min:	[110, 82, 42]
+	Max:	[115, 156, 81]
+	Avg:	[113.08333333333333, 114.97222222222223, 67.222222222222229]
+	Sdv:	[110, 82, 42]
+
+/Users/patrickberry/secon2013/Base_ROS_Vision/color_thresholding/blockpictures_cropped/blue1.jpg
+	Min:	[90, 33, 101]
+	Max:	[110, 255, 255]
+	Avg:	[103.02765965597824, 149.02331788172495, 181.97448569129986]
+	Sdv:	[90, 33, 101]
+
+/Users/patrickberry/secon2013/Base_ROS_Vision/color_thresholding/blockpictures_cropped/blue2.jpg
+	Min:	[110, 42, 37]
+	Max:	[122, 255, 190]
+	Avg:	[112.98949165749909, 219.48117207554088, 93.743101393472685]
+	Sdv:	[110, 42, 37]
+
+/Users/patrickberry/secon2013/Base_ROS_Vision/color_thresholding/blockpictures_cropped/blue3.png
+	Min:	[112, 126, 92]
+	Max:	[115, 211, 183]
+	Avg:	[113.27619047619048, 190.84761904761905, 159.05714285714285]
+	Sdv:	[112, 126, 92]
+
+/Users/patrickberry/secon2013/Base_ROS_Vision/color_thresholding/blockpictures_cropped/brown1.jpg
+	Min:	[0, 0, 19]
+	Max:	[177, 101, 94]
+	Avg:	[40.783496007098492, 27.667948338755792, 45.372670807453417]
+	Sdv:	[0, 0, 19]
+
+/Users/patrickberry/secon2013/Base_ROS_Vision/color_thresholding/blockpictures_cropped/brown2.jpg
+	Min:	[0, 0, 4]
+	Max:	[173, 128, 81]
+	Avg:	[127.69259099534241, 32.004743833017081, 16.657210626185957]
+	Sdv:	[0, 0, 4]
+
+/Users/patrickberry/secon2013/Base_ROS_Vision/color_thresholding/blockpictures_cropped/green1.jpg
+	Min:	[50, 54, 25]
+	Max:	[80, 245, 93]
+	Avg:	[68.367163608562691, 113.80179663608563, 53.765290519877674]
+	Sdv:	[50, 54, 25]
+
+/Users/patrickberry/secon2013/Base_ROS_Vision/color_thresholding/blockpictures_cropped/green2.jpg
+	Min:	[0, 0, 4]
+	Max:	[165, 255, 86]
+	Avg:	[84.499538401977432, 116.31895927017878, 28.300286885652739]
+	Sdv:	[0, 0, 4]
+
+/Users/patrickberry/secon2013/Base_ROS_Vision/color_thresholding/blockpictures_cropped/orange_bad1.png
+	Min:	[12, 56, 92]
+	Max:	[18, 103, 115]
+	Avg:	[14.911764705882353, 89.794117647058826, 105.8921568627451]
+	Sdv:	[12, 56, 92]
+
+/Users/patrickberry/secon2013/Base_ROS_Vision/color_thresholding/blockpictures_cropped/orange1.jpg
+	Min:	[0, 58, 39]
+	Max:	[37, 255, 255]
+	Avg:	[9.1048820067944671, 241.19883675078864, 204.53052202135405]
+	Sdv:	[0, 58, 39]
+
+/Users/patrickberry/secon2013/Base_ROS_Vision/color_thresholding/blockpictures_cropped/orange2.jpg
+	Min:	[0, 112, 53]
+	Max:	[179, 255, 230]
+	Avg:	[7.7708871142850251, 228.00838379695529, 116.63973799126637]
+	Sdv:	[0, 112, 53]
+
+/Users/patrickberry/secon2013/Base_ROS_Vision/color_thresholding/blockpictures_cropped/orange3.png
+	Min:	[4, 171, 118]
+	Max:	[8, 234, 195]
+	Avg:	[6.6928104575163401, 210.89542483660131, 179.29411764705881]
+	Sdv:	[4, 171, 118]
+
+/Users/patrickberry/secon2013/Base_ROS_Vision/color_thresholding/blockpictures_cropped/orange4.png
+	Min:	[1, 162, 49]
+	Max:	[7, 255, 70]
+	Avg:	[3.1749999999999998, 193.47499999999999, 59.200000000000003]
+	Sdv:	[1, 162, 49]
+
+/Users/patrickberry/secon2013/Base_ROS_Vision/color_thresholding/blockpictures_cropped/red1.jpg
+	Min:	[0, 57, 60]
+	Max:	[179, 236, 134]
+	Avg:	[16.086345631648438, 169.41517401160908, 89.873969258364269]
+	Sdv:	[0, 57, 60]
+
+/Users/patrickberry/secon2013/Base_ROS_Vision/color_thresholding/blockpictures_cropped/red2.jpg
+	Min:	[0, 67, 41]
+	Max:	[179, 244, 107]
+	Avg:	[142.47233548931385, 161.72568663292088, 65.129979846269222]
+	Sdv:	[0, 67, 41]
+
+/Users/patrickberry/secon2013/Base_ROS_Vision/color_thresholding/blockpictures_cropped/red3.png
+	Min:	[0, 94, 57]
+	Max:	[179, 184, 97]
+	Avg:	[169.07142857142858, 160.17857142857142, 86.914285714285711]
+	Sdv:	[0, 94, 57]
+
+/Users/patrickberry/secon2013/Base_ROS_Vision/color_thresholding/blockpictures_cropped/red4.png
+	Min:	[0, 88, 31]
+	Max:	[178, 156, 39]
+	Avg:	[163.26388888888889, 125.52777777777777, 34.305555555555557]
+	Sdv:	[0, 88, 31]
+
+/Users/patrickberry/secon2013/Base_ROS_Vision/color_thresholding/blockpictures_cropped/white1.png
+	Min:	[99, 24, 242]
+	Max:	[108, 43, 255]
+	Avg:	[102.95, 35.774999999999999, 252.15000000000001]
+	Sdv:	[99, 24, 242]
+
+/Users/patrickberry/secon2013/Base_ROS_Vision/color_thresholding/blockpictures_cropped/yellow1.jpg
+	Min:	[29, 140, 145]
+	Max:	[32, 255, 203]
+	Avg:	[30.153762239250746, 245.36205566198382, 177.92216102596851]
+	Sdv:	[29, 140, 145]
+
+/Users/patrickberry/secon2013/Base_ROS_Vision/color_thresholding/blockpictures_cropped/yellow2.jpg
+	Min:	[25, 81, 22]
+	Max:	[34, 255, 255]
+	Avg:	[30.522348198538676, 153.77824808935921, 154.63778449651466]
+	Sdv:	[25, 81, 22]
+
+/Users/patrickberry/secon2013/Base_ROS_Vision/color_thresholding/blockpictures_cropped/yellow3.png
+	Min:	[24, 140, 100]
+	Max:	[27, 177, 111]
+	Avg:	[25.166666666666668, 157.33333333333334, 104.91666666666667]
+	Sdv:	[24, 140, 100]

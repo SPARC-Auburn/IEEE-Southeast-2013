@@ -11,34 +11,68 @@
  *        boolean linesPath[3]
  *        location partOneDest
  *        location partTwoDest
- * The basic process is to have two single-wheel turns and one straight move.
+ * The basic process will eventually be to have two single-wheel turns and one straight move.
  *        If destination is in front of current location, first move will be forward turn.
  *        If destination is behind current location, first move will be backward turn.
  * Exception: If destination is within turning diameter of current location,
  * use two spins and one straight move.
  */
 
-//method declaration
-location calcWaypoint(location A, location B, signed char& dir); //may need to add some flags
-
 byte commandConversion() {
+  
+  // First, see if this should be a special move
+  if (bitRead(commandStatus, CS_SPECIAL) && destination.x == 0) {
+    
+    // Do special straight backwards move
+    destination.x = currentLocation.x - SPECIAL_MOVE_DISTANCE * cos(currentLocation.theta);
+    destination.y = currentLocation.y - SPECIAL_MOVE_DISTANCE * sin(currentLocation.theta);
+    destination.theta = currentLocation.theta;
+    motorPath[0] = M_CORRECT_ME;
+    motorPath[1] = M_BACKWARD;
+    motorPath[2] = M_CORRECT_ME;
+    partOneDest = currentLocation;
+    partTwoDest = destination;
+    return 0;
+    
+  }
+  
+  // Next, see if you just need to turn in place
+  if(currentLocation.x == destination.x && currentLocation.y == destination.y) {
+    partOneDest = destination;
+    partTwoDest = destination;
+    motorPath[0] = M_CORRECT_ME;
+    motorPath[1] = M_FORWARD;
+    motorPath[2] = M_CORRECT_ME;
+    return 0;
+  }
+
   // For now, assume no lines to be used in navigation
   linesPath[0] = 0;
   linesPath[1] = 0;
   linesPath[2] = 0;
-  doubleSpin();
+
+  // For now, just use the double spin simple calculation
+  doubleSpin(); 
   return 0;
-  //return doubleSpin(); // For now, assume two spins and a straight move.
 }
 
+// This method of command conversion models the move as simply spin to straight to spin
 byte doubleSpin() {
+  
+  // The direction you will move is midTheta
   double midTheta = adjustTheta(atan2(destination.y - currentLocation.y, destination.x - currentLocation.x));
+  
+  // Turn in-place
   partOneDest.x = currentLocation.x;
   partOneDest.y = currentLocation.y;
   partOneDest.theta = midTheta;
+  
+  // End up at destination facing where you moved
   partTwoDest.x = destination.x;
   partTwoDest.y = destination.y;
   partTwoDest.theta = midTheta;
+  
+  // Set motorPaths based on need to move right or left
   if (adjustTheta(midTheta - currentLocation.theta) > 0) {
     motorPath[0] = M_SPIN_LEFT;
   }
@@ -46,16 +80,11 @@ byte doubleSpin() {
     motorPath[0] = M_SPIN_RIGHT;
   }
   motorPath[1] = M_FORWARD;
-  if (adjustTheta(destination.theta - midTheta) > 0) {
-    motorPath[2] = M_SPIN_LEFT;
-  }
-  else {
-    motorPath[2] = M_SPIN_RIGHT;
-  }
+  motorPath[2] = M_CORRECT_ME; // will correct when correctTurn is called
   return 0;
 }
 
-// return.theta gives the 
+// Not used right now
 byte calcWaypoint(location A, location B) {
   location wp; //waypoint to be returned
   signed char dir = signbit(adjustTheta(atan2((destination.y-currentLocation.y),
@@ -77,6 +106,7 @@ byte calcWaypoint(location A, location B) {
   return 0;
 }
 
+// Keeps theta between -PI and PI
 double adjustTheta( double theta )
 {
   while (theta > PI)
@@ -86,15 +116,33 @@ double adjustTheta( double theta )
   return theta;
 }
 
-// returns target from the perspective of the origin
+// Not used right now
+// Should return target from the perspective of the origin
 // if origin is (0, 1, 0), target will be itself with y shifted down 1.
 location relativeCoordinates(location origin, location absoluteTarget) {
   return absoluteTarget;
 }
 
+// Not used right now
 // opposite of relativeCoordinates
-// assume relativeTarget is from perspective of origin, and return
+// assume relativeTarget is from perspective of origin, and should return
 // what would be the absolute location of the target
 location absoluteCoordinates(location origin, location relativeTarget) {
   return relativeTarget;
+}
+
+// Sets motorPath variable saved as M_CORRECT_ME to either spin left or right
+void correctTurn(int whichSegment) {
+  
+  if(motorPath[whichSegment] == M_CORRECT_ME) {
+    
+    if (adjustTheta(partOneDest.theta - currentLocation.theta) > 0) {
+      motorPath[whichSegment] = M_SPIN_LEFT;
+    }    
+    else {
+      motorPath[whichSegment] = M_SPIN_RIGHT;
+    }
+    
+  }
+  
 }
