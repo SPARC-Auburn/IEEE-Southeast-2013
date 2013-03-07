@@ -19,8 +19,8 @@ const double DEC_DIST = (SPD_DEC_RATIO*SPD_DEC_RATIO) - ADDED_DISTANCE_REV;
 const double DEC_THETA = DEC_DIST / WIDTH;
 const int ACCEL_ARRAY[21] = {65, 68, 80, 91, 100, 109, 117, 124, 131, 138, 144, 151, 156, 162, 168, 173, 178, 183, 188, 193, 195};
 //const int ACCEL_ARRAY[21] = {80, 80, 80, 80, 80, 80, 80, 80, 80, 80, 80, 80, 80, 80, 80, 80, 80, 80, 80, 80,80};
-const int DECEL_ARRAY[21] = {195, 195, 195, 180, 160, 138, 122, 108, 96, 86, 77, 69, 65, 65, 65, 65, 65, 65, 65, 65, 65};
-//const int DECEL_ARRAY[21] = {195, 140, 110, 90, 75, 65, 65, 65, 65, 65, 65, 65, 65, 65, 65, 65, 65, 65, 65, 65, 65};
+//const int DECEL_ARRAY[21] = {195, 195, 195, 180, 160, 138, 122, 108, 96, 86, 77, 69, 65, 65, 65, 65, 65, 65, 65, 65, 65};
+const int DECEL_ARRAY[21] = {195, 160, 120, 85, 60, 40, 30, 30, 30, 30, 30, 30, 30, 30, 30, 30, 45, 65, 65, 75, 65};
 //const int DECEL_ARRAY[21] = {80, 80, 80, 80, 80, 80, 80, 80, 80, 80, 80, 80, 80, 80, 80, 80, 80, 80, 80, 80,80};
 
 // What to do for a turn
@@ -28,6 +28,7 @@ int driveTurn(double newTheta, boolean useLines) {
   
   long turnTime = millis();  // Used to monitor timeout
   int motorSpeed = 0;
+  if (odometry() > 0) return globalError;
   
   // These are various reference angles
   const double maxTheta = newTheta - currentLocation.theta; // Analagous to distance we will need to travel, signed, remains constant
@@ -97,6 +98,8 @@ int driveStraight(location target, boolean useLines) {
   long straightTime = millis(); // Used to monitor timeout
   int motorSpeed = 0;
   
+  if (odometry() > 0) return globalError;
+  
   // Distance references
   start = currentLocation; // Constant start location
   const double maxDist = dist(start, target); // total trip distance, constant
@@ -153,7 +156,8 @@ int driveStraight(location target, boolean useLines) {
       }
       */
       
-      // Acceleration Algorithm (array version)
+      // Acceleration Algorithm (array version with lowest value used)
+      /*
       if (forwardDist > 10 && remainingDist > 10) {
         motorSpeed = MAX_SPEED;
       }
@@ -168,6 +172,18 @@ int driveStraight(location target, boolean useLines) {
       }
       else {
         motorSpeed = DECEL_ARRAY[21-(int)remainingDist * 2] + 15;
+      }
+      */
+      
+      // Acceleration Algorithm (array version with journey split in half)
+      if (forwardDist > 10 && remainingDist > 10) {
+        motorSpeed = MAX_SPEED;
+      }
+      else if (remainingDist > forwardDist) {
+        motorSpeed = ACCEL_ARRAY[(int)forwardDist * 2];
+      }
+      else {
+        motorSpeed = DECEL_ARRAY[21-(int)remainingDist * 2];
       }
       
       // Acceleration Algorithm (constant version)

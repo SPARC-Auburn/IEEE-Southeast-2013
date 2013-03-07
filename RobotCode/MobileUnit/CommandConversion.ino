@@ -134,9 +134,20 @@ location absoluteCoordinates(location origin, location relativeTarget) {
 // Sets motorPath variable saved as M_CORRECT_ME to either spin left or right
 void correctTurn(int whichSegment) {
   
-  if(motorPath[whichSegment] == M_CORRECT_ME) {
+  if(motorPath[whichSegment] == M_CORRECT_ME && whichSegment == 0) {
     
     if (adjustTheta(partOneDest.theta - currentLocation.theta) > 0) {
+      motorPath[whichSegment] = M_SPIN_LEFT;
+    }    
+    else {
+      motorPath[whichSegment] = M_SPIN_RIGHT;
+    }
+    
+  }
+  
+  if(motorPath[whichSegment] == M_CORRECT_ME && whichSegment == 2) {
+    
+    if (adjustTheta(destination.theta - currentLocation.theta) > 0) {
       motorPath[whichSegment] = M_SPIN_LEFT;
     }    
     else {
