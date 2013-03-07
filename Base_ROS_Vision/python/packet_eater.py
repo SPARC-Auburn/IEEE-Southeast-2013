@@ -9,7 +9,7 @@
 BYTE_OFFSET = 8
 NIBBLE_OFFSET = 4
 
-def read_nibbles(binary_string, first_nibble, final_nibble=None):
+def read_nibbles(binary, first_nibble, final_nibble=None):
 
     """
 
@@ -33,7 +33,7 @@ def read_nibbles(binary_string, first_nibble, final_nibble=None):
 
            
     """ 
-
+    
     final_index = first_nibble * NIBBLE_OFFSET
     first_index = final_index - NIBBLE_OFFSET
     if final_nibble is not None:

@@ -1,11 +1,11 @@
 #!/usr/bin/env python
 
-import course_utils
+import packet_utils
 
 class Block(object):
     
     def __init__(self, binary_string):
-        self.binary_representation = binary_string
+        self._binary_representation = binary_string
         self._length = None
         self._color = None
 
@@ -21,7 +21,7 @@ class Block(object):
     def _read_color(self):
         """ Decode color portion of the packet """
 
-        self.color = course_utils.read_color(self.binary_representation, 
+        self.color = course_utils.read_color(self._binary_representation, 
                                              COLOR_NIBBLE_POSITION)
         
         return
@@ -35,3 +35,6 @@ class Block(object):
 
     def get_color(self):
         return self._color
+
+    def get_binary_form(self):
+        return binary_representation

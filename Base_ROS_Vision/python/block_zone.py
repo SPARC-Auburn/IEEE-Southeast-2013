@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 
-import course_utils
+import packet_utils
 
 class BlockDestinationZone(object):
 
@@ -21,7 +21,9 @@ class BlockDestinationZone(object):
         return
 
     def get_color(self):
-        return _self.color
+        return self._color
 
     def get_zone(self):
         return self._zone_type
+
+    def get_binary_form(self):
