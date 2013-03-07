@@ -6,7 +6,6 @@
  *   int commandEndLength;        // The length of block as reported from base station (low 2 bits of end action byte)
  * Returns any error encountered, or 0 for no error.
  */
-
 int endAction() {
   switch (commandEndAction) {
     case EA_NONE:
@@ -30,5 +29,5 @@ int endAction() {
       // Do a dance
       while(true);
   }  
-  return 32;
+  return 32; // Command not recognized
 }

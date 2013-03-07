@@ -1,18 +1,30 @@
+/*
+ * This file contains all functions necessary for the debugging process with remote-control protocol
+ * The computer will be able to send instructions to the robot for execution
+ * Also a good platform for odometry testing
+*/
 void rcTest() {
+  
   setMotorPosition(M_BRAKE);
   analogWrite(P_LEFT_MOTOR_EN, 100);
   analogWrite(P_RIGHT_MOTOR_EN, 100);
-  long nextUpdate = millis() + 1000;
-  eaLastTime = millis();
+  
+  // This is when we'll next send currentLocation
+  long nextUpdate = millis() + 1000;  
+  
+  // Do this forever
   while(true) {
-    //Serial.println("Waiting...");
-    //while(!Serial.available()) delay(100);
-    //Serial.print("Heard!");
-    if(processIn()) return;
+    
+    if(processIn()) return;  // Handle commands
+    
+    // **** \\// Inside here play with odometry \\// ****
+    
     odometry();
-    //encoderAdvancedDriver();
-    //encoderAdvanced();
     //delay(100);
+    
+    // **** //\\ Inside here play with odometry //\\ ****
+    
+    // Send currentLocation report
     if (millis() > nextUpdate) {
       nextUpdate = millis() + 1000;
       Serial.print("Current position: (");
@@ -26,6 +38,7 @@ void rcTest() {
   }
 }
 
+// Incoming messages
 int processIn()
 {
   if (Serial.available() > 0)
@@ -70,6 +83,5 @@ int processIn()
         break;
     }
   }
-  eaLastTime = millis();
   return 0;
 }

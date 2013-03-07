@@ -1,40 +1,19 @@
-//THESE VALUES ARE ROUGH AND SHOULD BE TWEAKED FOR BEST RESULTS
-#define DIAM 1.9 //diameter in inches.
-#define WIDTH 9.187 //distance between wheels in inches
-#define RESOLUTION 64 //encoder resolution
-#define RATIO 18.75 //gearbox ratio
-//#define MAGIC_SCALE_FACTOR 0.005235987756 // = pi * DIAM / (RESOLUTION * RATIO),  uses D = 2.0
-#define MAGIC_SCALE_FACTOR .0049741883681838 // = pi * DIAM / (RESOLUTION * RATIO),  uses D = 1.9
-
-
+// Uses encoder functions in "encoder" to convert to a position value
 
 location encoderLoc = {0,0,0};
 
 void encSetup()
 {
-  encoderInitL(PinEncLA, PinEncLB);
-  encoderInitR(PinEncRA, PinEncRB);
+  encoderInitL(P_ENC_LEFT_A, P_ENC_LEFT_B);
+  encoderInitR(P_ENC_RIGHT_A, P_ENC_RIGHT_B);
 }
-
 
 void encCalc()
 {
   //clockwise encoder
   int L = encoderReadL();
-  data[0][dataIndex] = L;
   //counterclockwise encoder
-  int R = -encoderReadR(); //may or may not need to do this, we'll see.
-  data[1][dataIndex] = R;
-//  if (odomArrayIndex < 100) {
-//    LodomArray[odomArrayIndex] = L;
-//    RodomArray[odomArrayIndex] = R;
-//  }
-  
-  
-  //Serial.print("L:");
-  //Serial.println(L);
-  //Serial.print("R:");
-  //Serial.println(R);
+  int R = -encoderReadR();
   
   //forward difference between left and right wheels in ticks
   int rldiff = (L - R);

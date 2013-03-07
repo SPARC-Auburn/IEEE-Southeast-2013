@@ -18,8 +18,8 @@
  *  7) When command is received, set global variables and return.
  *  8) If no command is heard by timeout, call backup plan to set global variables.
  */
-
 void openHandshake() {
+  // For now, just set current location for testing purposes
   currentLocation.x = 42;
   currentLocation.y = 15;
   currentLocation.theta = 0;
@@ -27,7 +27,4 @@ void openHandshake() {
   destination.y = 15;
   destination.theta = 0;
   return;
-  // Wait for opening start command
-  
-  // 
 }

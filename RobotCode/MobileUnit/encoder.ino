@@ -1,5 +1,8 @@
 #include <PinChangeInt.h>
 
+
+// Variables for encoders
+
 uint8_t pinChLA;  //Left wheel, channel A pin
 uint8_t pinChLB;  //Left wheel, channel B pin
 volatile uint8_t * portChLA; //port of left ch A
@@ -15,7 +18,6 @@ volatile uint8_t * portChRB;
 volatile uint8_t maskChRA;
 volatile uint8_t maskChRB;
 volatile int countR;
-
 
 //look up interrupt
 int pinToInt( int pin )
@@ -38,9 +40,9 @@ int pinToInt( int pin )
   return -1;
 }
 
-//initializes the left wheel encoder
-//tell it what pins to use
-//If you swap the ch A and ch B pins, it will change the sign on the
+// initializes the left wheel encoder
+// tell it what pins to use
+// If you swap the ch A and ch B pins, it will change the sign on the
 // encoder count (as if it were going the opposite direction.
 void encoderInitL(int chAPin, int chBPin)
 {
