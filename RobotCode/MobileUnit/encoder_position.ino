@@ -1,9 +1,10 @@
 //THESE VALUES ARE ROUGH AND SHOULD BE TWEAKED FOR BEST RESULTS
-#define DIAM 2 //diameter in inches.
-#define WIDTH 9.25 //distance between wheels in inches
+#define DIAM 1.9 //diameter in inches.
+#define WIDTH 9.187 //distance between wheels in inches
 #define RESOLUTION 64 //encoder resolution
 #define RATIO 18.75 //gearbox ratio
-#define MAGIC_SCALE_FACTOR 0.005235987756 // = pi * DIAM / (RESOLUTION * RATIO),  uses D = 2.0
+//#define MAGIC_SCALE_FACTOR 0.005235987756 // = pi * DIAM / (RESOLUTION * RATIO),  uses D = 2.0
+#define MAGIC_SCALE_FACTOR .0049741883681838 // = pi * DIAM / (RESOLUTION * RATIO),  uses D = 1.9
 
 
 
@@ -20,8 +21,10 @@ void encCalc()
 {
   //clockwise encoder
   int L = encoderReadL();
+  data[0][dataIndex] = L;
   //counterclockwise encoder
   int R = -encoderReadR(); //may or may not need to do this, we'll see.
+  data[1][dataIndex] = R;
 //  if (odomArrayIndex < 100) {
 //    LodomArray[odomArrayIndex] = L;
 //    RodomArray[odomArrayIndex] = R;
@@ -53,6 +56,7 @@ void encCalc()
   
   double temp_theta = encoderLoc.theta; //hold old theta
   encoderLoc.theta -= atan(rl_length/WIDTH);
+  //encoderLoc.theta -= (rl_length/WIDTH);
   temp_theta = (temp_theta + encoderLoc.theta)/2; //hold the average of the old and new thetas.
     //we'll use this as an approximation for the direction of the movement
   

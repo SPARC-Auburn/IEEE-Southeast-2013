@@ -50,6 +50,7 @@ void debugging() {
       prompt();
       // First turn
       Serial.println("Starting first turn");
+      correctTurn(0);
       setMotorPosition(motorPath[0]);
       if(driveTurn(partOneDest.theta, linesPath[0]) > 0) break;
       Serial.print("Position after first move: (");
@@ -75,7 +76,7 @@ void debugging() {
       prompt();
       // Second turn
       Serial.println("Starting second turn");
-      correctTurn();
+      correctTurn(2);
       Serial.print("Motor state 3 (corrected): ");
       Serial.println(motorPath[2]);   
       setMotorPosition(motorPath[2]);

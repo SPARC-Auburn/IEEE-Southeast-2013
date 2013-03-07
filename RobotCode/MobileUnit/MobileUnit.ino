@@ -4,7 +4,7 @@
  * Student Project and Research Committee (SPaRC)
  * MobileUnit Code for IEEE Secon 2013 Hardware Competition
  * 
- * Version: 3/2/2013
+ * Version: 3/6/2013
  */
  
 // Libraries and Headers
@@ -78,6 +78,10 @@ byte commandStatus;          // The flags as received from base station (or made
 End_action commandEndAction;        // The end action of the current command (high 3 bits)
 int commandEndColor;         // The color block as reported from base station (middle 3 bits of end action byte)
 int commandEndLength;        // The length of block as reported from base station (low 2 bits of end action byte)
+long eaLastTime;
+int data[2][500];
+double datad[2][500];
+int dataIndex;
 
 double PIDSetpoint, PIDInput, PIDOutput;
 PID odomPID(&PIDInput, &PIDOutput, &PIDSetpoint, 3, 2, 20, DIRECT); //
@@ -102,6 +106,7 @@ double dist(location a, location b);
 double arcdist(double theta1, double theta2, double radius);
 void debugging();
 void rcTest();
+void encoderAdvanced();
 //int odomArrayIndex;
 //int LodomArray[100];
 //int RodomArray[100];
@@ -159,8 +164,8 @@ void setup() {
  * command in case commmunication fails, and report to base station.
  */
 void loop() {
-  //rcTest();
-  //debugging();
+  rcTest();
+  debugging();
   globalError = 0;
   
   // The first time this runs, the first command will already be set.
@@ -168,13 +173,14 @@ void loop() {
     // Command conversion
     if (commandConversion() > 0) break;
     // First turn
+    correctTurn(0);
     setMotorPosition(motorPath[0]);
     if(driveTurn(partOneDest.theta, linesPath[0]) > 0) break;
     // Straight move
     setMotorPosition(motorPath[1]);
     if(driveStraight(partTwoDest, linesPath[1]) > 0) break;
     // Second turn
-    correctTurn();
+    correctTurn(2);
     setMotorPosition(motorPath[2]);
     if(driveTurn(destination.theta, linesPath[2]) > 0) break;
     setMotorPosition(M_BRAKE);

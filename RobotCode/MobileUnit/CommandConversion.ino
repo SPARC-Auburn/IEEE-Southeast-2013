@@ -123,21 +123,13 @@ location absoluteCoordinates(location origin, location relativeTarget) {
   return relativeTarget;
 }
 
-void correctTurn() {
-  if(motorPath[1] == M_CORRECT_ME) {
+void correctTurn(int which) {
+  if(motorPath[which] == M_CORRECT_ME) {
     if (adjustTheta(partOneDest.theta - currentLocation.theta) > 0) {
-      motorPath[1] = M_SPIN_LEFT;
+      motorPath[which] = M_SPIN_LEFT;
     }
     else {
-      motorPath[1] = M_SPIN_RIGHT;
-    }
-  }
-  else if(motorPath[2] == M_CORRECT_ME) {
-    if (adjustTheta(destination.theta - currentLocation.theta) > 0) {
-      motorPath[2] = M_SPIN_LEFT;
-    }
-    else {
-      motorPath[2] = M_SPIN_RIGHT;
+      motorPath[which] = M_SPIN_RIGHT;
     }
   }
 }

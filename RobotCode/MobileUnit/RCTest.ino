@@ -3,9 +3,15 @@ void rcTest() {
   analogWrite(P_LEFT_MOTOR_EN, 100);
   analogWrite(P_RIGHT_MOTOR_EN, 100);
   long nextUpdate = millis() + 1000;
+  eaLastTime = millis();
   while(true) {
-    processIn();
+    //Serial.println("Waiting...");
+    //while(!Serial.available()) delay(100);
+    //Serial.print("Heard!");
+    if(processIn()) return;
     odometry();
+    //encoderAdvancedDriver();
+    //encoderAdvanced();
     //delay(100);
     if (millis() > nextUpdate) {
       nextUpdate = millis() + 1000;
@@ -20,7 +26,7 @@ void rcTest() {
   }
 }
 
-void processIn()
+int processIn()
 {
   if (Serial.available() > 0)
   {
@@ -54,6 +60,8 @@ void processIn()
       case 'x': // Pause.
         setMotorPosition(M_BRAKE);
         break;
+      case 'r': // Exit remote mode permanently
+        return 1;
       case 'h': // HELP.
         Serial.print("HELP:\n\tw: Move forward.\n\ta: Turn left.\n\ts: Move backward. \n\td: Turn left.\n");
         Serial.print("\tq: Move forward and left (right wheel drive only).\n\te: Move forward and right (left wheel drive only).\n");
@@ -62,4 +70,6 @@ void processIn()
         break;
     }
   }
+  eaLastTime = millis();
+  return 0;
 }

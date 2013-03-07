@@ -95,6 +95,7 @@ int driveTurn(double newTheta, boolean useLines) {
   delay(100); // Brake, then set output to zero
   analogWrite(P_LEFT_MOTOR_EN, 0);
   analogWrite(P_RIGHT_MOTOR_EN, 0);
+  if (odometry() > 0) return globalError;
   return 0; // Success
 }
 
@@ -173,6 +174,7 @@ int driveStraight(location target, boolean useLines) {
   delay(100); // Brake, then set output to zero
   analogWrite(P_LEFT_MOTOR_EN, 0);
   analogWrite(P_RIGHT_MOTOR_EN, 0);
+  if (odometry() > 0) return globalError;
   return globalError; // Success
 }
 
