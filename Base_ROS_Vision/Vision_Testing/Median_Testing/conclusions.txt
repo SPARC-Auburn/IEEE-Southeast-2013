@@ -1,0 +1,14 @@
+
+Based on the findings in:
+medianTest_output_1363040063.71.txt
+ 
+The results for the Kernel 3x3 are as follows:
+3   3   43.0    0.189207983017
+3   5   32.2    0.144185400009
+3   10  20.0    0.0913036346436
+3   15  13.6    0.0610451698303
+
+The 3x3 filter produced the clearest picture without destroying strong edges. 
+In order to get an epsilon between 10 and 15 at least 15 iterations are needed on average. It will also take at least less than 0.01 seconds to complete using 2.26 GHz processor.
+
+

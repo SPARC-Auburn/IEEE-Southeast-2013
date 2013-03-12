@@ -63,6 +63,7 @@ class BlockFinder():
 		####
 		########
 		
+
 		########
 		##Create Named Windows
 		"""
@@ -71,11 +72,26 @@ class BlockFinder():
 		####
 		cv2.namedWindow("canned")
 		"""
-	#	cv2.imshow("original",self.original)
-	#	cv2.namedWindow("result")
+		cv2.imshow("original",self.original)
+		cv2.namedWindow("result")
 		########
 
-		self.medianTest(watch = False)	
+
+		########
+		##Condition Image
+
+		#Median Filter
+		##for findings on median filter see medianTesting folder
+		median_output = self.original.copy()
+		for i in xrange(15):
+			median_output = cv2.medianBlur(median_output,3)
+		####
+		cv2.imshow("result",median_output)
+		########
+		self.waitForKeyPress()
+
+		cv2.namedWindow("color reduced")
+
 	####
 
 	def waitForKeyPress(self):
@@ -88,74 +104,13 @@ class BlockFinder():
 		####
 	####
 
-	def medianTest(self,watch = False):
-		kernel_list = [3,5,7,9]
-		eps_list = [3,5,10,15]
-		if( watch == True):
-			cv2.namedWindow("difference")
+	def colorReduce(self,img,iter=1):
+		i = 0xFF;
+		for k in xrange(iter):
+			img = np.bitwise_and(img,i)
+			i = i - 2**k
 		####
-
-		for kernel in kernel_list:
-			print ""
-			for eps in eps_list:
-				output1 = self.original.copy()
-				i = 0
-				start_time  = time.clock()
-				while( 1 ):
-					output2 = output1.copy()
-					output1 = cv2.medianBlur(output1,kernel)
-					difference = cv2.absdiff(output1,output2)
-					i = i+1
-					if( watch == True):
-						cv2.imshow("result",output1)
-						cv2.imshow("difference",difference)	
-						print i
-						if( self.waitForKeyPress() == 27):
-							return 0
-						####
-					####
-					max = difference.max()
-					if( max <= eps):
-						print kernel,"\t",eps,"\t",i,"\t",(time.clock()-start_time)
-						break
-					####
-				####
-			####
-		####
-			
-		"""
-		Convergence of Repeated Median Filters
-		Kernel,	Epsilon,	Iterations,	Elapsed Time
-		3	3	76	0.241815
-		3	5	47	0.148235
-		3	10	24	0.075576
-		3	15	19	0.059652
-
-		5	3	196		2.514416
-		5	5	107		1.371541
-		5	10	65	0.834036
-		5	15	64	0.821892
-
-		7	3	251		12.497997
-		7	5	247		12.346028
-		7	10	228		11.372821
-		7	15	60	3.011314
-
-		9	3	175		9.903751
-		9	5	144		8.15706
-		9	10	130		7.371763
-		9	15	127		7.2078
-
-		Conclusions
-		The 3x3 kernel does the best to conserve edges. 5,7,9 lose too much information.
-		Also there is little qualit
-		it takes less time/iterations to converge.
-
-		Final Median Filter Choice
-		Kernel, Iterations
-		3, 20
-		"""
-
+		return img
 	####
 ####
 
