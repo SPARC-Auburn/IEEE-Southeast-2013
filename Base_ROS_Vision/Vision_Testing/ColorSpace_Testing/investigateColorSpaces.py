@@ -60,6 +60,7 @@ def main():
 			cv2.imwrite(prefix+"Ch1_NoBlur"+ext,ch1)
 			cv2.imwrite(prefix+"Ch2_NoBlur"+ext,ch2)
 			cv2.imwrite(prefix+"Ch3_NoBlur"+ext,ch3)
+			cv2.imwrite(prefix+"Hist_NoBlur"+ext,create3ChannelHistogram(cv2.merge([ch1,ch2,ch3])))
 
 			output.append("\nNo Blur")
 			output.append("\nCh1:")
@@ -80,6 +81,7 @@ def main():
 			cv2.imwrite(prefix+"Ch1_PreBlur"+ext,ch1)
 			cv2.imwrite(prefix+"Ch2_PreBlur"+ext,ch2)
 			cv2.imwrite(prefix+"Ch3_PreBlur"+ext,ch3)
+			cv2.imwrite(prefix+"Hist_PreBlur"+ext,create3ChannelHistogram(cv2.merge([ch1,ch2,ch3])))
 
 
 			output.append("\nPreBlur")
@@ -101,6 +103,7 @@ def main():
 			cv2.imwrite(prefix+"Ch1_PostBlur"+ext,ch1)
 			cv2.imwrite(prefix+"Ch2_PostBlur"+ext,ch2)
 			cv2.imwrite(prefix+"Ch3_PostBlur"+ext,ch3)
+			cv2.imwrite(prefix+"Hist_PostBlur"+ext,create3ChannelHistogram(cv2.merge([ch1,ch2,ch3])))
 
 			output.append("\nPostBlur")
 			output.append("\nCh1:")
@@ -121,6 +124,7 @@ def main():
 			cv2.imwrite(prefix+"Ch1_BothBlur"+ext,ch1)
 			cv2.imwrite(prefix+"Ch2_BothBlur"+ext,ch2)
 			cv2.imwrite(prefix+"Ch3_BothBlur"+ext,ch3)
+			cv2.imwrite(prefix+"Hist_BothBlur"+ext,create3ChannelHistogram(cv2.merge([ch1,ch2,ch3])))
 
 			output.append("\nBothBlur")
 			output.append("\nCh1:")
@@ -136,6 +140,22 @@ def main():
 	####
 
 	return 0
+####
+
+def create3ChannelHistogram(img):
+	h = np.zeros((300,256,3))
+
+	bins = np.arange(256).reshape(256,1)
+	color = [ (255,0,0),(0,255,0),(0,0,255) ]
+	for ch, col in enumerate(color):
+		hist_item = cv2.calcHist([img],[ch],None,[256],[0,256])
+		cv2.normalize(hist_item,hist_item,0,255,cv2.NORM_MINMAX)
+		hist=np.int32(np.around(hist_item))
+		pts = np.column_stack((bins,hist))
+		cv2.polylines(h,[pts],False,col)
+	####
+	h=np.flipud(h)
+	return h
 ####
 
 def get_stats(img):
