@@ -53,18 +53,17 @@ def find_all_files_in_dir_tree(path):
 ####
 
 def main():
-	if( argv.__len__() != 2 ):
-		print "\nError\nUsage search_all_subfolders_recursively.py 'pathname' \n"
+	if( argv.__len__() != 3 ):
+		print "\nError\nUsage search_all_subfolders_recursively.py 'pattern' 'pathname' \n"
 		return 0
 	####
-	
-	path = argv[1]
-	(curdir,pathname) = os.path.split(argv[1])
+	pattern = compile(argv[1])
+	path = argv[2]
+	(curdir,pathname) = os.path.split(path)
 
 	##/Users/patrickberry/secon2013/Base_ROS_Vision/Vision_Testing/ColorSpace_Testing/Canny_Testing_1363074159
-	outputFilename = curdir+"/YUV_data_for_"+pathname+".txt"
+	outputFilename = curdir+"/"+argv[1]+"_data_for_"+pathname+".txt"
 	output = []
-	pattern = compile("YUV")
 	
 	for pathname in find_all_files_in_dir_tree(path):
 		(curdir,filename) = os.path.split(pathname)
