@@ -18,7 +18,7 @@ def main():
 	curtime = int(time())
 
 	##Create a base subfolder for the entire procedure
-	base_prefix = workingdir + "/Canny_Testing_"+str(curtime)
+	base_prefix = workingdir + "/ColorSpace_Testing_"+str(curtime)
 	mkdir(base_prefix)
 	base_prefix = base_prefix + "/"
 	ext    = ".png"
@@ -60,7 +60,13 @@ def main():
 			cv2.imwrite(prefix+"Ch1_NoBlur"+ext,ch1)
 			cv2.imwrite(prefix+"Ch2_NoBlur"+ext,ch2)
 			cv2.imwrite(prefix+"Ch3_NoBlur"+ext,ch3)
-			cv2.imwrite(prefix+"Hist_NoBlur"+ext,create3ChannelHistogram(cv2.merge([ch1,ch2,ch3])))
+
+			##I have to write it to a file and then re-read it because opencv2 is idiotic
+			hist = create3ChannelHistogram(cv2.merge([ch1,ch2,ch3]))
+			cv2.imwrite(prefix+"Hist_NoBlur"+ext,hist)
+			hist = cv2.imread(prefix+"Hist_NoBlur"+ext)
+			cv2.putText(hist,"BGR:"+name,(15,30),cv2.FONT_HERSHEY_SIMPLEX,0.5,(255,255,255),thickness = 1, lineType = cv2.CV_AA)
+			cv2.imwrite(prefix+"Hist_NoBlur"+ext,hist)
 
 			output.append("\nNo Blur")
 			output.append("\nCh1:")
@@ -81,8 +87,13 @@ def main():
 			cv2.imwrite(prefix+"Ch1_PreBlur"+ext,ch1)
 			cv2.imwrite(prefix+"Ch2_PreBlur"+ext,ch2)
 			cv2.imwrite(prefix+"Ch3_PreBlur"+ext,ch3)
-			cv2.imwrite(prefix+"Hist_PreBlur"+ext,create3ChannelHistogram(cv2.merge([ch1,ch2,ch3])))
 
+			##I have to write it to a file and then re-read it because opencv2 is idiotic
+			hist = create3ChannelHistogram(cv2.merge([ch1,ch2,ch3]))
+			cv2.imwrite(prefix+"Hist_PreBlur"+ext,hist)
+			hist = cv2.imread(prefix+"Hist_PreBlur"+ext)
+			cv2.putText(hist,"BGR:"+name,(15,30),cv2.FONT_HERSHEY_SIMPLEX,0.5,(255,255,255),thickness = 1, lineType = cv2.CV_AA)
+			cv2.imwrite(prefix+"Hist_PreBlur"+ext,hist)
 
 			output.append("\nPreBlur")
 			output.append("\nCh1:")
@@ -103,7 +114,13 @@ def main():
 			cv2.imwrite(prefix+"Ch1_PostBlur"+ext,ch1)
 			cv2.imwrite(prefix+"Ch2_PostBlur"+ext,ch2)
 			cv2.imwrite(prefix+"Ch3_PostBlur"+ext,ch3)
-			cv2.imwrite(prefix+"Hist_PostBlur"+ext,create3ChannelHistogram(cv2.merge([ch1,ch2,ch3])))
+
+			##I have to write it to a file and then re-read it because opencv2 is idiotic
+			hist = create3ChannelHistogram(cv2.merge([ch1,ch2,ch3]))
+			cv2.imwrite(prefix+"Hist_PostBlur"+ext,hist)
+			hist = cv2.imread(prefix+"Hist_PostBlur"+ext)
+			cv2.putText(hist,"BGR:"+name,(15,30),cv2.FONT_HERSHEY_SIMPLEX,0.5,(255,255,255),thickness = 1, lineType = cv2.CV_AA)
+			cv2.imwrite(prefix+"Hist_PostBlur"+ext,hist)
 
 			output.append("\nPostBlur")
 			output.append("\nCh1:")
@@ -124,7 +141,13 @@ def main():
 			cv2.imwrite(prefix+"Ch1_BothBlur"+ext,ch1)
 			cv2.imwrite(prefix+"Ch2_BothBlur"+ext,ch2)
 			cv2.imwrite(prefix+"Ch3_BothBlur"+ext,ch3)
-			cv2.imwrite(prefix+"Hist_BothBlur"+ext,create3ChannelHistogram(cv2.merge([ch1,ch2,ch3])))
+
+			##I have to write it to a file and then re-read it because opencv2 is idiotic
+			hist = create3ChannelHistogram(cv2.merge([ch1,ch2,ch3]))
+			cv2.imwrite(prefix+"Hist_BothBlur"+ext,hist)
+			hist = cv2.imread(prefix+"Hist_BothBlur"+ext)
+			cv2.putText(hist,"BGR:"+name,(15,30),cv2.FONT_HERSHEY_SIMPLEX,0.5,(255,255,255),thickness = 1, lineType = cv2.CV_AA)
+			cv2.imwrite(prefix+"Hist_BothBlur"+ext,hist)
 
 			output.append("\nBothBlur")
 			output.append("\nCh1:")
@@ -137,6 +160,7 @@ def main():
 		####
 		output_file = open(file_prefix+"MinMaxAvgSdv.txt",'w')
 		output_file.write(''.join(output))
+		output_file.close()
 	####
 
 	return 0
@@ -147,6 +171,10 @@ def create3ChannelHistogram(img):
 
 	bins = np.arange(256).reshape(256,1)
 	color = [ (255,0,0),(0,255,0),(0,0,255) ]
+
+	##Blue  == Ch1
+	##Green == Ch2
+	##Red   == Ch3
 	for ch, col in enumerate(color):
 		hist_item = cv2.calcHist([img],[ch],None,[256],[0,256])
 		cv2.normalize(hist_item,hist_item,0,255,cv2.NORM_MINMAX)
