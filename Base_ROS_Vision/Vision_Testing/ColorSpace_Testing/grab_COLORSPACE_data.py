@@ -1,7 +1,13 @@
-
 from re import compile,IGNORECASE;
 from sys import argv;
 import os;
+
+"""
+This program is meant to be used after investigateColorSpaces.py has ran
+Give this program a ColorSpace to search for and the Big Folder
+investigateColorSpaces.py created. This script will grab the NoBlur statistics 
+from each MinMaxAvgSdv.txt found in each image folder.
+"""
 
 def find_in_file(re_pattern,filename):
 	fid = open(filename,'r')

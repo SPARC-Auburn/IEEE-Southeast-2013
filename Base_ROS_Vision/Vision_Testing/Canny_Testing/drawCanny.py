@@ -3,6 +3,27 @@
 import cv2
 import numpy as np
 from random import random
+
+"""This program was meant to find the ideal values for the Canny edge detection filter
+the method outlined is wasteful, and not much time should be spent trying to use this 
+particular implementation. In fact, I was just frustrated and ended up building a mess,
+even still it is pretty fun.
+
+Additionally the difference between aperture 5 and whatever ap maybe was also investigated
+The difference of the edges based on the currently chosen thresholds and aperture,
+ and the currently chosen threshold and ap=5 is displayed
+
+If the key '1' is pressed the thresholds are randomized between [0,255]
+If the key '2' is pressed the aperture is picked randomly between {3,5,7}
+If the key '3' is pressed the thresholds are randomized locally within +/- 40
+If the key '5' is pressed 1 is added to the bottom threshold,
+	if (bottom>255) add 1 to the top threshold and start the bottom back at 0
+If the key '6' is pressed 10 is added to the bottom threshold, 
+	if (bottom>255) add 1 to the top threshold and start the bottom back at 0
+
+
+"""
+
 def main():
 	cv2.namedWindow("Original",0)
 	cv2.namedWindow("Canny",0)
@@ -28,7 +49,7 @@ def main():
 							threshold2 = t2, \
 							apertureSize = ap2, \
 							L2gradient = True)
-		diff = cv2.subtract(canned,canned2)
+		diff = cv2.absdiff(canned,canned2)
 		cv2.imshow("Original",frame)
 		cv2.imshow("Canny",canned)
 		cv2.imshow("DiffCan",diff)

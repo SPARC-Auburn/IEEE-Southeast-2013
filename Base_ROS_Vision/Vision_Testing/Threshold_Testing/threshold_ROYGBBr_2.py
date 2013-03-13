@@ -4,6 +4,9 @@ import numpy as np
 import time
 from sys import argv
 
+"""This python program is meant to be the final BlockFinder program
+it is still under construction"""
+
 class BlockFinder():
 	"""
 	-Ignore everything above the strong line with black on the bottom side of the line

@@ -2,6 +2,17 @@
 import cv2
 import numpy as np
 from random import random
+
+"""This was my attempt to threshold and draw contours around different blobs.
+However my frustration got the best of me and now it is a mess.
+
+BUT the one thing I learned is that opencv2 will not fill contours if the 
+contour list argument is just a single contour. It must be encapsulated in a 
+list for it to fill in the blob
+
+Seriously that was really frustrating
+""""
+
 def main():
 	cv2.namedWindow("Original",0)
 	cv2.namedWindow("HSV",0)

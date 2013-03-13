@@ -1,5 +1,11 @@
 import cv
 
+"""Produces an image with all possible colors
+creates one 256x256 pattern with all Red and Green combinations
+then it makes a 16x16 grid and adds 1 to the Blue value, so that
+all possible 24bit colors are produced
+"""
+
 def main():
 	##cv.NamedWindow('Input',0)
 	maxCols = 16

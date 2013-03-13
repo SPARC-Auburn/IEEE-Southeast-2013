@@ -3,7 +3,13 @@ import cv2
 import numpy as np
 from sys import argv
 
+"""This python script blurs and then thresholds for Red,Orange,Yellow,
+Green,Blue, and Brown. Finally it draws ellipses that fit around each 
+contour that is found in each thresholded image.
 
+Each step of the process is displayed and can be advanced by pressing the 
+'0' key. The escape key quits the program.
+"""
 def catsKey():
 	while(1):
 		keyPressed = cv2.waitKey(30)

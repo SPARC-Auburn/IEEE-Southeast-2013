@@ -4,6 +4,16 @@
 ## 
 
 ## Cats
+"""Okay.... so this program is outdated by the MinMaxAvgSdv_HSV_cv2.py mainly because
+THIS ONE USES AN OLD VERSION OF OPENCV
+
+I didn't know the cv was outdate at the time I wrote this, but when I realized 
+I raged so hard that I wrote the another script that did the same thing, but used cv2.
+Anywho, this thing takes in a filelist of files
+and finds the MinMaxAvgSdv of the HSV of each file found.
+
+Yeah, stop reading this and head over to MinMaxAvgSdv_HSV_2.py
+"""
 
 from cv import SetImageCOI,MinMaxLoc,LoadImage,AvgSdv,CV_BGR2HSV,CvtColor
 from sys import argv

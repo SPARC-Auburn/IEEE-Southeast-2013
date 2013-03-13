@@ -3,6 +3,12 @@ from re import compile,IGNORECASE;
 from sys import argv;
 import os;
 
+"""
+Okay so this thing searches all the files in every subfolder for a given string. 
+Really this can be done by "grep pattern -r" but I happend to be working on a 
+Windows at the time, so I wrote this baby to do it for me.
+"""
+
 def find_in_file(re_pattern,filename):
 	fid = open(filename,'r')
 	i=0

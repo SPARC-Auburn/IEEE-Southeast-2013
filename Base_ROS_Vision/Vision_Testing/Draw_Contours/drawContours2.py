@@ -2,6 +2,16 @@
 import cv2
 import numpy as np
 from random import random
+
+"""Second attempt at drawing contours on an image. Once again 
+opencv2 1, pat 0
+
+yeah, the "orange" isn't orange I think it is blue.
+
+Anyways this thing just draws a bunch of annoying rainbow colored blob outlines.
+Carry on...
+"""
+
 def main():
 	cv2.namedWindow("Original",0)
 	cv2.namedWindow("HSV",0)

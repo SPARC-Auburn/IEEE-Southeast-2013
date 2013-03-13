@@ -6,7 +6,7 @@ from sys import argv
 
 class MedianTest():
 	"""
-	This class is to test how many iterations and time it takes the MedianBlur filter to converge for different test images provided in the command line.
+	This class tests many iterations and time it takes the MedianBlur filter to converge for different test images provided in the command line as well as the kernel_list and eps_list.
 	"""
 	def __init__(self):
 		pass

@@ -1,3 +1,22 @@
+"""
+Okay so this thing takes in a list of images as arguments
+and spits out colorspace statistics for each image
+
+--ColorSpace_Testing_<CurrentTime>/
+---Image/ (for every image given)
+----Stats.txt
+----ColorSpace/ (for ever color-space specified)
+-----Ch1NoBlur.png
+-----Ch1PreBlur.png
+-----Ch1PostBlur.png
+-----Ch1BothBlur.png
+-----...(Ch2 and Ch3)
+-----HistNoBlur.png
+-----....etc
+
+If you want to look at the statistics for a particular ColorSpace use
+grab_COLORSPACE_data.py 
+"""
 
 
 import cv2

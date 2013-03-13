@@ -10,6 +10,10 @@ from random import random
 ##	display in a window
 ##
 
+"""This program will take an image and display each external contour
+in a separate window and with a different color. Try using the test image
+"/secon2013/Base_ROS_Vision/Vision_Testing/Draw_Contours/external_contour_test.png"
+"""
 def main():
 
 	if( argv.__len__()!= 2):

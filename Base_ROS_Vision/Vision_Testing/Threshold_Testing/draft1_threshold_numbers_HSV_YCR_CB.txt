@@ -1,0 +1,54 @@
+#Draft #1
+
+##HSV
+##			 [Hue,Sat,Val]
+black_low	=[140,  0, 41] 
+black_high	=[125, 39, 61]
+       
+red_low1	=[  0,165, 61]	   
+red_high1	=[  6,212,126]
+
+red_low2	=[169,165, 61]
+red_high2	=[179,212,126]
+
+orange_low	=[  4,186,108]
+orange_high	=[ 13,255,255]
+       
+yellow_low	=[ 21,148, 97]
+yellow_high	=[ 32,255,255]
+        
+green_low	=[ 54, 74, 44]
+green_high	=[ 78,140, 77]
+        
+blue_low	=[108,168, 41]
+blue_high	=[121,255,202]
+        
+brown_low	=[  2, 74, 51]
+brown_high	=[ 15,204, 84]  
+##The only problem with this set is that Red,Orange, and Brown overlap
+## in both the Hue,Sat,and Value space
+
+##YCR_CB
+##			 [  Y, CR, CB]
+black_low	=[ 38,127,128] 
+black_high	=[ 57,128,133]
+       
+red_low		=[ 31,148,107]	   
+red_high	=[ 70,177,126]
+
+orange_low	=[ 49,165, 62]
+orange_high	=[162,200,106]
+       
+yellow_low	=[ 78,137, 35]
+yellow_high	=[239,150, 90]
+        
+green_low	=[ 36,110,119]
+green_high	=[ 64,123,128]
+        
+blue_low	=[ 18, 85,140]
+blue_high	=[117,126,198]
+        
+brown_low	=[ 31,138,114]
+brown_high	=[ 66,148,125]  
+
+####

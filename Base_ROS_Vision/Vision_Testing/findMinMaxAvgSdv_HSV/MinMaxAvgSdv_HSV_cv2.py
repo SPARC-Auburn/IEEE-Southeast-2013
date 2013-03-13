@@ -5,6 +5,14 @@
 
 ## Cats
 
+"""
+This has been outdated by the investigateColorSpaces.py script.
+
+This thing takes in a filelist of files
+and finds the MinMaxAvgSdv of the HSV of each file found.
+
+"""
+
 from cv2 import imread,cvtColor,COLOR_BGR2HSV,split
 import numpy as np
 from sys import argv
