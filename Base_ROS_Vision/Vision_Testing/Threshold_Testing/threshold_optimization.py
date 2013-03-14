@@ -4,13 +4,12 @@ import numpy as np
 import time
 from sys import argv
 from os import path,mkdir
-"""This python program is meant to be the final BlockFinder program
-it is still under construction
+from random import gauss
+"""
 
-Note to future opencv2-ers cv2.findContours edits the image!
-It edits the argument image. Ugh. 25 minutes wasted
+This python program is a branch from threshold_2
 
-
+This is meant to optimize the threshold values
 """
 
 class BlockFinder():
@@ -115,73 +114,116 @@ class BlockFinder():
 							self.brown_ycrcb ]
 		########
 
-		########
-		##Check the arguments and grab the image
-		if( argv.__len__()!= 3 ):
-			raise Exception("\n\nERROR\nUsage: *.py store_results={0,1} (fileName)\n")
-		####
-		self.store_results = int(argv[1])
-		fileName = argv[2]
-		self.original = cv2.imread(fileName)
-
-		if( self.original == None ):
-			raise Exception("\nError\ncould not open <"+fileName+">")
-		####
-		########
-
 		(workingdir,exec_ext) = path.split(path.realpath(__file__))
 		self.curtim = int(time.time())
-		self.prefix = workingdir + "/Thresholding_Testing_"+str(self.curtim)+"/"
-		
-		if( self.store_results == 1 ):
-			mkdir(self.prefix)
-		####
+		self.workingdir = workingdir+"/"
+
+		self.original = cv2.imread(self.workingdir+"original.png")
+
+		self.correct_id = { \
+			"black": cv2.imread(self.workingdir+"black.png",cv2.CV_LOAD_IMAGE_GRAYSCALE), \
+			"red": cv2.imread(self.workingdir+"red.png",cv2.CV_LOAD_IMAGE_GRAYSCALE), \
+			"orange": cv2.imread(self.workingdir+"orange.png",cv2.CV_LOAD_IMAGE_GRAYSCALE), \
+			"yellow": cv2.imread(self.workingdir+"yellow.png",cv2.CV_LOAD_IMAGE_GRAYSCALE), \
+			"green": cv2.imread(self.workingdir+"green.png",cv2.CV_LOAD_IMAGE_GRAYSCALE), \
+			"blue":	cv2.imread(self.workingdir+"blue.png",cv2.CV_LOAD_IMAGE_GRAYSCALE), \
+			"brown": cv2.imread(self.workingdir+"brown.png",cv2.CV_LOAD_IMAGE_GRAYSCALE) }
+
+		self.watch = False
+
+		self.SIGMA = 8
+		self.N = 150
+		self.MAX_ITER = 5000
+		self.MIN_FITNESS = 0
+
 	####
 
 	def run(self):
-		
-		img = self.medianFilter(self.original)	
-		
-		hsv_img = cv2.cvtColor(img,cv2.COLOR_BGR2HSV)
-		for t in self.hsv_thresholds:
-			t.name = "hsv_"+t.name
-			self.storeThresholdedImage(t,hsv_img)
-		####
 
-		ycrcb_img = cv2.cvtColor(img,cv2.COLOR_BGR2YCR_CB)
-		for t in self.ycrcb_thresholds:
-			t.name = "ycrcb_"+t.name
-			self.storeThresholdedImage(t,ycrcb_img)
+		##Initializations
+		ycrcb_img = cv2.cvtColor(self.original,cv2.COLOR_BGR2YCR_CB)
+		outputFile = open(self.workingdir+"Threshold_Optimization_Test_"+str(self.curtim)+".txt",'w')
+		try:
+			for initial_seed in self.ycrcb_thresholds:
+				iterations = 0
+				stale_gen = 0
+				seed = initial_seed
+
+				##Best initializations...
+				thr_img = cv2.inRange(src = ycrcb_img, \
+										lowerb = seed.lowerb, \
+										upperb = seed.upperb )
+				best_score = self.findFitness(thr_img,self.correct_id[seed.name])
+				best_child = seed
+				outputFile.write("\n\nSeed\t"+str(best_score)+"\t"+str(best_child))
+				while( iterations < self.MAX_ITER and best_score >= self.MIN_FITNESS ):
+					children = self.generateThresholdValues(seed)
+					fitness_scores = []
+					for (i,child) in enumerate(children):
+						thr_img = cv2.inRange(src = ycrcb_img, \
+												lowerb = child.lowerb, \
+												upperb = child.upperb )
+						fitness = self.findFitness(thr_img,self.correct_id[child.name])
+						fitness_scores.append( (fitness,i) )
+					####
+					(gen_score,index) = min(fitness_scores)
+					iterations = iterations +1
+
+					if( gen_score < best_score ):
+						best_score = gen_score
+						best_child = seed
+						seed = children[index]
+						stale_gen = 0
+						outputFile.write(str(iterations)+"\t"+str(gen_score)+"\t"+str(seed))
+					else:
+						stale_gen = stale_gen + 1
+
+						if( stale_gen > 20 ):
+							self.SIGMA = self.SIGMA + 1
+							outputFile.write("Stale generation:\t"+str(i)+"\tsigma: "+str(self.SIGMA))
+							stale_gen = 0
+						####					
+					####
+					if( self.watch == True ):
+						cv2.waitKey(100)
+					####
+				####
+				outputFile.write("\nBEST!\nscore: "+str(best_score)+"\tthreshold: "+str(best_child))
+			####
+		except:
+			outputFile.close()
+			raise
 		####
-		print "DONE!"
+		outputFile.close()
 	####
 
-	def storeThresholdedImage(self,t,orig):
-		##Assume the image has already by blurred
-		#t is a Threshold object
-		img = orig.copy()
-		threshed_img = cv2.inRange(src = img, \
-							lowerb = t.lowerb, \
-							upperb = t.upperb)
-		thr_cpy = threshed_img.copy()
-		(contours,hierarchy) = cv2.findContours( \
-							image = thr_cpy, \
-							mode = cv2.RETR_EXTERNAL, \
-							method = cv2.CHAIN_APPROX_NONE)
-		cv2.drawContours( image = img, \
-							contours = contours, \
-							contourIdx = -1, \
-							color = t.color, \
-							thickness = -1, \
-							lineType = cv2.CV_AA)
-		if( self.store_results == 0 ):
-			cv2.namedWindow(t.name)
-			cv2.imshow(t.name,threshed_img)
-			self.waitForKeyPress()
-		elif( self.store_results == 1):
-			cv2.imwrite(self.prefix+t.name+".png",img)
+	def generateThresholdValues(self,seed):
+		"""
+		Takes in a Threshold object and generates N similar Threshold objects
+		"""
+		children = []
+		for i in xrange(self.N):
+
+			lowerb = self.random_thresh(seed.lowerb)
+			upperb = self.random_thresh(seed.upperb)
+			children.append( Threshold( seed.name,seed.color,lowerb,upperb))
 		####
-		return None
+		return children
+	####
+
+	def random_thresh(self,t):
+		tmp = t+np.array([gauss(0,self.SIGMA),gauss(0,self.SIGMA),gauss(0,self.SIGMA)])
+		tmp[tmp>255]=255
+		tmp[tmp<0]=0
+		return np.array(tmp,np.uint8)
+	####
+
+	def sat_add(self,array,scalar):
+		tmp = np.array(array,np.float64)
+		tmp = tmp+scalar
+		tmp[tmp>255]=255
+		tmp[tmp<0]=0
+		return np.array(tmp,np.uint8)
 	####
 
 	def medianFilter(self,img):
@@ -212,125 +254,14 @@ class BlockFinder():
 		####
 		return img
 	####
-####
 
-def main():
-
-	KERNEL = np.ones((3,3),np.uint8)
-
-	cv2.namedWindow("canned")
-
-	print "Gray Image"
-	img_gray = cv2.cvtColor(img,cv2.COLOR_BGR2GRAY)
-	cv2.imshow("canned",img_gray)
-	catsKey()
-
-	print "Gaussian Blurred 9x9"
-	img_gray = cv2.GaussianBlur(img_gray,(9,9),7)
-	cv2.imshow("canned",img_gray)
-	catsKey()
-
-	print "Canny"
-	img_canned =cv2.Canny( image = img_gray, \
-				      threshold1 = 40, \
-				      threshold2 = 220, \
-				    apertureSize = 5, \
-			          L2gradient = True)
-	cv2.imshow("canned",img_gray)
-	catsKey()
-#	img_canned = cv2.dilate(img_canned,KERNEL,iterations=1)
-#	img_canned = cv2.erode(img_canned,KERNEL,iterations=1)
-	
-	print "Gaussian Blurred 5x5"
-	img_canned = cv2.GaussianBlur(img_canned,(5,5),0)
-	cv2.imshow("canned",img_gray)
-	catsKey()
-
-	cats,img_canned = cv2.threshold(img_canned,64,255,cv2.THRESH_BINARY)
-#	img_canned = cv2.erode(img_canned,KERNEL)
-	img_canned = cv2.bitwise_not(img_canned)
-	cv2.imshow("canned",img_canned)
-	catsKey()
-	img_hsv = cv2.cvtColor(img,cv2.COLOR_BGR2HSV);
-
-	red_image1 = cv2.inRange(img_hsv,red_low_1,red_high_1)
-	red_image2 = cv2.inRange(img_hsv,red_low_2,red_high_2)
-	red_image = cv2.bitwise_or(red_image1,red_image2)
-
-	orange_image = cv2.inRange(img_hsv,orange_low,orange_high)
-
-	yellow_image = cv2.inRange(img_hsv,yellow_low,yellow_high)
-
-	green_image	 = cv2.inRange(img_hsv,green_low,green_high)
-
-	blue_image = cv2.inRange(img_hsv,blue_low,blue_high)
-
-	brown_image = cv2.inRange(img_hsv,brown_low,brown_high)
-
-	d = {"red":red_image,"orange":orange_image,"yellow":yellow_image,"green":green_image,"blue":blue_image,"brown":brown_image}
-
-
-	KERNEL = np.ones((3,3),np.uint8)
-	print "Color Thresholded"
-	for (key,value) in d.items():
-		cv2.imshow(key,value)
-	####
-	catsKey()
-
-	print "Eroded"
-	for (key,value) in d.items():
-		value = cv2.erode(value,KERNEL,iterations=1)
-		cv2.imshow(key,value)
-	####
-	catsKey()
-
-	print "Gaussian Blurred 5x5"
-	for (key,value) in d.items():
-		value = cv2.GaussianBlur(value,(5,5),5)
-		cv2.imshow(key,value)
-	####
-	catsKey()
-
-	print "Dilated"
-	for (key,value) in d.items():
-		value = cv2.dilate(value,KERNEL,iterations=3)
-		cv2.imshow(key,value)
-	####
-	catsKey()
-
-	print "Gaussian Blurred 5x5"
-	for (key,value) in d.items():
-		value = cv2.GaussianBlur(value,(5,5),5)
-		cv2.imshow(key,value)
-	####
-	catsKey()
-
-	print "Binary Thresholded"
-	for (key,value) in d.items():
-		cats,value = cv2.threshold(value,128,255,cv2.THRESH_BINARY)
-		cv2.imshow(key,value)
-	####
-	catsKey()
-
-	for (key,value) in d.items():
-		(contours,hierarchy) = cv2.findContours(value,cv2.RETR_EXTERNAL,cv2.CHAIN_APPROX_NONE)
-		for contour in contours:
-			if contour.__len__()>=5:
-				ellipse = cv2.fitEllipse(contour)
-				cv2.ellipse(img,ellipse,color_dict[key],2)
-			####
+	def findFitness(self,im1,im2):
+		t = cv2.absdiff(im1,im2)
+		if( self.watch == True ):
+			cv2.imshow("cats",t)
+			cv2.waitKey(50)
 		####
-	####
-	cv2.namedWindow("cats")
-	cv2.imshow("cats",img)
-
-#	(contours,hierarchy) = cv2.findContours(img,cv2.RETR_EXTERNAL,cv2.CHAIN_APPROX_NONE)
-
-	while(1):
-		keyPressed = cv2.waitKey(20)
-		if( keyPressed == 27 ):
-			return 0
-		####
+		return t.sum()
 	####
 ####
 
