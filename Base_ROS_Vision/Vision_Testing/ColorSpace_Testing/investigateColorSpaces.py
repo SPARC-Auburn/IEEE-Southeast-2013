@@ -9,7 +9,7 @@ and spits out colorspace statistics for each image
 -----Ch1NoBlur.png
 -----Ch1PreBlur.png
 -----Ch1PostBlur.png
------Ch1BothBlur.png
+----Ch1BothBlur.png
 -----...(Ch2 and Ch3)
 -----HistNoBlur.png
 -----....etc
