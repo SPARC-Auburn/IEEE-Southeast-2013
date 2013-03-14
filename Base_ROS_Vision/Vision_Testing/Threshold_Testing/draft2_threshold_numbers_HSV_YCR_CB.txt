@@ -1,0 +1,19 @@
+Draft #2 Thresholds
+
+YCR_CB
+score: 8263020	threshold: black	(0, 0, 0)	[ 15  94 129]	[ 86 130 140]
+score: 740265	threshold: red	(0, 0, 255)	[  6 139 118]	[ 72 195 126]
+score: 439110	threshold: orange	(0, 100, 230)	[ 41 154  44]	[176 202 102]
+score: 266730	threshold: yellow	(0, 255, 255)	[ 37 122  14]	[243 141 108]
+score: 71910	threshold: green	(0, 255, 0)	[  3  98 109]	[ 37 124 130]
+score: 428655	threshold: blue	(255, 0, 0)	[  2  74 154]	[ 86 119 203]
+score: 153000	threshold: brown	(0, 77, 108)	[ 14 133 127]	[ 43 143 129]
+
+HSV
+score: 8668470	threshold: black	(0, 0, 0)	[ 16  29 130]	[108 194 152]
+score: 439110	threshold: orange	(0, 100, 230)	[  6 154  47]	[218 222 101]
+score: 287385	threshold: yellow	(0, 255, 255)	[  0 108   0]	[255 143 101]
+score: 133110	threshold: green	(0, 255, 0)	[  0 108  82]	[ 60 123 130]
+score: 439620	threshold: blue	(255, 0, 0)	[  9   0 154]	[ 78 255 254]
+score: 464865	threshold: brown	(0, 77, 108)	[  6 133  18]	[ 27 205 236]
+score: 823140	threshold: red	(0, 0, 255)	[ 32 147 116]	[ 61 224 155]red	(0, 0, 255)	[231 129  89]	[159 238 166]

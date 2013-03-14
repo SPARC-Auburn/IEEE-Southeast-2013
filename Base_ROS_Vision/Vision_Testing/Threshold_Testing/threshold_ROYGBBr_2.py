@@ -29,91 +29,164 @@ class BlockFinder():
 		#########
 		####Constants
 
+		###Draft#2
+		##HSV
+		##color = (B,G,R)
+		##lower/upperb =(Hue,Sat,Val)
+		self.black_hsv_d2 = Threshold( name = "black", \
+			color = (0,0,0), \
+			lowerb = ( 16, 29,130), \
+			upperb = (108,194,152) )
+		self.red1_hsv_d2 = Threshold( name = "red", \
+			color = (0,0,255), \
+			lowerb = ( 32,147,116), \
+			upperb = ( 61,224,155) )
+		self.red2_hsv_d2 = Threshold( name = "red", \
+			color = (0,0,255), \
+			lowerb = (231,129, 89), \
+			upperb = (159,238,166) )
+		self.orange_hsv_d2 = Threshold( name = "orange", \
+			color = (0,100,230), \
+			lowerb = (  6,154, 47), \
+			upperb = (218,222,101) )
+		self.yellow_hsv_d2 = Threshold( name = "yellow", \
+			color = (0,255,255), \
+			lowerb = (  0,108,  0), \
+			upperb = (255,143,101) )
+		self.green_hsv_d2 = Threshold( name = "green", \
+			color = (0,255,0), \
+			lowerb = (  0,108, 82), \
+			upperb = ( 60,123,130) )
+		self.blue_hsv_d2 = Threshold( name = "blue", \
+			color = (255,0,0), \
+			lowerb = (  9,  0,154), \
+			upperb = ( 78,255,254) )
+		self.brown_hsv_d2 = Threshold( name = "brown", \
+			color = (0,77,108), \
+			lowerb = (  6,133, 18), \
+			upperb = ( 27,205,236) )
+
+		##YCR_CB
+		##color = (B,G,R)
+		##lower/upperb =(Y,ChrRed,ChrBlue)
+		self.black_ycrcb_d2 = Threshold( name = "black", \
+			color = (0,0,0), \
+			lowerb = ( 15, 94,129), \
+			upperb = ( 86,130,140) )
+		self.red_ycrcb_d2 = Threshold( name = "red", \
+			color = (0,0,255), \
+			lowerb = (  6,139,118), \
+			upperb = ( 72,195,126) )
+		self.orange_ycrcb_d2 = Threshold( name = "orange", \
+			color = (0,100,230), \
+			lowerb = ( 41,154, 44), \
+			upperb = (176,202,102) )
+		self.yellow_ycrcb_d2 = Threshold( name = "yellow", \
+			color = (0,255,255), \
+			lowerb = ( 37,122, 14), \
+			upperb = (243,141,108) )
+		self.green_ycrcb_d2 = Threshold( name = "green", \
+			color = (0,255,0), \
+			lowerb = (  3, 98,109), \
+			upperb = ( 37,124,130) )
+		self.blue_ycrcb_d2 = Threshold( name = "blue", \
+			color = (255,0,0), \
+			lowerb = (  2, 74,154), \
+			upperb = ( 43,143,129) )
+		self.brown_ycrcb_d2 = Threshold( name = "brown", \
+			color = (0,77,108), \
+			lowerb = ( 14,133,127), \
+			upperb = ( 43,143,129) )
+		####
+
+
 		###Draft #1
 		##HSV
 		##color = (B,G,R)
 		##lower/upperb =(Hue,Sat,Val)
-		self.black_hsv = Threshold( name = "black", \
+		self.black_hsv_d1 = Threshold( name = "black", \
 								color = (0,0,0), \
 								lowerb = (140,  0, 41), \
 								upperb = (125, 39, 61) )
-		self.red1_hsv = Threshold( name = "red1", \
+		self.red1_hsv_d1 = Threshold( name = "red1", \
 								color = (0,0,255), \
 								lowerb = (  0,165, 61), \
 								upperb = (  6,212,126) )
-		self.red2_hsv = Threshold( name = "red2", \
+		self.red2_hsv_d1 = Threshold( name = "red2", \
 								color = (0,0,255), \
 								lowerb = (169,165, 61), \
 								upperb = (179,212,126) )
-		self.orange_hsv = Threshold( name = "orange", \
+		self.orange_hsv_d1 = Threshold( name = "orange", \
 								color = (0,100,230), \
 								lowerb = (  4,186,108), \
 								upperb = ( 13,255,255) )
-		self.yellow_hsv = Threshold( name = "yellow", \
+		self.yellow_hsv_d1 = Threshold( name = "yellow", \
 								color = (0,255,255), \
 								lowerb = ( 21,148, 97), \
 								upperb = ( 32,255,255) )
-		self.green_hsv = Threshold( name = "green", \
+		self.green_hsv_d1 = Threshold( name = "green", \
 								color = (0,255,0), \
 								lowerb = ( 54, 74, 44), \
 								upperb = ( 78,140, 77) )
-		self.blue_hsv = Threshold( name = "blue", \
+		self.blue_hsv_d1 = Threshold( name = "blue", \
 								color = (255,0,0), \
 								lowerb = (108,168, 41), \
 								upperb = (121,255,202) )
-		self.brown_hsv = Threshold( name = "brown", \
+		self.brown_hsv_d1 = Threshold( name = "brown", \
 								color = (0,77,108), \
 								lowerb = (  2, 74, 51), \
 								upperb = ( 15,204, 84) )
 
-		self.hsv_thresholds = [ self.black_hsv, \
-							self.red1_hsv, \
-							self.red2_hsv, \
-							self.orange_hsv, \
-							self.yellow_hsv, \
-							self.green_hsv, \
-							self.blue_hsv, \
-							self.brown_hsv ]
 		##YCR_CB
 		##color = (B,G,R)
 		##lower/upperb =(Y,ChrRed,ChrBlue)
-		self.black_ycrcb = Threshold( name = "black", \
+		self.black_ycrcb_d1 = Threshold( name = "black", \
 								color = (0,0,0), \
 								lowerb = ( 38,127,128), \
 								upperb = ( 57,128,133) )
-		self.red_ycrcb = Threshold( name = "red", \
+		self.red_ycrcb_d1 = Threshold( name = "red", \
 								color = (0,0,255), \
 								lowerb = ( 31,148,107), \
 								upperb = ( 70,177,126) )
-		self.orange_ycrcb = Threshold( name = "orange", \
+		self.orange_ycrcb_d1 = Threshold( name = "orange", \
 								color = (0,100,230), \
 								lowerb = ( 49,165, 62), \
 								upperb = (162,200,106) )
-		self.yellow_ycrcb = Threshold( name = "yellow", \
+		self.yellow_ycrcb_d1 = Threshold( name = "yellow", \
 								color = (0,255,255), \
 								lowerb = ( 78,137, 35), \
 								upperb = (239,150, 90) )
-		self.green_ycrcb = Threshold( name = "green", \
+		self.green_ycrcb_d1 = Threshold( name = "green", \
 								color = (0,255,0), \
 								lowerb = ( 36,110,119), \
 								upperb = ( 64,123,128) )
-		self.blue_ycrcb = Threshold( name = "blue", \
+		self.blue_ycrcb_d1 = Threshold( name = "blue", \
 								color = (255,0,0), \
 								lowerb = ( 18, 85,140), \
 								upperb = (117,126,198) )
-		self.brown_ycrcb = Threshold( name = "brown", \
+		self.brown_ycrcb_d1 = Threshold( name = "brown", \
 								color = (0,77,108), \
 								lowerb = ( 31,138,114), \
 								upperb = ( 66,148,125) )
-
-		self.ycrcb_thresholds = [ self.black_ycrcb, \
-							self.red_ycrcb, \
-							self.orange_ycrcb, \
-							self.yellow_ycrcb, \
-							self.green_ycrcb, \
-							self.blue_ycrcb, \
-							self.brown_ycrcb ]
 		########
+
+
+		self.ycrcb_thresholds = [ self.black_ycrcb_d2, \
+							self.red_ycrcb_d2, \
+							self.orange_ycrcb_d2, \
+							self.yellow_ycrcb_d2, \
+							self.green_ycrcb_d2, \
+							self.blue_ycrcb_d2, \
+							self.brown_ycrcb_d2 ]
+
+		self.hsv_thresholds = [ self.black_hsv_d2, \
+							self.red1_hsv_d2, \
+							self.red2_hsv_d2, \
+							self.orange_hsv_d2, \
+							self.yellow_hsv_d2, \
+							self.green_hsv_d2, \
+							self.blue_hsv_d2, \
+							self.brown_hsv_d2 ]
 
 		########
 		##Check the arguments and grab the image
