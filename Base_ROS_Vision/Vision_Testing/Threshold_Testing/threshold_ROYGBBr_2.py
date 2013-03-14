@@ -37,11 +37,11 @@ class BlockFinder():
 			color = (0,0,0), \
 			lowerb = ( 16, 29,130), \
 			upperb = (108,194,152) )
-		self.red1_hsv_d2 = Threshold( name = "red", \
+		self.red1_hsv_d2 = Threshold( name = "red1", \
 			color = (0,0,255), \
 			lowerb = ( 32,147,116), \
 			upperb = ( 61,224,155) )
-		self.red2_hsv_d2 = Threshold( name = "red", \
+		self.red2_hsv_d2 = Threshold( name = "red2", \
 			color = (0,0,255), \
 			lowerb = (231,129, 89), \
 			upperb = (159,238,166) )
