@@ -123,8 +123,8 @@ byte calcWaypoint() {
   }
   
   //step 2: find the theta for the straight move
-  wheel.x = destination.x + dir * sin(destination.theta);
-  wheel.y = destination.y - dir * cos(destination.theta);
+  wheel.x = destination.x + dir * HALF_WIDTH * sin(destination.theta);
+  wheel.y = destination.y - dir * HALF_WIDTH * cos(destination.theta);
   
   tempTheta = atan2((wheel.y-currentLocation.y),(wheel.x-currentLocation.x));
   tempDist = dist(currentLocation, wheel);

@@ -10,6 +10,22 @@ void debugging() {
     Serial.print("Move number: ");
     Serial.println(++moves);
     
+    // Communicate with base station and determine next move.  
+    
+    Serial.println("Comm function ready!");
+    
+    prompt();
+    
+    Serial.println("Going to comm function: ");
+    
+    if (!getBaseCommand()) {
+      Serial.println("Fetching Backup: ");
+      getBackupCommand();
+    }
+    
+    commTest();
+    prompt();
+    
     globalError = 0;
     
     // The first time this runs, the first command will already be set.
@@ -130,22 +146,6 @@ void debugging() {
     
     Serial.print("Out of loop: ");
     Serial.println(globalError);
-    
-    // Communicate with base station and determine next move.  
-    
-    Serial.println("Comm function ready!");
-    
-    prompt();
-    
-    Serial.println("Going to comm function: ");
-    
-    if (!getBaseCommand()) {
-      Serial.println("Fetching Backup: ");
-      getBackupCommand();
-    }
-    
-    commTest();
-    prompt();
     
   }
   Serial.println("Escaped");

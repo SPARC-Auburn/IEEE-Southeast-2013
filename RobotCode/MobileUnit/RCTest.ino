@@ -6,8 +6,8 @@
 void rcTest() {
   
   setMotorPosition(M_BRAKE);
-  analogWrite(P_LEFT_MOTOR_EN, 100);
-  analogWrite(P_RIGHT_MOTOR_EN, 100);
+  analogWrite(P_LEFT_MOTOR_EN, 150);
+  analogWrite(P_RIGHT_MOTOR_EN, 150);
   
   // This is when we'll next send currentLocation
   long nextUpdate = millis() + 1000;  

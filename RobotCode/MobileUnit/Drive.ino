@@ -114,6 +114,8 @@ int driveStraight(location target, boolean useLines) {
   
   // Pid Setup
   int pidCounter = 0;
+  odomPID.SetMode(MANUAL);
+  odomPID.SetMode(AUTOMATIC);
   
   // Check to see if we're traveling backward
   int backwardCorrection = 1;

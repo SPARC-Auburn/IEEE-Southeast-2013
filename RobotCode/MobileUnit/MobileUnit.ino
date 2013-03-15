@@ -37,13 +37,18 @@
 #define DECELERATION_CONSTANT 72.7  // 46.0 means 0 to 230 in 25 inches, 42.0 means 0 to 230 in 30 inches
 #define DIAM                 1.9    // diameter in inches.
 #define WIDTH              9.187    // distance between wheels in inches
-const double HALF_WIDTH = (WIDTH/2);    // Patrick, if you read this, this isn't my fault
+#define HALF_WIDTH     (WIDTH/2)    // Patrick, if you read this, this isn't my fault
 #define RESOLUTION            64    // encoder resolution
 #define RATIO              18.75    // gearbox ratio
 //#define MAGIC_SCALE_FACTOR   0.005235987756 // = pi * DIAM / (RESOLUTION * RATIO),  uses D = 2.0
 #define MAGIC_SCALE_FACTOR .0049741883681838 // = pi * DIAM / (RESOLUTION * RATIO),  uses D = 1.9
 #define TURN_SPEED_RIGHT      80    // When turning, this will be the speed
 #define TURN_SPEED_LEFT       62    // When turning, this will be the speed
+#define GREETING_TIMEOUT    3000
+#define HANDSHAKE_BACK_TIME 2500
+#define HANDSHAKE_TURN_TIME 2000
+#define HS_BACK_SPEED_LEFT    67
+#define HS_BACK_SPEED_RIGHT   80
 
 // Pin Definitions begin with P_
 #define P_XBEE_IN          14
@@ -164,6 +169,9 @@ void setup() {
    odomPID.SetMode(AUTOMATIC);
    odomPID.SetSampleTime(50);
    
+  
+   //rcTest();       // Uncomment to enter RC mode on startup
+  
    // Call opening handshake sequence
    openHandshake();
 }
@@ -181,9 +189,16 @@ void setup() {
  * command in case commmunication fails, and report to base station.
  */
 void loop() {
+  //debugging();    // Uncomment to use Debug mode, this is an infinite loop that cannot be escaped
   
-  // rcTest();       // Uncomment to enter RC mode on startup
-  debugging();    // Uncomment to use Debug mode, this is an infinite loop that cannot be escaped
+  // Communicate with base station and determine next move.  
+  if (!getBaseCommand()) {
+    
+    getBackupCommand();
+  
+  }
+  
+  odometryClear();  // Avoid any weird odometry problems when receiving a new location from base station.
   
   globalError = 0;
   
@@ -213,13 +228,4 @@ void loop() {
     globalError = endAction();
     
   } while(false);
-  
-  // Communicate with base station and determine next move.  
-  if (!getBaseCommand()) {
-    
-    getBackupCommand();
-  
-  }
-  
-  odometryClear();  // Avoid any weird odometry problems when receiving a new location from base station.
 }
