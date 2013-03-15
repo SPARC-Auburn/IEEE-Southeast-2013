@@ -37,7 +37,7 @@
 #define DECELERATION_CONSTANT 72.7  // 46.0 means 0 to 230 in 25 inches, 42.0 means 0 to 230 in 30 inches
 #define DIAM                 1.9    // diameter in inches.
 #define WIDTH              9.187    // distance between wheels in inches
-#define HALF_WIDTH     (WIDTH/2)    // Patrick, if you read this, this isn't my fault
+const double HALF_WIDTH = (WIDTH/2);    // Patrick, if you read this, this isn't my fault
 #define RESOLUTION            64    // encoder resolution
 #define RATIO              18.75    // gearbox ratio
 //#define MAGIC_SCALE_FACTOR   0.005235987756 // = pi * DIAM / (RESOLUTION * RATIO),  uses D = 2.0

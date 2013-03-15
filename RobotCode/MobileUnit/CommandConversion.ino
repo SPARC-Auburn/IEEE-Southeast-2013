@@ -52,7 +52,8 @@ byte commandConversion() {
   linesPath[2] = 0;
 
   // For now, just use the double spin simple calculation
-  doubleSpin(); 
+  //doubleSpin(); 
+  calcWaypoint();
   return 0;
 }
 
@@ -84,26 +85,94 @@ byte doubleSpin() {
   return 0;
 }
 
-// Not used right now
-byte calcWaypoint(location A, location B) {
+
+byte calcWaypoint() {
+  signed char dir;
+  double tempTheta;
+  location wheel;
+  double tempDist;
+  double correctionTheta;
+  
+  motorPath[1] = M_FORWARD;
+  
+  //step 1: get direction / what wheel to turn about
+  tempTheta = atan2((currentLocation.y-destination.y),(currentLocation.x-destination.x)); //angle from end to begin
+  tempTheta = adjustTheta(destination.theta - tempTheta); //relative to the ending angle
+  if (tempTheta < 0)
+  {
+    if (tempTheta <= -1.57) //-90deg
+    {
+      dir = -1;  //pivot on left wheel
+      motorPath[2] = M_FORWARD_LEFT;
+    }
+    else
+    {
+      return doubleSpin();  //spin
+    }
+  } else //tempTheta >= 0
+  {
+    if (tempTheta >= 1.57) //-90deg
+    {
+      dir = 1;  // pivot on right wheel
+      motorPath[2] = M_FORWARD_RIGHT;
+    }
+    else
+    {
+      return doubleSpin();  //spin
+    }
+  }
+  
+  //step 2: find the theta for the straight move
+  wheel.x = destination.x + dir * sin(destination.theta);
+  wheel.y = destination.y - dir * cos(destination.theta);
+  
+  tempTheta = atan2((wheel.y-currentLocation.y),(wheel.x-currentLocation.x));
+  tempDist = dist(currentLocation, wheel);
+  correctionTheta = atan( (tempDist/HALF_WIDTH) );
+  
+  partOneDest.theta = adjustTheta( tempTheta + dir * correctionTheta );
+  
+  //step 3: calculate the rest of the midpoint coordinates
+  partOneDest.x = currentLocation.x;
+  partOneDest.y = currentLocation.y;
+  
+  partTwoDest.theta = partOneDest.theta;
+  partTwoDest.x = destination.x + dir * HALF_WIDTH * (sin(destination.theta) - sin(partTwoDest.theta));
+  partTwoDest.y = destination.y - dir * HALF_WIDTH * (cos(destination.theta) - cos(partTwoDest.theta));
+  
+  //step 4: determine the original spin direction
+  if (adjustTheta(partOneDest.theta - currentLocation.theta) > 0) {
+    motorPath[0] = M_SPIN_LEFT;
+  }
+  else {
+    motorPath[0] = M_SPIN_RIGHT;
+  }
+  
+  
+/*  OLD CODE THAT DOESN'T WORK :(
   location wp; //waypoint to be returned
   signed char dir = signbit(adjustTheta(atan2((destination.y-currentLocation.y),
                       (destination.x-currentLocation.x))-currentLocation.theta));
+  dir = 1 - (dir << 1);  //make it so 1 = positive, -1 = negative
+  signed char dir2 = signbit(adjustTheta(destination.theta - atan2((destination.y-currentLocation.y),
+                      (destination.x-currentLocation.x))));\
+  dir2 = 1 - (dir2 << 1);
+  
   if (dir == 1)
     motorPath[0] = M_FORWARD_LEFT;
   else
     motorPath[0] = M_FORWARD_RIGHT;
-  motorPath[2] = 
-  //motorPath[0]
+  motorPath[1] = M_FORWARD;
+  motorPath[2] = motorPath[0];
   
   partOneDest.theta = atan2( (destination.y-currentLocation.y+HALF_WIDTH*(cos(destination.theta)-cos(currentLocation.theta))*dir),
                     (destination.x-currentLocation.x-HALF_WIDTH*(sin(destination.theta)-sin(currentLocation.theta))*dir));
   partOneDest.x = currentLocation.x + dir*HALF_WIDTH*(sin(partOneDest.theta)-sin(currentLocation.theta));
   partOneDest.y = currentLocation.y - dir*HALF_WIDTH*(cos(partOneDest.theta)-cos(currentLocation.theta));
   partTwoDest.theta = partOneDest.theta;
-  partTwoDest.x = destination.x - dir*HALF_WIDTH*(sin(destination.theta)-sin(partOneDest.theta));
-  partTwoDest.y = destination.y + dir*HALF_WIDTH*(cos(destination.theta)-cos(partOneDest.theta));  
-  return 0;
+  partTwoDest.x = destination.x + dir2*HALF_WIDTH*(sin(destination.theta)-sin(partOneDest.theta));
+  partTwoDest.y = destination.y - dir2*HALF_WIDTH*(cos(destination.theta)-cos(partOneDest.theta));  
+  return 0;*/
 }
 
 // Keeps theta between -PI and PI
