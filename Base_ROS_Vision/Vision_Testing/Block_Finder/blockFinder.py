@@ -219,14 +219,13 @@ class BlockFinder():
 		self.img_ycrcb = cv2.cvtColor(img_med,cv2.COLOR_BGR2YCR_CB)
 		self.img_hsv   = cv2.cvtColor(img_med,cv2.COLOR_BGR2HSV)
 		
-		self.findCourseMask()	
+		self.findInitialMasks()
 		print "DONE!"
 	####
 
-	def showImage(self,img):
-		cv2.namedWindow(self.cats)
-		cv2.imshow(self.cats,img)
-		self.cats +="cats"
+	def showImage(self,str,img):
+		cv2.namedWindow(str)
+		cv2.imshow(str,img)
 	####
 
 	def storeThresholdedImage(self,t,orig):
@@ -257,7 +256,16 @@ class BlockFinder():
 		return None
 	####
 
-	def findCourseMask(self):
+	def sortContoursByArea(self,contours):
+		area_contours = []
+		for contour in contours:
+			area_contours.append((cv2.contourArea(contour),contour))
+		####
+		area_contours.sort(key=lambda x: x[0],reverse = True)
+		return np.array([x[1] for x in area_contours])
+	####
+
+	def findInitialMasks(self):
 		thr_black_ycrcb = cv2.inRange(src = self.img_ycrcb, \
 								lowerb = self.black_ycrcb_d2.lowerb, \
 								upperb = self.black_ycrcb_d2.upperb )
@@ -267,42 +275,38 @@ class BlockFinder():
 		(contours,hier) = cv2.findContours( \
 							image = thr_black_ycrcb.copy(), \
 							mode = cv2.RETR_EXTERNAL, \
-							method = cv2.CHAIN_APPROX_NONE )
-		self.fixSmallHoles(thr_black_ycrcb)
-
-
+							method = cv2.CHAIN_APPROX_SIMPLE )
 
 		canvas = np.zeros_like(thr_black_ycrcb)
-		area_contours = []
-		for contour in contours:
-			area_contours.append((cv2.contourArea(contour),contour))
-		####
-		area_contours.sort(key=lambda x: x[0],reverse = True)
 
-		biggest_contour = area_contours[0][1]
-		hull = cv2.convexHull(points = biggest_contour,returnPoints = False)
-		defects = cv2.convexityDefects(biggest_contour,hull)
+		sorted_contours = self.sortContoursByArea(contours)
+		biggest_contour = sorted_contours[0]
+
 		cv2.drawContours( image = canvas, \
-						contours = [hull], \
+						contours = [biggest_contour], \
 						contourIdx = -1, \
 						color = (255), \
 						thickness = -1 )
 	
-		self.showImage(canvas)
+		self.showImage("Course Mask",canvas)
 		self.courseMask = canvas
 
 		#blocks = not(thr_low_sat) || not(thr_black_ycrcb)
 		#blocks = not( thr_low_sat && thr_black_ycrcb )
-		possible_blocks = cv2.bitwise_not(cv2.bitwise_and(thr_low_sat,thr_black_ycrcb))
-		blocks_on_course = cv2.bitwise_and(possible_blocks,canvas)
+		possible_blocks = cv2.bitwise_not(cv2.bitwise_and(thr_low_sat,self.courseMask))
+		blocks_on_course = cv2.bitwise_and(possible_blocks,self.courseMask)
 
 		self.blockMask = blocks_on_course
-		self.showImage(self.blockMask)
-		self.showImage(cv2.bitwise_and(self.medianFilter(self.blockMask),self.blockMask))
+		self.showImage("Block Mask",self.blockMask)
 		self.waitForKeyPress()
 	####
 
 	def fixSmallHoles(self,mask):
+		"""
+		Now defunct, as of Mar 17
+		the ycrcb external contour is good enough...
+		"""
+		self.showImage("mask coming in...",mask)
 		(contours,hier) = cv2.findContours( \
 							image = mask.copy(), \
 							mode = cv2.RETR_EXTERNAL, \
@@ -315,12 +319,7 @@ class BlockFinder():
 		area_contours.sort(key = lambda x: x[0], reverse = True)
 
 		biggest_contour = area_contours[0][1]
-		hull = cv2.convexHull(points = biggest_contour,returnPoints=True)
-		print "HULL"
-		for (i,point) in enumerate(hull):
-			print i,"\t",point
-		####
-		print "\n\n"
+		hull = cv2.convexHull(points = biggest_contour,returnPoints=False)
 		defects = cv2.convexityDefects(biggest_contour,hull)
 
 		print defects
@@ -331,21 +330,72 @@ class BlockFinder():
 		print "\n"
 		img = mask
 		cnt = biggest_contour
+
+		repaired = []
+		hull_cats = []
 		for i in range(defects.shape[0]):
 			s,e,f,d = defects[i,0]
 			start = tuple(cnt[s][0])
 			end = tuple(cnt[e][0])
 			far = tuple(cnt[f][0])
-			cv2.line(img,start,end,96,2)
+#			cv2.line(img,start,end,96,2)
 
-			cv2.circle(img,start,5,200,-1)
-			cv2.circle(img,end,5,200,-1)
+#			cv2.circle(img,start,5,200,-1)
+#			cv2.circle(img,end,5,200,-1)
 
-			cv2.circle(img,far,5,128)
-			cv2.circle(img,far,7,128)
-			cv2.circle(img,far,9,128)
+#			cv2.circle(img,far,5,128)
+#			if( d > 5000):
+#				cv2.circle(img,far,7,128)
+#				cv2.circle(img,far,9,128)
+#			####
+
+			hull_cats.append(cnt[s].tolist())
+			hull_cats.append(cnt[e].tolist())
+			if( d > 5000):
+				if( e < s):
+					repaired.extend(cnt[s:].tolist())
+					repaired.extend(cnt[:(e+1)].tolist())
+				else:
+					repaired.extend(cnt[s:(e+1)].tolist())
+				####
+			else:
+				repaired.append(cnt[s].tolist())
+				repaired.append(cnt[e].tolist())
+			####
 		####
-		self.showImage(img)
+		hull_cats = np.array(hull_cats)
+		repaired = np.array(repaired)
+		cv2.drawContours( image = mask, \
+			contours = [hull_cats], \
+			contourIdx = -1, \
+			color = (128), \
+			thickness = -1 )
+		cv2.drawContours( image = mask, \
+			contours = [repaired], \
+			contourIdx = -1, \
+			color = (250), \
+			thickness = -1 )
+		cv2.drawContours( image = mask, \
+			contours = [biggest_contour], \
+			contourIdx = -1, \
+			color = (64), \
+			thickness = 1 )
+		self.showImage("mask with hull,repaired,and,biggestcontour",mask)	
+		
+
+
+		print "REPAIRED"
+		for (i,ind) in enumerate(repaired):
+			print i,ind
+		####
+
+
+		print "\n\nHULL_CATS"
+		for (i,t) in enumerate(hull_cats):
+			print i,t
+		####
+
+		self.showImage("IMAGE?",img)
 		self.waitForKeyPress()
 		assert False
 		dist = lambda a,b: ((a[0]-b[0])**2+(a[1]-b[1])**2)
