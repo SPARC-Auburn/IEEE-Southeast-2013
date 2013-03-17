@@ -220,6 +220,47 @@ class BlockFinder():
 		self.img_hsv   = cv2.cvtColor(img_med,cv2.COLOR_BGR2HSV)
 		
 		self.findInitialMasks()
+
+
+		(contours,hierarchy) = cv2.findContours( \
+								image = self.blockMask.copy(), \
+								mode = cv2.RETR_EXTERNAL, \
+								method = cv2.CHAIN_APPROX_SIMPLE )
+		canvas = self.blockMask.copy()
+		canvas = cv2.merge((canvas,canvas,canvas))
+		cv2.drawContours( image = canvas, \
+						contours = contours, \
+						contourIdx = -1, \
+						color = (0,255,0), \
+						thickness = 0, \
+						lineType = cv2.CV_AA)
+		
+		sorted_contours = self.sortContoursByArea(contours)
+		outputFile = open("contour_hull_solidarity_information.txt",'w')
+		for (i,contour) in enumerate(sorted_contours):
+			hull = cv2.convexHull(contour)
+
+			cv2.drawContours( image = canvas, \
+						contours = [hull], \
+						contourIdx = -1, \
+						color = (0,0,255), \
+						thickness = 0, \
+						lineType = cv2.CV_AA)
+
+
+			cnt_area = cv2.contourArea(contour)
+			hull_area = cv2.contourArea(hull)
+			if( hull_area != 0 ):
+				outputFile.write(str(i)+"\t"+str(cnt_area)+"\t"+str(hull_area)+"\tsolidarity: "+str(cnt_area/hull_area))
+			else:
+				outputFile.write(str(i)+"\t"+str(cnt_area)+"\t"+str(hull_area)+"\tsolidarity: n/a")
+			####
+		####
+		self.showImage("contours for blockMask",canvas)
+		cv2.imwrite("Contours_for_BlockMask.png",canvas)
+		outputFile.close()
+
+		self.waitForKeyPress()
 		print "DONE!"
 	####
 
@@ -288,7 +329,6 @@ class BlockFinder():
 						color = (255), \
 						thickness = -1 )
 	
-		self.showImage("Course Mask",canvas)
 		self.courseMask = canvas
 
 		#blocks = not(thr_low_sat) || not(thr_black_ycrcb)
@@ -297,8 +337,7 @@ class BlockFinder():
 		blocks_on_course = cv2.bitwise_and(possible_blocks,self.courseMask)
 
 		self.blockMask = blocks_on_course
-		self.showImage("Block Mask",self.blockMask)
-		self.waitForKeyPress()
+		return 1
 	####
 
 	def fixSmallHoles(self,mask):
