@@ -220,48 +220,49 @@ class BlockFinder():
 		self.img_hsv   = cv2.cvtColor(img_med,cv2.COLOR_BGR2HSV)
 		
 		self.findInitialMasks()
+		self.analyzeBlockMaskContours()
 
+		self.waitForKeyPress()
+		print "DONE!"
+	####
 
+	def analyzeBlockMaskContours(self):
 		(contours,hierarchy) = cv2.findContours( \
 								image = self.blockMask.copy(), \
 								mode = cv2.RETR_EXTERNAL, \
 								method = cv2.CHAIN_APPROX_SIMPLE )
-		canvas = self.blockMask.copy()
-		canvas = cv2.merge((canvas,canvas,canvas))
-		cv2.drawContours( image = canvas, \
-						contours = contours, \
-						contourIdx = -1, \
-						color = (0,255,0), \
-						thickness = 0, \
-						lineType = cv2.CV_AA)
-		
 		sorted_contours = self.sortContoursByArea(contours)
-		outputFile = open("contour_hull_solidarity_information.txt",'w')
+		contour_areas = []
+		hull_areas = []
 		for (i,contour) in enumerate(sorted_contours):
 			hull = cv2.convexHull(contour)
-
-			cv2.drawContours( image = canvas, \
-						contours = [hull], \
-						contourIdx = -1, \
-						color = (0,0,255), \
-						thickness = 0, \
-						lineType = cv2.CV_AA)
-
-
-			cnt_area = cv2.contourArea(contour)
+			contour_area = cv2.contourArea(contour)
 			hull_area = cv2.contourArea(hull)
-			if( hull_area != 0 ):
-				outputFile.write(str(i)+"\t"+str(cnt_area)+"\t"+str(hull_area)+"\tsolidarity: "+str(cnt_area/hull_area))
-			else:
-				outputFile.write(str(i)+"\t"+str(cnt_area)+"\t"+str(hull_area)+"\tsolidarity: n/a")
+			if( contour_area <= 0):
+				##once the list has reached the point where an area is zero
+				## all the rest of the areas will also be zero
+				break
+			####
+			contour_areas.append(contour_area)
+			hull_areas.append(hull_area)
 			####
 		####
-		self.showImage("contours for blockMask",canvas)
-		cv2.imwrite("Contours_for_BlockMask.png",canvas)
-		outputFile.close()
+		contour_areas = np.array(contour_areas)
+		hull_areas = np.array(hull_areas)
+		solidarity= contour_areas/hull_areas
 
-		self.waitForKeyPress()
-		print "DONE!"
+		##block candidate indiceds
+		(bci,) = np.nonzero(((contour_areas>400) & (solidarity>0.75)))
+
+		for i in bci:
+			print i
+		####
+
+		for i in bci:
+			print sorted_contours[i]
+		####
+		self.block_candidates = [sorted_contours[i] for i in bci]
+		print self.block_candidates	
 	####
 
 	def showImage(self,str,img):
@@ -303,7 +304,7 @@ class BlockFinder():
 			area_contours.append((cv2.contourArea(contour),contour))
 		####
 		area_contours.sort(key=lambda x: x[0],reverse = True)
-		return np.array([x[1] for x in area_contours])
+		return [x[1] for x in area_contours]
 	####
 
 	def findInitialMasks(self):
@@ -368,15 +369,15 @@ class BlockFinder():
 		####
 		print "\n"
 		img = mask
-		cnt = biggest_contour
+		contour = biggest_contour
 
 		repaired = []
 		hull_cats = []
 		for i in range(defects.shape[0]):
 			s,e,f,d = defects[i,0]
-			start = tuple(cnt[s][0])
-			end = tuple(cnt[e][0])
-			far = tuple(cnt[f][0])
+			start = tuple(contour[s][0])
+			end = tuple(contour[e][0])
+			far = tuple(contour[f][0])
 #			cv2.line(img,start,end,96,2)
 
 #			cv2.circle(img,start,5,200,-1)
@@ -388,18 +389,18 @@ class BlockFinder():
 #				cv2.circle(img,far,9,128)
 #			####
 
-			hull_cats.append(cnt[s].tolist())
-			hull_cats.append(cnt[e].tolist())
+			hull_cats.append(contour[s].tolist())
+			hull_cats.append(contour[e].tolist())
 			if( d > 5000):
 				if( e < s):
-					repaired.extend(cnt[s:].tolist())
-					repaired.extend(cnt[:(e+1)].tolist())
+					repaired.extend(contour[s:].tolist())
+					repaired.extend(contour[:(e+1)].tolist())
 				else:
-					repaired.extend(cnt[s:(e+1)].tolist())
+					repaired.extend(contour[s:(e+1)].tolist())
 				####
 			else:
-				repaired.append(cnt[s].tolist())
-				repaired.append(cnt[e].tolist())
+				repaired.append(contour[s].tolist())
+				repaired.append(contour[e].tolist())
 			####
 		####
 		hull_cats = np.array(hull_cats)
@@ -467,126 +468,6 @@ class BlockFinder():
 			i = i - 2**k
 		####
 		return img
-	####
-####
-
-def main():
-
-	KERNEL = np.ones((3,3),np.uint8)
-
-	cv2.namedWindow("canned")
-
-	print "Gray Image"
-	img_gray = cv2.cvtColor(img,cv2.COLOR_BGR2GRAY)
-	cv2.imshow("canned",img_gray)
-	catsKey()
-
-	print "Gaussian Blurred 9x9"
-	img_gray = cv2.GaussianBlur(img_gray,(9,9),7)
-	cv2.imshow("canned",img_gray)
-	catsKey()
-
-	print "Canny"
-	img_canned =cv2.Canny( image = img_gray, \
-				      threshold1 = 40, \
-				      threshold2 = 220, \
-				    apertureSize = 5, \
-			          L2gradient = True)
-	cv2.imshow("canned",img_gray)
-	catsKey()
-#	img_canned = cv2.dilate(img_canned,KERNEL,iterations=1)
-#	img_canned = cv2.erode(img_canned,KERNEL,iterations=1)
-	
-	print "Gaussian Blurred 5x5"
-	img_canned = cv2.GaussianBlur(img_canned,(5,5),0)
-	cv2.imshow("canned",img_gray)
-	catsKey()
-
-	cats,img_canned = cv2.threshold(img_canned,64,255,cv2.THRESH_BINARY)
-#	img_canned = cv2.erode(img_canned,KERNEL)
-	img_canned = cv2.bitwise_not(img_canned)
-	cv2.imshow("canned",img_canned)
-	catsKey()
-	img_hsv = cv2.cvtColor(img,cv2.COLOR_BGR2HSV);
-
-	red_image1 = cv2.inRange(img_hsv,red_low_1,red_high_1)
-	red_image2 = cv2.inRange(img_hsv,red_low_2,red_high_2)
-	red_image = cv2.bitwise_or(red_image1,red_image2)
-
-	orange_image = cv2.inRange(img_hsv,orange_low,orange_high)
-
-	yellow_image = cv2.inRange(img_hsv,yellow_low,yellow_high)
-
-	green_image	 = cv2.inRange(img_hsv,green_low,green_high)
-
-	blue_image = cv2.inRange(img_hsv,blue_low,blue_high)
-
-	brown_image = cv2.inRange(img_hsv,brown_low,brown_high)
-
-	d = {"red":red_image,"orange":orange_image,"yellow":yellow_image,"green":green_image,"blue":blue_image,"brown":brown_image}
-
-
-	KERNEL = np.ones((3,3),np.uint8)
-	print "Color Thresholded"
-	for (key,value) in d.items():
-		cv2.imshow(key,value)
-	####
-	catsKey()
-
-	print "Eroded"
-	for (key,value) in d.items():
-		value = cv2.erode(value,KERNEL,iterations=1)
-		cv2.imshow(key,value)
-	####
-	catsKey()
-
-	print "Gaussian Blurred 5x5"
-	for (key,value) in d.items():
-		value = cv2.GaussianBlur(value,(5,5),5)
-		cv2.imshow(key,value)
-	####
-	catsKey()
-
-	print "Dilated"
-	for (key,value) in d.items():
-		value = cv2.dilate(value,KERNEL,iterations=3)
-		cv2.imshow(key,value)
-	####
-	catsKey()
-
-	print "Gaussian Blurred 5x5"
-	for (key,value) in d.items():
-		value = cv2.GaussianBlur(value,(5,5),5)
-		cv2.imshow(key,value)
-	####
-	catsKey()
-
-	print "Binary Thresholded"
-	for (key,value) in d.items():
-		cats,value = cv2.threshold(value,128,255,cv2.THRESH_BINARY)
-		cv2.imshow(key,value)
-	####
-	catsKey()
-
-	for (key,value) in d.items():
-		(contours,hierarchy) = cv2.findContours(value,cv2.RETR_EXTERNAL,cv2.CHAIN_APPROX_NONE)
-		for contour in contours:
-			if contour.__len__()>=5:
-				ellipse = cv2.fitEllipse(contour)
-				cv2.ellipse(img,ellipse,color_dict[key],2)
-			####
-		####
-	####
-	cv2.namedWindow("cats")
-	cv2.imshow("cats",img)
-
-#	(contours,hierarchy) = cv2.findContours(img,cv2.RETR_EXTERNAL,cv2.CHAIN_APPROX_NONE)
-
-	while(1):
-		keyPressed = cv2.waitKey(20)
-		if( keyPressed == 27 ):
-			return 0
-		####
 	####
 ####
 
