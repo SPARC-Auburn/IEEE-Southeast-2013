@@ -220,55 +220,27 @@ class BlockFinder():
 		self.img_hsv   = cv2.cvtColor(img_med,cv2.COLOR_BGR2HSV)
 		
 		self.findInitialMasks()
-		self.analyzeBlockMaskContours()
+		self.createBlockCandidates()
 
-		self.waitForKeyPress()
+		waitForKeyPress()
 		print "DONE!"
 	####
 
-	def analyzeBlockMaskContours(self):
+	def createBlockCandidates(self):
 		(contours,hierarchy) = cv2.findContours( \
 								image = self.blockMask.copy(), \
 								mode = cv2.RETR_EXTERNAL, \
 								method = cv2.CHAIN_APPROX_SIMPLE )
-		sorted_contours = self.sortContoursByArea(contours)
-		contour_areas = []
-		hull_areas = []
-		for (i,contour) in enumerate(sorted_contours):
-			hull = cv2.convexHull(contour)
-			contour_area = cv2.contourArea(contour)
-			hull_area = cv2.contourArea(hull)
-			if( contour_area <= 0):
-				##once the list has reached the point where an area is zero
-				## all the rest of the areas will also be zero
-				break
-			####
-			contour_areas.append(contour_area)
-			hull_areas.append(hull_area)
+
+		self.blockCandidates = []
+		for contour in contours:
+			candidate = BlockCandidate(contour)
+			if( (candidate.area > 400) && (candidate.solidarity > 0.75 )):
+				blockCandidates.append(candidate)
 			####
 		####
-		contour_areas = np.array(contour_areas)
-		hull_areas = np.array(hull_areas)
-		solidarity= contour_areas/hull_areas
-
-		##block candidate indiceds
-		(bci,) = np.nonzero(((contour_areas>400) & (solidarity>0.75)))
-
-		for i in bci:
-			print i
-		####
-
-		for i in bci:
-			print sorted_contours[i]
-		####
-		self.block_candidates = [sorted_contours[i] for i in bci]
-		print self.block_candidates	
 	####
 
-	def showImage(self,str,img):
-		cv2.namedWindow(str)
-		cv2.imshow(str,img)
-	####
 
 	def storeThresholdedImage(self,t,orig):
 		##Assume the image has already by blurred
@@ -291,7 +263,7 @@ class BlockFinder():
 		if( self.store_results == 0 ):
 			cv2.namedWindow(t.name)
 			cv2.imshow(t.name,threshed_img)
-			self.waitForKeyPress()
+			waitForKeyPress()
 		elif( self.store_results == 1):
 			cv2.imwrite(self.prefix+t.name+".png",img)
 		####
@@ -346,7 +318,7 @@ class BlockFinder():
 		Now defunct, as of Mar 17
 		the ycrcb external contour is good enough...
 		"""
-		self.showImage("mask coming in...",mask)
+		showImage("mask coming in...",mask)
 		(contours,hier) = cv2.findContours( \
 							image = mask.copy(), \
 							mode = cv2.RETR_EXTERNAL, \
@@ -420,7 +392,7 @@ class BlockFinder():
 			contourIdx = -1, \
 			color = (64), \
 			thickness = 1 )
-		self.showImage("mask with hull,repaired,and,biggestcontour",mask)	
+		showImage("mask with hull,repaired,and,biggestcontour",mask)	
 		
 
 
@@ -435,8 +407,8 @@ class BlockFinder():
 			print i,t
 		####
 
-		self.showImage("IMAGE?",img)
-		self.waitForKeyPress()
+		showImage("IMAGE?",img)
+		waitForKeyPress()
 		assert False
 		dist = lambda a,b: ((a[0]-b[0])**2+(a[1]-b[1])**2)
 	####
@@ -447,18 +419,6 @@ class BlockFinder():
 			tmp = cv2.medianBlur(tmp,3)
 		####
 		return tmp
-	####
-
-	def waitForKeyPress(self):
-		while(1):
-			keyPressed = cv2.waitKey(5)
-
-			if( keyPressed == 27 ):
-				raise Exception("\n\nQuit on ESC key\n")
-			elif( keyPressed != -1 ):
-				return keyPressed
-			####
-		####
 	####
 
 	def colorReduce(self,img,iter=1):
@@ -487,6 +447,113 @@ class Threshold():
 
 	def __str__(self):
 		return '\t'.join([str(self.name),str(self.color),str(self.lowerb),str(self.upperb)])
+####
+
+class BlockCandidate():
+	"""This class is just a glorified struct...
+	area		  : float 
+					moments["m00"]
+	contour		  :	np.array, shape = (n,1,2)
+	hull		  :	np.array, shape = (n,1)
+	defects		  :	np.array, shape = (n,4)
+				 			(start_index, end_index,farthest_pt_ind, fixpt_depth)
+				 			actual_depth = fixpt_depth/256.0
+	solidarity	  :	float
+				 		contour_area/hull_area
+	moments		  :	dictionairy
+	ellipse		  :	rotated rectangle
+					((x,y),(width,height),(angle [cw]))
+	bounding rect :	rect
+					(x,y,width,height)
+	center of mass: (x,y)
+	mask		  : np.array, shape = (bounding_rect.height,bounding_rect.width),uint8
+					the contour is drawn onto the mask
+	valid		  : boolean
+					=(moments["m00"]>0)
+	"""
+	def __init__(self,contour):
+		self.contour = contour
+		print contour.shape[0]
+		self.moments = cv2.moments(self.contour)
+		self.area = self.moments["m00"]
+
+		if( self.area > 0 ):
+			self.valid = True
+			self.hull = cv2.convexHull(contour,returnPoints = False)
+
+			self.com	 = (self.moments["m10"]/self.moments["m00"],self.moments["m01"]/self.moments["m00"])
+			
+			self.solidarity = self.moments["m00"]/cv2.contourArea(self.contour[self.hull.flatten()])
+
+			self.bounding_rect = cv2.boundingRect(self.contour)
+			if( self.contour.shape[0]>=5 ):
+				self.ellipse = cv2.fitEllipse(self.contour)
+				self.defects = cv2.convexityDefects(self.contour,self.hull)
+			elif( self.contour.shape[0]>3 ):
+				temp = list(self.bounding_rect)
+				temp.append(0)
+				self.ellipse = tuple(temp)
+				self.defects = cv2.convexityDefects(self.contour,self.hull)
+			else:
+				temp = list(self.bounding_rect)
+				temp.append(0)
+				self.ellipse = tuple(temp)
+				self.defects = np.array([[]])
+			####
+
+			self.mask = np.zeros((self.bounding_rect[3],self.bounding_rect[2]),np.uint8)
+			shifted_contour = self.contour - (self.bounding_rect[0],self.bounding_rect[1])
+			cv2.drawContours( image = self.mask , \
+							contours = [shifted_contour], \
+							contourIdx = -1, \
+							color = (255), \
+							thickness = -1 )
+		else:
+			self.valid = False
+		####
+	####
+	def maskImage(self,img):
+		(x,y,w,h) = self.bounding_rect
+		view = img[y:y+h,x:x+w]
+		return cv2.bitwise_and(view,self.mask)
+	####
+
+	def __str__(self):
+		out = []
+		if( self.valid ):
+			out.append("\nCenter Of Mass: ")
+			out.append(str(self.com))
+			out.append("\nArea: ")
+			out.append(str(self.area))
+			out.append("\nSolidarity: ")
+			out.append(str(self.solidarity))
+			out.append("\nBounding Rectangle: ")
+			out.append(str(self.bounding_rect))
+			out.append("\nMoments:\n")
+			out.append(str(self.moments))
+		else:
+			out.append("Invalid")
+		####
+		return ''.join(out)
+	####
+
+####
+
+def showImage(str,img):
+	cv2.namedWindow(str)
+	cv2.imshow(str,img)
+####
+
+def waitForKeyPress():
+	while(1):
+		keyPressed = cv2.waitKey(5)
+
+		if( keyPressed == 27 ):
+			raise Exception("\n\nQuit on ESC key\n")
+		elif( keyPressed != -1 ):
+			return keyPressed
+		####
+	####
 ####
 
 if __name__=="__main__":
