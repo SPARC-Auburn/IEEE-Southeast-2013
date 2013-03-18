@@ -298,20 +298,23 @@ class BlockFinder():
 		print candidate.hull_area
 
 		if( big_defects.__len__()==2 ):
-			mask = candidate.mask.copy()
 			p1 = candidate.contour[big_defects[0][0][2]] [0]
 			p1 = (p1[0],p1[1])
 			p2 = candidate.contour[big_defects[1][0][2]] [0]
 			p2 = (p2[0],p2[1])
+
+			mask = candidate.mask.copy()
 			cv2.line(mask,p1,p2,(0),thickness=2)
 			cv2.circle(mask,p1,2,(0),thickness=-1)
 			cv2.circle(mask,p2,2,(0),thickness=-1)
 			split_candidates = self.createBlockCandidates(mask)
+
 			print "SPLIT!!"
 			t = str(int(time.time()))
-
 			showImage("Simple Split Candidate:"+t,candidate.maskImage(self.img_ycrcb))
 			showImage("Simple-Split Candidate with Line: "+t,mask)
+
+			##fix offset for block children
 			offset_x = candidate.bounding_rect[0]
 			offset_y = candidate.bounding_rect[1]
 			for (i,block) in enumerate(split_candidates):
@@ -319,28 +322,15 @@ class BlockFinder():
 				temp[0]+=offset_x
 				temp[1]+=offset_y
 				block.bounding_rect = temp
-
-				##for show
-				showImage(str(i)+"_"+t,block.maskImage(self.img_ycrcb))
 			####
 			return split_candidates
 		####
 		else:
 
+			cat = candidate.mask.copy()
+			########
 			##Build mathcing defect pairs
 			defect_pairs = {}
-			mask = candidate.mask.copy()
-
-			###########
-			##for show....
-			mask = cv2.merge((mask,mask,mask))
-			for defect in big_defects:
-				x = candidate.contour[defect[0][2]][0][0]
-				y = candidate.contour[defect[0][2]][0][1]
-				cv2.circle(mask,(x,y),3,(0,0,255))
-			####
-			##########
-
 			for (i,defect) in enumerate(big_defects):
 				defects_copy = list(big_defects)
 				defects_copy.pop(i)
@@ -349,54 +339,39 @@ class BlockFinder():
 				pt2 = candidate.contour[defect[0][1]] [0]
 				farthest = candidate.contour[defect[0][2]] [0]
 
-				points = [candidate.contour[x[0][2]][0] for x in defects_copy]
-	#			cv2.line(mask,(pt1[0],pt1[1]),(pt2[0],pt2[1]),(255,0,0))
-				
 				point_along_hull = self.findClosestPointAlongLine(pt1,pt2,farthest)
 
-	#			cv2.line(mask,(point_along_hull[0],point_along_hull[1]),(farthest[0],farthest[1]),(0,255,0))
+				points = [candidate.contour[x[0][2]][0] for x in defects_copy]
 				closest_index = self.findClosestPointToLine(point_along_hull,farthest,points)
-
 				if( closest_index>=i ): #fix the index because defects_copy popped an element
 					closest_index+=1
 				####
-	#			closest_point = candidate.contour[big_defects[closest_index][0][2]][0]
-	#			cv2.line(mask,(farthest[0],farthest[1]),(closest_point[0],closest_point[1]),(200,0,205))
-				
 				defect_pairs[i]=closest_index
+				
+				closest_point = candidate.contour[big_defects[closest_index][0][2]][0]
+				cv2.circle(cat,(farthest[0],farthest[1]),5,(0,0,255))
+				cv2.line(cat,(farthest[0],farthest[1]),(closest_point[0],closest_point[1]),(0,255,0))
 			####
 
-			############
-			##for show.....
-			t = str((time.time()))
-			showImage("Multi-Split Candidate: "+t,mask)
-			print self.prefix
-	#		cv2.imwrite(self.prefix+"Multi_Split_Candidate_"+t+".png",mask)
-			############
-			
+			t = str(time.time())
+			showImage("Multi-split: "+t,cat)
+			#######
 			##Confirm pairs
-			print "DEFECT PAIRS"
-			print defect_pairs
-
 			points_to_eliminate = set([])
 			for (i,j) in defect_pairs.items():
-				if( i == defect_pairs[j] ):
-					print i," and ",j,"\tagree"
-				####
-				else:
-					print i,j," disagree"
+				if( i != defect_pairs[j] ):
 					points_to_eliminate.update([i,j])
 					k = defect_pairs[j]
 					while( k not in points_to_eliminate ):
 						points_to_eliminate.add(k)
 						k = defect_pairs[k]
 					####
+				####
 			####
 
 			all_points = set(range(big_defects.__len__()))
 			valid_points = all_points-points_to_eliminate
-			print "VALID POINTS"
-			print valid_points
+
 
 			valid_pairs = [ (x,defect_pairs[x]) for x in valid_points]
 			for (i,j) in valid_pairs:
@@ -404,14 +379,50 @@ class BlockFinder():
 					valid_pairs.remove((j,i))
 				####
 			####
+			########
 
+
+			########
+			##Draw on mask
+			mask = candidate.mask.copy()
 			print "VALID PAIRS"
 			print valid_pairs
-			####
+			for (i,j) in valid_pairs:
+				p1 = candidate.contour[big_defects[i][0][2]] [0]
+				p1 = (p1[0],p1[1])
+				p2 = candidate.contour[big_defects[j][0][2]] [0]
+				p2 = (p2[0],p2[1])
 
+				cv2.line(mask,p1,p2,(0),thickness=2)
+				cv2.circle(mask,p1,2,(0),thickness=-1)
+				cv2.circle(mask,p2,2,(0),thickness=-1)
+			####
+			########
+
+			########
+			##Create split children
+			split_candidates = self.createBlockCandidates(mask)
+			print "SPLIT!!"
+			t = str(int(time.time()))
+			showImage("Multi-Split Candidate:"+t,candidate.maskImage(self.img_ycrcb))
+			showImage("Multi-Split Candidate with Line: "+t,mask)
+
+			##fix offset for block children
+			offset_x = candidate.bounding_rect[0]
+			offset_y = candidate.bounding_rect[1]
+			for (i,block) in enumerate(split_candidates):
+				temp = list(block.bounding_rect)
+				temp[0]+=offset_x
+				temp[1]+=offset_y
+				block.bounding_rect = temp
+			####
+			########
+
+			return split_candidates
 		####
 
-		return []
+		assert False
+		return "CATS!!!!"
 	####
 
 	def findClosestPointAlongLine(self,pt1,pt2,point):
