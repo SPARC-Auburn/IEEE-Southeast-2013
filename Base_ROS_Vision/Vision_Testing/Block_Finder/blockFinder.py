@@ -4,6 +4,7 @@ import numpy as np
 import time
 from sys import argv
 from os import path,mkdir
+from math import sqrt
 """This python program is meant to be the final BlockFinder program
 it is still under construction
 
@@ -33,35 +34,35 @@ class BlockFinder():
 		##HSV
 		##color = (B,G,R)
 		##lower/upperb =(Hue,Sat,Val)
-		self.black_hsv_d2 = Threshold( name = "black", \
+		self.BLACK_HSV_D2 = Threshold( name = "black", \
 			color = (0,0,0), \
 			lowerb = ( 16, 29,130), \
 			upperb = (108,194,152) )
-		self.red1_hsv_d2 = Threshold( name = "red1", \
+		self.RED1_HSV_D2 = Threshold( name = "red1", \
 			color = (0,0,255), \
 			lowerb = ( 32,147,116), \
 			upperb = ( 61,224,155) )
-		self.red2_hsv_d2 = Threshold( name = "red2", \
+		self.RED2_HSV_D2 = Threshold( name = "red2", \
 			color = (0,0,255), \
 			lowerb = (231,129, 89), \
 			upperb = (159,238,166) )
-		self.orange_hsv_d2 = Threshold( name = "orange", \
+		self.ORANGE_HSV_D2 = Threshold( name = "orange", \
 			color = (0,100,230), \
 			lowerb = (  6,154, 47), \
 			upperb = (218,222,101) )
-		self.yellow_hsv_d2 = Threshold( name = "yellow", \
+		self.YELLOW_HSV_D2 = Threshold( name = "yellow", \
 			color = (0,255,255), \
 			lowerb = (  0,108,  0), \
 			upperb = (255,143,101) )
-		self.green_hsv_d2 = Threshold( name = "green", \
+		self.GREEN_HSV_D2 = Threshold( name = "green", \
 			color = (0,255,0), \
 			lowerb = (  0,108, 82), \
 			upperb = ( 60,123,130) )
-		self.blue_hsv_d2 = Threshold( name = "blue", \
+		self.BLUE_HSV_D2 = Threshold( name = "blue", \
 			color = (255,0,0), \
 			lowerb = (  9,  0,154), \
 			upperb = ( 78,255,254) )
-		self.brown_hsv_d2 = Threshold( name = "brown", \
+		self.BROWN_HSV_D2 = Threshold( name = "brown", \
 			color = (0,77,108), \
 			lowerb = (  6,133, 18), \
 			upperb = ( 27,205,236) )
@@ -69,31 +70,31 @@ class BlockFinder():
 		##YCR_CB
 		##color = (B,G,R)
 		##lower/upperb =(Y,ChrRed,ChrBlue)
-		self.black_ycrcb_d2 = Threshold( name = "black", \
+		self.BLACK_YCR_CB_D2 = Threshold( name = "black", \
 			color = (0,0,0), \
 			lowerb = ( 15, 94,129), \
 			upperb = ( 86,130,140) )
-		self.red_ycrcb_d2 = Threshold( name = "red", \
+		self.RED_YCR_CB_D2 = Threshold( name = "red", \
 			color = (0,0,255), \
 			lowerb = (  6,139,118), \
 			upperb = ( 72,195,126) )
-		self.orange_ycrcb_d2 = Threshold( name = "orange", \
+		self.ORANGE_YCR_CB_D2 = Threshold( name = "orange", \
 			color = (0,100,230), \
 			lowerb = ( 41,154, 44), \
 			upperb = (176,202,102) )
-		self.yellow_ycrcb_d2 = Threshold( name = "yellow", \
+		self.YELLOW_YCR_CB_D2 = Threshold( name = "yellow", \
 			color = (0,255,255), \
 			lowerb = ( 37,122, 14), \
 			upperb = (243,141,108) )
-		self.green_ycrcb_d2 = Threshold( name = "green", \
+		self.GREEN_YCR_CB_D2 = Threshold( name = "green", \
 			color = (0,255,0), \
 			lowerb = (  3, 98,109), \
 			upperb = ( 37,124,130) )
-		self.blue_ycrcb_d2 = Threshold( name = "blue", \
+		self.BLUE_YCR_CB_D2 = Threshold( name = "blue", \
 			color = (255,0,0), \
 			lowerb = (  2, 74,154), \
 			upperb = ( 43,143,129) )
-		self.brown_ycrcb_d2 = Threshold( name = "brown", \
+		self.BROWN_YCR_CB_D2 = Threshold( name = "brown", \
 			color = (0,77,108), \
 			lowerb = ( 14,133,127), \
 			upperb = ( 43,143,129) )
@@ -104,35 +105,35 @@ class BlockFinder():
 		##HSV
 		##color = (B,G,R)
 		##lower/upperb =(Hue,Sat,Val)
-		self.black_hsv_d1 = Threshold( name = "black", \
+		self.BLACK_HSV_D1 = Threshold( name = "black", \
 								color = (0,0,0), \
 								lowerb = (140,  0, 41), \
 								upperb = (125, 39, 61) )
-		self.red1_hsv_d1 = Threshold( name = "red1", \
+		self.RED1_HSV_D1 = Threshold( name = "red1", \
 								color = (0,0,255), \
 								lowerb = (  0,165, 61), \
 								upperb = (  6,212,126) )
-		self.red2_hsv_d1 = Threshold( name = "red2", \
+		self.RED2_HSV_D1 = Threshold( name = "red2", \
 								color = (0,0,255), \
 								lowerb = (169,165, 61), \
 								upperb = (179,212,126) )
-		self.orange_hsv_d1 = Threshold( name = "orange", \
+		self.ORANGE_HSV_D1 = Threshold( name = "orange", \
 								color = (0,100,230), \
 								lowerb = (  4,186,108), \
 								upperb = ( 13,255,255) )
-		self.yellow_hsv_d1 = Threshold( name = "yellow", \
+		self.YELLOW_HSV_D1 = Threshold( name = "yellow", \
 								color = (0,255,255), \
 								lowerb = ( 21,148, 97), \
 								upperb = ( 32,255,255) )
-		self.green_hsv_d1 = Threshold( name = "green", \
+		self.GREEN_HSV_D1 = Threshold( name = "green", \
 								color = (0,255,0), \
 								lowerb = ( 54, 74, 44), \
 								upperb = ( 78,140, 77) )
-		self.blue_hsv_d1 = Threshold( name = "blue", \
+		self.BLUE_HSV_D1 = Threshold( name = "blue", \
 								color = (255,0,0), \
 								lowerb = (108,168, 41), \
 								upperb = (121,255,202) )
-		self.brown_hsv_d1 = Threshold( name = "brown", \
+		self.BROWN_HSV_D1 = Threshold( name = "brown", \
 								color = (0,77,108), \
 								lowerb = (  2, 74, 51), \
 								upperb = ( 15,204, 84) )
@@ -140,55 +141,66 @@ class BlockFinder():
 		##YCR_CB
 		##color = (B,G,R)
 		##lower/upperb =(Y,ChrRed,ChrBlue)
-		self.black_ycrcb_d1 = Threshold( name = "black", \
+		self.BLACK_YCR_CB_D1 = Threshold( name = "black", \
 								color = (0,0,0), \
 								lowerb = ( 38,127,128), \
 								upperb = ( 57,128,133) )
-		self.red_ycrcb_d1 = Threshold( name = "red", \
+		self.RED_YCR_CB_D1 = Threshold( name = "red", \
 								color = (0,0,255), \
 								lowerb = ( 31,148,107), \
 								upperb = ( 70,177,126) )
-		self.orange_ycrcb_d1 = Threshold( name = "orange", \
+		self.ORANGE_YCR_CB_D1 = Threshold( name = "orange", \
 								color = (0,100,230), \
 								lowerb = ( 49,165, 62), \
 								upperb = (162,200,106) )
-		self.yellow_ycrcb_d1 = Threshold( name = "yellow", \
+		self.YELLOW_YCR_CB_D1 = Threshold( name = "yellow", \
 								color = (0,255,255), \
 								lowerb = ( 78,137, 35), \
 								upperb = (239,150, 90) )
-		self.green_ycrcb_d1 = Threshold( name = "green", \
+		self.GREEN_YCR_CB_D1 = Threshold( name = "green", \
 								color = (0,255,0), \
 								lowerb = ( 36,110,119), \
 								upperb = ( 64,123,128) )
-		self.blue_ycrcb_d1 = Threshold( name = "blue", \
+		self.BLUE_YCR_CB_D1 = Threshold( name = "blue", \
 								color = (255,0,0), \
 								lowerb = ( 18, 85,140), \
 								upperb = (117,126,198) )
-		self.brown_ycrcb_d1 = Threshold( name = "brown", \
+		self.BROWN_YCR_CB_D1 = Threshold( name = "brown", \
 								color = (0,77,108), \
 								lowerb = ( 31,138,114), \
 								upperb = ( 66,148,125) )
 		########
 
 
-		self.ycrcb_thresholds = [ self.black_ycrcb_d2, \
-							self.red_ycrcb_d2, \
-							self.orange_ycrcb_d2, \
-							self.yellow_ycrcb_d2, \
-							self.green_ycrcb_d2, \
-							self.blue_ycrcb_d2, \
-							self.brown_ycrcb_d2 ]
+		self.ycrcb_thresholds = [ self.BLACK_YCR_CB_D2, \
+							self.RED_YCR_CB_D2, \
+							self.ORANGE_YCR_CB_D2, \
+							self.YELLOW_YCR_CB_D2, \
+							self.GREEN_YCR_CB_D2, \
+							self.BLUE_YCR_CB_D2, \
+							self.BROWN_YCR_CB_D2 ]
 
-		self.hsv_thresholds = [ self.black_hsv_d2, \
-							self.red1_hsv_d2, \
-							self.red2_hsv_d2, \
-							self.orange_hsv_d2, \
-							self.yellow_hsv_d2, \
-							self.green_hsv_d2, \
-							self.blue_hsv_d2, \
-							self.brown_hsv_d2 ]
+		self.hsv_thresholds = [ self.BLACK_HSV_D2, \
+							self.RED1_HSV_D2, \
+							self.RED2_HSV_D2, \
+							self.ORANGE_HSV_D2, \
+							self.YELLOW_HSV_D2, \
+							self.GREEN_HSV_D2, \
+							self.BLUE_HSV_D2, \
+							self.BROWN_HSV_D2 ]
 
 		########
+
+		########
+		##Candidate thresholds
+		self.MIN_CANDIDATE_AREA = 400
+		self.MIN_CANDIDATE_SOLIDARITY = 0.75
+		########
+
+		########
+		self.distance = lambda a,b: sqrt(((a[0]-b[0])**2+(a[1]-b[1])**2))
+		#######
+
 		##Check the arguments and grab the image
 		self.cats="cats"
 
@@ -220,27 +232,109 @@ class BlockFinder():
 		self.img_hsv   = cv2.cvtColor(img_med,cv2.COLOR_BGR2HSV)
 		
 		self.findInitialMasks()
-		self.createBlockCandidates()
+		initial_candidates = self.createBlockCandidates(self.blockMask)
+		final_candidates = self.analyzeBlockCandidates(initial_candidates)
 
 		waitForKeyPress()
 		print "DONE!"
 	####
 
-	def createBlockCandidates(self):
+	def createBlockCandidates(self,img):
 		(contours,hierarchy) = cv2.findContours( \
-								image = self.blockMask.copy(), \
+								image = img.copy(), \
 								mode = cv2.RETR_EXTERNAL, \
 								method = cv2.CHAIN_APPROX_SIMPLE )
 
-		self.blockCandidates = []
+		blockCandidates = []
 		for contour in contours:
 			candidate = BlockCandidate(contour)
-			if( (candidate.area > 400) && (candidate.solidarity > 0.75 )):
+			if( (candidate.area > self.MIN_CANDIDATE_AREA) and  \
+					(candidate.solidarity > self.MIN_CANDIDATE_SOLIDARITY )):
 				blockCandidates.append(candidate)
 			####
 		####
+		blockCandidates.sort(key=lambda x: x.area,reverse=True)
+		return blockCandidates
 	####
 
+	def analyzeBlockCandidates(self,initial_candidates):
+		num = 750
+		final_candidates = []	
+
+		round_candidates = initial_candidates
+		while( 1 ):
+			multiple_blocks = []
+			for candidate in (round_candidates):
+				if( round(candidate.hull_area/num)>1 and candidate<0.90):
+					multiple_blocks.append(candidate)
+				else:
+					final_candidates.append(candidate)
+				####
+			####
+			if( multiple_blocks.__len__() == 0 ):
+				break
+			####
+
+			##sepearate blocks and continue separating
+			round_candidates = []
+			for candidate in multiple_blocks:
+				round_candidates.extend(self.separateBlocks(candidate))
+			####
+
+		####
+		return final_candidates
+	####
+
+	def separateBlocks(self,candidate):
+
+		num_blocks = round(candidate.hull_area/750)
+		big_defects = []
+		for defect in candidate.defects:
+			if( defect[0][3]/256.0 > 7 ):
+				big_defects.append(defect)
+			####
+		####
+
+		print candidate.hull_area
+		print "Distances between big defects"
+		for (i,d1) in enumerate(big_defects):
+			for d2 in big_defects[(i+1):]:
+				print self.distance(candidate.contour[d1[0][2]][0],candidate.contour[d2[0][2]][0])
+			####
+		####
+
+		if( big_defects.__len__()==2 ):
+			mask = candidate.mask.copy()
+			p1 = candidate.contour[big_defects[0][0][2]][0]
+			p1 = (p1[0],p1[1])
+			p2 = candidate.contour[big_defects[1][0][2]][0]
+			p2 = (p2[0],p2[1])
+			cv2.line(mask,p1,p2,(0),thickness=2)
+			cv2.circle(mask,p1,2,(0),thickness=-1)
+			cv2.circle(mask,p2,2,(0),thickness=-1)
+			split_candidates = self.createBlockCandidates(mask)
+			print "SPLIT!!"
+			t = str(int(time.time()))
+
+			showImage("split candidate:"+t,candidate.maskImage(self.img_ycrcb))
+			showImage("split candidate with line: "+t,mask)
+			offset_x = candidate.bounding_rect[0]
+			offset_y = candidate.bounding_rect[1]
+			for (i,block) in enumerate(split_candidates):
+				temp = list(block.bounding_rect)
+				temp[0]+=offset_x
+				temp[1]+=offset_y
+				block.bounding_rect = temp
+				print i,t
+				print block
+				showImage(str(i)+"_"+t,block.maskImage(self.img_ycrcb))
+			####
+			return split_candidates
+		####
+
+		print candidate.defects
+		return []
+	####
 
 	def storeThresholdedImage(self,t,orig):
 		##Assume the image has already by blurred
@@ -281,8 +375,8 @@ class BlockFinder():
 
 	def findInitialMasks(self):
 		thr_black_ycrcb = cv2.inRange(src = self.img_ycrcb, \
-								lowerb = self.black_ycrcb_d2.lowerb, \
-								upperb = self.black_ycrcb_d2.upperb )
+								lowerb = self.BLACK_YCR_CB_D2.lowerb, \
+								upperb = self.BLACK_YCR_CB_D2.upperb )
 		thr_low_sat =    cv2.inRange(src = self.img_hsv, \
 								lowerb = np.array((0,0,0),np.uint8), \
 								upperb = np.array((255,85,255),np.uint8) )
@@ -410,7 +504,6 @@ class BlockFinder():
 		showImage("IMAGE?",img)
 		waitForKeyPress()
 		assert False
-		dist = lambda a,b: ((a[0]-b[0])**2+(a[1]-b[1])**2)
 	####
 
 	def medianFilter(self,img):
@@ -451,10 +544,11 @@ class Threshold():
 
 class BlockCandidate():
 	"""This class is just a glorified struct...
-	area		  : float 
-					moments["m00"]
 	contour		  :	np.array, shape = (n,1,2)
 	hull		  :	np.array, shape = (n,1)
+	area		  : float 
+					moments["m00"]
+	hull_area	  : float
 	defects		  :	np.array, shape = (n,4)
 				 			(start_index, end_index,farthest_pt_ind, fixpt_depth)
 				 			actual_depth = fixpt_depth/256.0
@@ -472,20 +566,19 @@ class BlockCandidate():
 					=(moments["m00"]>0)
 	"""
 	def __init__(self,contour):
-		self.contour = contour
-		print contour.shape[0]
+		self.bounding_rect = cv2.boundingRect(contour)
+		self.contour = contour - (self.bounding_rect[0],self.bounding_rect[1])
 		self.moments = cv2.moments(self.contour)
 		self.area = self.moments["m00"]
 
 		if( self.area > 0 ):
 			self.valid = True
 			self.hull = cv2.convexHull(contour,returnPoints = False)
-
-			self.com	 = (self.moments["m10"]/self.moments["m00"],self.moments["m01"]/self.moments["m00"])
+			self.hull_area = cv2.contourArea(self.contour[self.hull.flatten()])
+			self.com	 = (self.moments["m10"]/self.area,self.moments["m01"]/self.area)
 			
-			self.solidarity = self.moments["m00"]/cv2.contourArea(self.contour[self.hull.flatten()])
+			self.solidarity = self.area/self.hull_area
 
-			self.bounding_rect = cv2.boundingRect(self.contour)
 			if( self.contour.shape[0]>=5 ):
 				self.ellipse = cv2.fitEllipse(self.contour)
 				self.defects = cv2.convexityDefects(self.contour,self.hull)
@@ -502,9 +595,8 @@ class BlockCandidate():
 			####
 
 			self.mask = np.zeros((self.bounding_rect[3],self.bounding_rect[2]),np.uint8)
-			shifted_contour = self.contour - (self.bounding_rect[0],self.bounding_rect[1])
 			cv2.drawContours( image = self.mask , \
-							contours = [shifted_contour], \
+							contours = [self.contour], \
 							contourIdx = -1, \
 							color = (255), \
 							thickness = -1 )
@@ -515,7 +607,13 @@ class BlockCandidate():
 	def maskImage(self,img):
 		(x,y,w,h) = self.bounding_rect
 		view = img[y:y+h,x:x+w]
-		return cv2.bitwise_and(view,self.mask)
+		depth = view.shape[2]
+		if( depth == 3 ):
+			temp_mask = cv2.merge((self.mask,self.mask,self.mask))
+			return cv2.bitwise_and(view,temp_mask)
+		else:
+			return cv2.bitwise_and(view,self.mask)
+		####
 	####
 
 	def __str__(self):
