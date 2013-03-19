@@ -52,8 +52,12 @@ byte commandConversion() {
   linesPath[2] = 0;
 
   // For now, just use the double spin simple calculation
-  //doubleSpin(); 
-  calcWaypoint();
+  if (dist(currentLocation, destination) < 12) {
+    doubleSpin();
+  }
+  else {
+    calcWaypoint();
+  }
   return 0;
 }
 
@@ -128,7 +132,7 @@ byte calcWaypoint() {
   
   tempTheta = atan2((wheel.y-currentLocation.y),(wheel.x-currentLocation.x));
   tempDist = dist(currentLocation, wheel);
-  correctionTheta = atan( (tempDist/HALF_WIDTH) );
+  correctionTheta = asin( (HALF_WIDTH/tempDist) );
   
   partOneDest.theta = adjustTheta( tempTheta + dir * correctionTheta );
   

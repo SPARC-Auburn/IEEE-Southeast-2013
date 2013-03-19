@@ -30,6 +30,8 @@
 #define STRAIGHT_TIMEOUT   20000    // No more than this many milliseconds spent moving straight
 #define TURN_TIMEOUT       15000    // No more than this many milliseconds spent turning
 #define MIN_SPEED             60    // PWM minimum, except for PID
+#define FW_CONST_SPEED_R      80    // This will be constant speed for straight move
+#define FW_CONST_SPEED_L      62    // This will be constant speed for straight move
 #define MAX_SPEED            195    // PWM maximum, except for PID
 #define ADDED_DISTANCE       0.3    // in inches, the amount to add to the forward distance to have the effect of adding some initial velocity
 #define ADDED_DISTANCE_REV     0
@@ -104,7 +106,7 @@ End_action commandEndAction; // The end action of the current command (high 3 bi
 int commandEndColor;         // The color block as reported from base station (middle 3 bits of end action byte)
 int commandEndLength;        // The length of block as reported from base station (low 2 bits of end action byte)
 double PIDSetpoint, PIDInput, PIDOutput;
-PID odomPID(&PIDInput, &PIDOutput, &PIDSetpoint, 3, 2, 20, DIRECT); //
+PID odomPID(&PIDInput, &PIDOutput, &PIDSetpoint, 3, 2, 15, DIRECT); //
 
 // Debug-related Global Variables
 int debugIntData[2][500];    // For storing info for debugging purposes
@@ -189,7 +191,7 @@ void setup() {
  * command in case commmunication fails, and report to base station.
  */
 void loop() {
-  //debugging();    // Uncomment to use Debug mode, this is an infinite loop that cannot be escaped
+  debugging();    // Uncomment to use Debug mode, this is an infinite loop that cannot be escaped
   
   // Communicate with base station and determine next move.  
   if (!getBaseCommand()) {

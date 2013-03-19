@@ -87,10 +87,10 @@ int driveTurn(double newTheta, boolean useLines) {
   analogWrite(P_RIGHT_MOTOR_EN, 0);
   
   // Check odometry one last time
-  if (odometry() > 0) return globalError;
+  odometry();
   
   // Success
-  return 0;
+  return globalError;
 }
 
 int driveStraight(location target, boolean useLines) {
@@ -128,8 +128,10 @@ int driveStraight(location target, boolean useLines) {
       if (odometry() > 0) return globalError;
       
       // Update motor Speed
-      analogWrite(P_LEFT_MOTOR_EN, motorSpeed+PIDOutput * constrain(1-1/remainingDist, 0, 100)*backwardCorrection); // Added two correction factors, one for a backward move and the other to avoid last second quick adjustments
-      analogWrite(P_RIGHT_MOTOR_EN, motorSpeed-PIDOutput * constrain(1-1/remainingDist, 0, 100)*backwardCorrection);
+      //analogWrite(P_LEFT_MOTOR_EN, motorSpeed+PIDOutput * constrain(1-1/remainingDist, 0, 100)*backwardCorrection); // Added two correction factors, one for a backward move and the other to avoid last second quick adjustments
+      //analogWrite(P_RIGHT_MOTOR_EN, motorSpeed-PIDOutput * constrain(1-1/remainingDist, 0, 100)*backwardCorrection);
+      analogWrite(P_LEFT_MOTOR_EN, FW_CONST_SPEED_L + PIDOutput * constrain(1-1/remainingDist, 0, 100) * backwardCorrection); // Added two correction factors, one for a backward move and the other to avoid last second quick adjustments
+      analogWrite(P_RIGHT_MOTOR_EN, FW_CONST_SPEED_R - PIDOutput * constrain(1-1/remainingDist, 0, 100) * backwardCorrection);
       
       // Dynamic variable update
       if (remainingDist < umbrella) umbrella = remainingDist; // Umbrella update
@@ -138,6 +140,7 @@ int driveStraight(location target, boolean useLines) {
       
       // Escape conditions
       if (millis() > straightTime + STRAIGHT_TIMEOUT) {globalError = 5; break;}
+      if (remainingDist < 0.05 * maxDist) break; // Break if very close
       // Will need to add useLines conditions
             
       // Accelleration Algorithm (calculation version)
