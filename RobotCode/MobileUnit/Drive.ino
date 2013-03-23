@@ -57,6 +57,10 @@ int driveTurn(double newTheta, boolean useLines) {
       // Escape conditions
       if (abs(remainingTheta) > umbrella + UMBRELLA_THETA) break; // Umbrella escape
       if (millis() > turnTime + TURN_TIMEOUT) {globalError = 5; break;} // Timeout escape
+      if (lineSensors() > 4 && useLines) {
+          // We see a line
+          break;
+      }
       // Will need to add useLines conditions
       
       // Accelleration Algorithm (not currently used)
@@ -141,6 +145,11 @@ int driveStraight(location target, boolean useLines) {
       // Escape conditions
       if (millis() > straightTime + STRAIGHT_TIMEOUT) {globalError = 5; break;}
       if (remainingDist < 0.05 * maxDist) break; // Break if very close
+      if (lineSensors() > 0 && useLines) {
+          // We see a line
+          break;
+      }
+      
       // Will need to add useLines conditions
             
       // Accelleration Algorithm (calculation version)

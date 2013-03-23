@@ -51,6 +51,10 @@
 #define HANDSHAKE_TURN_TIME 2000
 #define HS_BACK_SPEED_LEFT    67
 #define HS_BACK_SPEED_RIGHT   80
+#define LINE_BOUNDARY 500    // Percent that marks boundary
+#define LINE_TIMEOUT 100000  // Micros timeout
+#define LINE_CALIB_LOW 0     // Low calibration indicator
+#define LINE_CALIB_HIGH 1000 // High calibration indicator
 
 // Pin Definitions begin with P_
 #define P_XBEE_IN          14
@@ -69,6 +73,17 @@
 #define P_ENC_LEFT_B       19 // Encoders
 #define P_ENC_RIGHT_A      20 // Encoders
 #define P_ENC_RIGHT_B      21 // Encoders
+#define P_LINE_FRONT_1     38
+#define P_LINE_FRONT_2     40
+#define P_LINE_FRONT_3     42
+#define P_LINE_FRONT_4     44
+#define P_LINE_FRONT_5     46
+#define P_LINE_FRONT_6     48
+#define P_LINE_FRONT_7     50
+#define P_LINE_FRONT_8     52
+#define P_LINE_BACK_L      37
+#define P_LINE_BACK_R      39
+#define P_LINE_EN          41
 
 // Enumerations
 enum Motor_State {
@@ -107,6 +122,7 @@ int commandEndColor;         // The color block as reported from base station (m
 int commandEndLength;        // The length of block as reported from base station (low 2 bits of end action byte)
 double PIDSetpoint, PIDInput, PIDOutput;
 PID odomPID(&PIDInput, &PIDOutput, &PIDSetpoint, 3, 2, 15, DIRECT); //
+int lineSensorValues[10];     // 1 for line detected, 0 for no line detected
 
 // Debug-related Global Variables
 int debugIntData[2][500];    // For storing info for debugging purposes
@@ -160,6 +176,7 @@ void setup() {
    pinMode(P_LEFT_MOTOR_L1, OUTPUT);
    pinMode(P_LEFT_MOTOR_L2, OUTPUT);
    pinMode(P_LEFT_MOTOR_EN, OUTPUT);
+   pinMode(P_LINE_EN, OUTPUT);
    
    // Initialize global variables.
    PIDSetpoint = 0;
@@ -170,9 +187,9 @@ void setup() {
    odomPID.SetOutputLimits(-60, 60);
    odomPID.SetMode(AUTOMATIC);
    odomPID.SetSampleTime(50);
-   
+   digitalWrite(P_LINE_EN, HIGH);   
   
-   //rcTest();       // Uncomment to enter RC mode on startup
+   rcTest();       // Uncomment to enter RC mode on startup
   
    // Call opening handshake sequence
    openHandshake();

@@ -46,10 +46,24 @@ byte commandConversion() {
     return 0;
   }
 
-  // For now, assume no lines to be used in navigation
+  // Assume no lines to be used in navigation first step
   linesPath[0] = 0;
-  linesPath[1] = 0;
-  linesPath[2] = 0;
+  
+  // See if lines will be used for approach
+  if (bitRead(commandStatus, CS_EXPECT_LINE)) {
+    linesPath[1] = 1;
+  }
+  else {
+    linesPath[1] = 0;
+  }
+  
+  // Use lines on second move always unless no end action  
+  if (commandEndAction == EA_NONE) {
+    linesPath[2] = 0;
+  }
+  else {
+    linesPath[2] = 1;
+  }
 
   // For now, just use the double spin simple calculation
   if (dist(currentLocation, destination) < 12) {
