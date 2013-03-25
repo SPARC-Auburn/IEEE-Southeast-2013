@@ -109,7 +109,7 @@ class OrientationPacket(BasePacket):
         #byte 22    
         packet_segment = packet_eater.read_bytes(self.packet_payload_string, 22)
         packet_list = packet_eater.split_bytes(packet_segment)
-
+_
         self.air_colors = [BlockDestinationZone(nibble, AIR) for nibble in nibble_list]
         return
 
@@ -180,7 +180,7 @@ class OrientationPacket(BasePacket):
         return
 
     def _encode_errors(self, error):
-        #TODO: find error codes
+        #TODO: add error encoding
         pass
 
     #TODO: Flesh this out

@@ -26,34 +26,18 @@ GREEN_FORMAT = 0b0100
 RED_FORMAT = 0b0101
 BLUE_FORMAT = 0b0110
 
-def byte_to_string(binary_value):
-    #Must cast binary value to bin to ensure 0b appears in string
-    binary_string = str(bin(binary_value))[2:]
-    binary_string = "0" * (-len(binary_string) % BYTE_OFFSET) + binary_string
-
-    return binary_string
-
-def nibble_to_string(binary_value):
-    #Must cast binary value to bin to ensure 0b appears in string
-    binary_string = str(bin(binary_value))[2:]
-    binary_string = "0" * (-len(binary_string) % NIBBLE_OFFSET) + binary_string
-
-    return binary_string
-
 def decode_length(binary_string, length_nibble_position):
     """ Decode length portion of the packet """
     length_info = packet_eater.read_nibbles(binary_string, 
                                             length_nibble_position)
-
-    length_info = bin(length_info)
-
-    if length_info == UNKNOWN_LENGTH_FORMAT:
+    length_info = bin(int(length_info, 2))
+    if length_info == bin(UNKNOWN_LENGTH_FORMAT):
         length = None
-    elif length_info == FOUR_INCH_FORMAT:
+    elif length_info == bin(FOUR_INCH_FORMAT):
         length = 4
-    elif length_info == THREE_INCH_FORMAT:
+    elif length_info == bin(THREE_INCH_FORMAT):
         length = 3
-    elif length_info == TWO_INCH_FORMAT:
+    elif length_info == bin(TWO_INCH_FORMAT):
         length = 2
     
     return length
@@ -63,19 +47,20 @@ def decode_color(binary_string, color_nibble_position):
 
     color_info = packet_eater.read_nibbles(binary_string, 
                                            color_nibble_position)
-    color_info = bin(color_info)
-
-    if color_info == UNKNOWN_COLOR_FORMAT:
-        color = None
-    elif color_info == YELLOW_FORMAT:
+    color_info = bin(int(color_info, 2))
+    if color_info == bin(UNKNOWN_COLOR_FORMAT):
+        color = 'unknown'
+    elif color_info == bin(YELLOW_FORMAT):
         color = 'yellow'
-    elif color_info == ORANGE_FORMAT:
+    elif color_info == bin(ORANGE_FORMAT):
         color = 'orange'
-    elif color_info == BROWN_FORMAT:
+    elif color_info == bin(BROWN_FORMAT):
         color = 'brown'
-    elif color_info == GREEN_FORMAT:
+    elif color_info == bin(GREEN_FORMAT):
         color = 'green'
-    elif color_info == RED_FORMAT:
+    elif color_info == bin(BLUE_FORMAT):
+        color = 'blue'
+    elif color_info == bin(RED_FORMAT):
         color = 'red'
 
     return color
@@ -100,7 +85,7 @@ def encode_color(color):
     else:
         color_binary = UNKNOWN_COLOR_FORMAT
 
-    return byte_to_string(color_binary)
+    return packet_eater.byte_to_string(color_binary)
 
 def encode_length(length):
     """ Encode length portion of block byte """
@@ -116,4 +101,5 @@ def encode_length(length):
     else:   
         length_binary = UNKNOWN_LENGTH_FORMAT
     
-    return byte_to_string(length_binary)
+    return packet_eater.byte_to_string(length_binary)
+

@@ -9,7 +9,28 @@
 BYTE_OFFSET = 8
 NIBBLE_OFFSET = 4
 
-def read_nibbles(binary, first_nibble, final_nibble=None):
+def byte_to_string(binary_value):
+    """ returns binary string that is ensured to represent one full byte """
+    #must cast binary value to bin to ensure 0b appears in string
+    if not isinstance(binary_value, basestring):
+        binary_string = bin(binary_value)[2:]
+    else:
+        binary_string = bin(int(binary_value, 2))[2:]
+    binary_string = "0" * (-len(binary_string) % BYTE_OFFSET) + binary_string
+
+    return binary_string
+
+def nibble_to_string(binary_value):
+    #must cast binary value to bin to ensure 0b appears in string
+    if not isinstance(binary_value, basestring):
+        binary_string = bin(binary_value)[2:]
+    else:
+        binary_string = bin(int(binary_value, 2))[2:]
+    binary_string = "0" * (-len(binary_string) % NIBBLE_OFFSET) + binary_string
+
+    return binary_string
+
+def read_nibbles(binary_string, first_nibble, final_nibble=None):
 
     """
 
@@ -33,7 +54,7 @@ def read_nibbles(binary, first_nibble, final_nibble=None):
 
            
     """ 
-    
+    #binary_string = nibble_to_string(binary_string)
     final_index = first_nibble * NIBBLE_OFFSET
     first_index = final_index - NIBBLE_OFFSET
     if final_nibble is not None:
@@ -63,6 +84,7 @@ def read_bytes(binary_string, first_byte, final_byte=None):
             readBytes('000000001000000101010101, 2, 3)
 
     """
+    #binary_string = byte_to_string(binary_string)
 
     final_index = first_byte * BYTE_OFFSET
     first_index = final_index - BYTE_OFFSET
@@ -87,21 +109,4 @@ def split_nibbles(binary_string):
 
 if __name__ == "__main__":
     pass 
-    """
-    b1 = '00000000'
-    b2 = '11111111'
-    b3 = '01010101'
-    b4 = '10101010'
-
-    print splitBytes(b1)
-    print splitBytes(b1 + b2)
-    print splitBytes(b1 + b2 + b3)
-    print splitBytes(b1 + b2 + b3 + b4)
-
-
-    print splitNibbles(b1)
-    print splitNibbles(b1 + b2)
-    print splitNibbles(b1 + b2 + b3)
-    print splitNibbles(b1 + b2 + b3 + b4)
-    """
 
