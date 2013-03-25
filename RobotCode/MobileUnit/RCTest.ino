@@ -104,11 +104,9 @@ int processIn()
 void calibrateLineSensor(int pin)
 {
   // Do 10 reads, and find max/min of that set of reads
-  int minValue = 1000;
-  int maxValue = 0;
   int j;
-  int currentMax = 0, currentMin = 1000;
-  for(j = 0; j < 10; j++)
+  int currentMax = 0, currentMin = 10000;
+  for(j = 0; j < 20; j++)
   {
     int rawSensorValue = readLineSensor(pin);
     if (rawSensorValue > currentMax)
@@ -116,18 +114,11 @@ void calibrateLineSensor(int pin)
     if (rawSensorValue < currentMin)
       currentMin = rawSensorValue;
   }
-  
-  // Find out if the whole group is > max or less than min
-  if (currentMin > maxValue)
-      maxValue = currentMin;
-  if (currentMax < minValue)
-      minValue = currentMax;
-  
   Serial.print("Pin: ");
   Serial.println(pin);
-  Serial.print("Low Value: ");
-  Serial.println(minValue);
-  Serial.print("High Value: ");
-  Serial.println(maxValue);
+  Serial.print("Lowest Value: ");
+  Serial.println(currentMin);
+  Serial.print("Highest Value: ");
+  Serial.println(currentMax);
   return;
 }

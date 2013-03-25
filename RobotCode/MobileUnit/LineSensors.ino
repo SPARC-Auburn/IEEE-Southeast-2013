@@ -20,9 +20,9 @@ int lineSensors()
   lineSensorValues[7] = readLineCalibrated(P_LINE_FRONT_8, LINE_CALIB_LOW, LINE_CALIB_HIGH);
   if (lineSensorValues[7] > LINE_BOUNDARY) onLines++;
   lineSensorValues[8] = readLineCalibrated(P_LINE_BACK_L, LINE_CALIB_LOW, LINE_CALIB_HIGH);
-  if (lineSensorValues[8] > LINE_BOUNDARY) onLines++;
+  //if (lineSensorValues[8] > LINE_BOUNDARY) onLines++;
   lineSensorValues[9] = readLineCalibrated(P_LINE_BACK_R, LINE_CALIB_LOW, LINE_CALIB_HIGH);
-  if (lineSensorValues[9] > LINE_BOUNDARY) onLines++;
+  //if (lineSensorValues[9] > LINE_BOUNDARY) onLines++;
   return onLines;
 }
 

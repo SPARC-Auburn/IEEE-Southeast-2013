@@ -52,9 +52,9 @@
 #define HS_BACK_SPEED_LEFT    67
 #define HS_BACK_SPEED_RIGHT   80
 #define LINE_BOUNDARY 500    // Percent that marks boundary
-#define LINE_TIMEOUT 100000  // Micros timeout
-#define LINE_CALIB_LOW 0     // Low calibration indicator
-#define LINE_CALIB_HIGH 1000 // High calibration indicator
+#define LINE_TIMEOUT 5000  // Micros timeout
+#define LINE_CALIB_LOW 500     // Low calibration indicator
+#define LINE_CALIB_HIGH 1500 // High calibration indicator
 
 // Pin Definitions begin with P_
 #define P_XBEE_IN          14
@@ -129,6 +129,7 @@ int debugIntData[2][500];    // For storing info for debugging purposes
 double debugDoubleData[2][500];  // For storing info for debugging purposes
 int dataIndex;               // For storing info for debugging purposes
 int commTimesSent, commPacketsReceived; // For debugging
+long sensorTime;
 
 // Method Declarations
 void getBackupCommand();     // Figures out best command from backup list.

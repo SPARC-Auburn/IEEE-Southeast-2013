@@ -67,11 +67,12 @@ byte commandConversion() {
 
   // For now, just use the double spin simple calculation
   if (dist(currentLocation, destination) < 12) {
-    doubleSpin();
+    //doubleSpin();
   }
   else {
-    calcWaypoint();
+    //calcWaypoint();
   }
+  doubleSpin();
   return 0;
 }
 
