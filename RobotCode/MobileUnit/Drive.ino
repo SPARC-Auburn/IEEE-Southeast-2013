@@ -25,7 +25,7 @@ const int DECEL_ARRAY[21] = {195, 160, 120, 85, 60, 40, 30, 30, 30, 30, 30, 30, 
 
 // What to do for a turn
 int driveTurn(double newTheta, boolean useLines) {
-  
+   
   long turnTime = millis();  // Used to monitor timeout
   int motorSpeed = 0;
   if (odometry() > 0) return globalError;
@@ -57,6 +57,12 @@ int driveTurn(double newTheta, boolean useLines) {
       // Escape conditions
       if (abs(remainingTheta) > umbrella + UMBRELLA_THETA) break; // Umbrella escape
       if (millis() > turnTime + TURN_TIMEOUT) {globalError = 5; break;} // Timeout escape
+      sensorTime = millis();
+      if (lineSensors() > 4 && useLines) {
+          // We see a line
+          break;
+      }
+      sensorTime = millis() - sensorTime;
       // Will need to add useLines conditions
       
       // Accelleration Algorithm (not currently used)
@@ -132,6 +138,8 @@ int driveStraight(location target, boolean useLines) {
       //analogWrite(P_RIGHT_MOTOR_EN, motorSpeed-PIDOutput * constrain(1-1/remainingDist, 0, 100)*backwardCorrection);
       analogWrite(P_LEFT_MOTOR_EN, FW_CONST_SPEED_L + PIDOutput * constrain(1-1/remainingDist, 0, 100) * backwardCorrection); // Added two correction factors, one for a backward move and the other to avoid last second quick adjustments
       analogWrite(P_RIGHT_MOTOR_EN, FW_CONST_SPEED_R - PIDOutput * constrain(1-1/remainingDist, 0, 100) * backwardCorrection);
+      //analogWrite(P_LEFT_MOTOR_EN, FW_CONST_SPEED_L);
+      //analogWrite(P_RIGHT_MOTOR_EN, FW_CONST_SPEED_R);
       
       // Dynamic variable update
       if (remainingDist < umbrella) umbrella = remainingDist; // Umbrella update
@@ -141,6 +149,11 @@ int driveStraight(location target, boolean useLines) {
       // Escape conditions
       if (millis() > straightTime + STRAIGHT_TIMEOUT) {globalError = 5; break;}
       if (remainingDist < 0.05 * maxDist) break; // Break if very close
+      if (lineSensors() > 0 && useLines) {
+          // We see a line
+          break;
+      }
+      
       // Will need to add useLines conditions
             
       // Accelleration Algorithm (calculation version)
