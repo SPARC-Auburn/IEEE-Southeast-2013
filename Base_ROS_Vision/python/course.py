@@ -41,11 +41,8 @@ class Course(object):
         course_utils.initialize_course_constructs(self.course_constructs)
         self.initialize_grid()
 
-
-
     #TODO: Add key
     #TODO: FIX ALL INDEXING
-
 
     def initialize_grid(self):
         course_utils.initialize_starting_area(self.grid)
@@ -55,16 +52,9 @@ class Course(object):
         self.initialize_air_zone()
         self.initialize_ramp_area()
 
-            # TODO: Finish adding whiteline stuff         
-        #self.grid[START_ZONE_Y_START:START_ZONE_Y_END + WHITE_LINE_SIZE,
-         #         START_ZONE_X_END + INDEX_BUFFER:WHITE_LINE_SIZE] = WHITE_LINE_CODE
-
-        #self.grid[START_ZONE_Y_END + INDEX_BUFFER,
-         #         START_ZONE_X_START:START_ZONE_X_END + INDEX_BUFFER] = WHITE_LINE_CODE
-                  
-
     def initialze_ramp_area(self):
         pass
+        #TODO: Fix ramp codes
         #Unaccesible portions
         #self.grid[640:800][:] = BLOCKED_PATH_CODE
         #Top portion of ramp
@@ -79,27 +69,9 @@ class Course(object):
 
     def initialize_rail_zone(self):
         pass
-        #for i in xrange(SEA_ZONE_Y_START, SEA_ZONE_Y_END, DESTINATION_ZONE_WIDTH * 2 + 1):
-         #   print i
-          #  self.grid[i][SEA_ZONE_X_START:SEA_ZONE_X_END] = WHITE_LINE_CODE
-    
+
     def initialize_sea_zone(self):
-        """
-        SEA_ZONE_Y_START = START_ZONE_Y_END + (INDEX_BUFFER * 9)
-        SEA_ZONE_Y_END = SEA_ZONE_Y_START + (INDEX_BUFFER * 2.5)
-        
-        SEA_ZONE_X_START = 0
-        SEA_ZONE_X_END = INDEX_BUFFER * 4
-       """ 
-        #TODO: Fix the spacing. It should just be adding WHITE_SPACE
-        #TODO: or something like that. WAY over indexing now
-       
-        #for i in xrange(1, SEA_ZONE_COUNT):
-         #   self.grid[SEA_ZONE_Y_START * i:SEA_ZONE_Y_END * i,
-          #            SEA_ZONE_X_START:SEA_ZONE_X_END] = SEA_ZONE_CODE
-            #self.grid[SEA_INITIAL_EDGE_X]
-            #self.grid[FIRST_SEA_BLOCK_Y_START:,
-             #         FIRST_SEA_BLOCK_X_START * i:FIRST_SEA_BLOCK_X_END * i] = WHITE_LINE_CODE
+        pass
 
     def initialize_air_zone(self):
         pass
@@ -182,10 +154,13 @@ if __name__ == "__main__":
     course_utils.fill_sea_zone(C.grid, 5, 0b11)
     course_utils.fill_sea_zone(C.grid, 6, 0b11)
     """
+    """
     course_utils.fill_rail_zone(C.grid, 1, 0b11)
     course_utils.fill_rail_zone(C.grid, 2, 0b11)
     course_utils.fill_rail_zone(C.grid, 3, 0b11)
     course_utils.fill_rail_zone(C.grid, 4, 0b11)
     course_utils.fill_rail_zone(C.grid, 5, 0b11)
     course_utils.fill_rail_zone(C.grid, 6, 0b11)
-    pass
+    """
+    course_utils.fill_air_zone(C.grid, 1, 0b11)
+    course_utils.fill_air_zone(C.grid, 2, 0b11)

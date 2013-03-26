@@ -15,9 +15,9 @@ DEBUG = True
 INCH = 1
 INDEX_SIZE = INCH * .5
 INDEX_BUFFER = INCH * 50
-TOP_BUFFER = INDEX_BUFFER * 14.875
+TOP_BUFFER = INDEX_BUFFER * 15
 LEFT_BUFFER = INDEX_BUFFER * 8.5
-BOTTOM_BUFFER = INDEX_BUFFER * 31.75
+BOTTOM_BUFFER = INDEX_BUFFER * 32.5
 
 MOBILE_COORDINATE_INCREMENT = INCH * 500
 
@@ -73,7 +73,6 @@ WHITE_LINE_SIZE = INDEX_BUFFER * .5
 
 RAMP_X_START = COURSE_WIDTH - (INDEX_BUFFER * 24)
 
-
 #Start and end locations of FIRST zone
 #Must calculate position of offset blocks
 #based on initial locations
@@ -88,11 +87,11 @@ RAIL_ZONE_Y_END = RAIL_LENGTH
 
 #TODO: CORRECT THESE MEASUREMENTS
 #      The ones listed on the diagram are not correct
-RAIL_ZONE_X_START = math.ceil(START_ZONE_X_END + BOTTOM_BUFFER + (2 * WHITE_LINE_SIZE))
+RAIL_ZONE_X_START = (START_ZONE_X_END + BOTTOM_BUFFER + (2 * WHITE_LINE_SIZE))
 RAIL_ZONE_X_END = RAIL_ZONE_X_START + BLOCK_ZONE_WIDTH
 
-SEA_ZONE_Y_START = int(START_ZONE_Y_END + (WHITE_LINE_SIZE) + LEFT_BUFFER)
-SEA_ZONE_Y_END  = int(SEA_ZONE_Y_START + BLOCK_ZONE_WIDTH)
+SEA_ZONE_Y_START = START_ZONE_Y_END + (2 * WHITE_LINE_SIZE) + LEFT_BUFFER
+SEA_ZONE_Y_END  = SEA_ZONE_Y_START + BLOCK_ZONE_WIDTH
 
 SEA_ZONE_X_START = 0
 SEA_ZONE_X_END =  int(SEA_LENGTH)
@@ -104,6 +103,12 @@ LOADING_ZONE_X_END =  math.ceil(LOADING_ZONE_X_START + BLOCK_ZONE_WIDTH)
 
 LOADING_ZONE_Y_END = REAL_COURSE_HEIGHT * INDEX_BUFFER
 LOADING_ZONE_Y_START = LOADING_ZONE_Y_END - LOADING_ZONE_LENGTH
+
+AIR_ZONE_Y_START = LOADING_ZONE_Y_END + (2 * WHITE_LINE_SIZE)
+AIR_ZONE_Y_END = AIR_ZONE_Y_START + BLOCK_ZONE_WIDTH
+
+AIR_ZONE_X_START  = 0
+AIR_ZONE_X_END = AIR_LENGTH
 
 def distance(point_one, point_two):
     diff_x_squared = math.pow(point_two[1] - point_one[1], 2)
@@ -165,8 +170,6 @@ def fill_rail_zone(grid, zone_position, zone_code):
                    rail_x_start-1:rail_x_end+1]
 
 
-
-
 #first element is zone closest to 
 def fill_sea_zone(grid, zone_position, zone_code):
     """ """ 
@@ -175,13 +178,22 @@ def fill_sea_zone(grid, zone_position, zone_code):
                                            SEA_ZONE_Y_END,
                                            zone_position)
 
-    DEBUG = True
+    grid[sea_y_start:sea_y_end, 
+         SEA_ZONE_X_START : SEA_ZONE_X_END ] = zone_code
+
+
     if DEBUG:
+        print zone_position
+        print SEA_ZONE_Y_START
+        print SEA_ZONE_Y_END
+
         print sea_y_start
         print sea_y_end
 
-    grid[sea_y_start:sea_y_end, 
-         SEA_ZONE_X_START : SEA_ZONE_X_END ] = zone_code
+
+        print grid[sea_y_start - 1:sea_y_end + 1,
+                   SEA_ZONE_X_START:SEA_ZONE_X_END + 1]
+
 
 
 def fill_air_zone(grid, zone_position, zone_code):
@@ -189,15 +201,23 @@ def fill_air_zone(grid, zone_position, zone_code):
     
 
     air_y_start, air_y_end = adjust_widths(AIR_ZONE_Y_START,
-                                           AIR_ZONE_X_START,
-                                           zone_position)                                           
-    DEBUG = True
+                                           AIR_ZONE_Y_END,
+                                           zone_position)                               
+    grid[air_y_start:air_y_end,
+         AIR_ZONE_X_START:AIR_ZONE_X_END] = zone_code
+
     if DEBUG:
+        print zone_position
+        print AIR_ZONE_Y_START
+        print AIR_ZONE_Y_END
+
         print air_y_start
         print air_y_end
 
-    grid[air_y_start:air_y_end, 
-         AIR_ZONE_X_START:AIR_ZONE_X_END] = zone_code
+
+        print grid[air_y_start - 1:air_y_end + 1,
+                   AIR_ZONE_X_START:AIR_ZONE_X_END + 1]
+
 
 
 def initialize_starting_area(grid):
