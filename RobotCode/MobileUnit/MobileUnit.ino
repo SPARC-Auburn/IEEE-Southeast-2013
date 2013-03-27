@@ -4,7 +4,7 @@
  * Student Project and Research Committee (SPaRC)
  * MobileUnit Code for IEEE Secon 2013 Hardware Competition
  * 
- * Version: 3/7/2013
+ * Version: 3/26/2013
  *
  * To debug: Go to first lines of loop() and uncomment rcTest() or debugging(),
  * and change prompt() in debugging_loop to step through program.
@@ -51,10 +51,11 @@
 #define HANDSHAKE_TURN_TIME 2000
 #define HS_BACK_SPEED_LEFT    67
 #define HS_BACK_SPEED_RIGHT   80
-#define LINE_BOUNDARY 500    // Percent that marks boundary
-#define LINE_TIMEOUT 5000  // Micros timeout
-#define LINE_CALIB_LOW 500     // Low calibration indicator
-#define LINE_CALIB_HIGH 1500 // High calibration indicator
+#define LINE_BOUNDARY        500    // Percent that marks boundary
+#define LINE_TIMEOUT        5000  // Micros timeout
+#define LINE_CALIB_LOW      2000     // Low calibration indicator
+#define LINE_CALIB_HIGH     4000 // High calibration indicator
+#define LINE_ADJUST_MOTOR_SPEED 60 // The speed of motors when adjusting for line
 
 // Pin Definitions begin with P_
 #define P_XBEE_IN          14
@@ -140,6 +141,7 @@ void correctTurn(int whichSegment);  // Sets motorPath variable saved as M_CORRE
 void setMotorPosition(int whichPosition);  // Just changes motor directions.
 int driveTurn(double newTheta, boolean useLines);  // Return error
 int driveStraight(location target, boolean useLines);  // Return error
+int adjustToFullLine(); // Makes small adjustments to be sure at least all line sensors are satisfied, then resets odometry
 boolean getBaseCommand();    // Communicates with base station and gets command, returns false if timeout with failed communication.
 int odometry();              // Runs the math to update currentLocation, returns global error (0 = success)
 int endAction();             // Manages claw and color, length sensors to pick up or drop off blocks.

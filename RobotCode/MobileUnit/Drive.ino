@@ -26,6 +26,10 @@ const int DECEL_ARRAY[21] = {195, 160, 120, 85, 60, 40, 30, 30, 30, 30, 30, 30, 
 // What to do for a turn
 int driveTurn(double newTheta, boolean useLines) {
    
+  if (useLines && bitRead(commandStatus, CS_EXPECT_LINE)) {
+    return adjustToFullLine();
+  }
+  
   long turnTime = millis();  // Used to monitor timeout
   int motorSpeed = 0;
   if (odometry() > 0) return globalError;
@@ -240,4 +244,51 @@ double dist(location a, location b) {
 
 double arcdist(double theta1, double theta2, double radius) {
   return (theta2 - theta1)*radius;
+}
+
+int adjustToFullLine() {
+  
+  long timeStart = millis();
+  analogWrite(P_LEFT_MOTOR_EN, LINE_ADJUST_MOTOR_SPEED);
+  analogWrite(P_RIGHT_MOTOR_EN, LINE_ADJUST_MOTOR_SPEED); 
+  
+  while(millis() < timeStart + 200) {
+    setMotorPosition(M_BACKWARD);
+    odometry();
+  }
+  
+  int sensorHappiness = lineSensors(); 
+  
+  while(sensorHappiness < 8) {
+    if (sensorHappiness == 0) {
+      setMotorPosition(M_FORWARD);
+    }
+    else if (lineSensorValues[8] < LINE_BOUNDARY) {
+      setMotorPosition(M_FORWARD_RIGHT);
+    }
+    else if (lineSensorValues[0] < LINE_BOUNDARY) {
+      setMotorPosition(M_FORWARD_LEFT);
+    }
+    else {
+      setMotorPosition(M_BACKWARD);
+      delay(200);
+    }
+    odometry();
+    sensorHappiness = lineSensors();
+    
+    if (millis() > timeStart + 5000) {globalError = 5; break;}
+  }
+  
+  // Brake sequence
+  setMotorPosition(M_BRAKE);
+  delay(10);
+  analogWrite(P_LEFT_MOTOR_EN, 255);
+  analogWrite(P_RIGHT_MOTOR_EN, 255);
+  delay(100); 
+  
+  // Finished breaking, set output to zero
+  analogWrite(P_LEFT_MOTOR_EN, 0);
+  analogWrite(P_RIGHT_MOTOR_EN, 0);
+  
+  return globalError;
 }
