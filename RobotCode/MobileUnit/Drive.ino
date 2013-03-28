@@ -25,6 +25,10 @@ const int DECEL_ARRAY[21] = {195, 160, 120, 85, 60, 40, 30, 30, 30, 30, 30, 30, 
 
 // What to do for a turn
 int driveTurn(double newTheta, boolean useLines) {
+   
+  if (useLines && bitRead(commandStatus, CS_EXPECT_LINE)) {
+    return adjustToFullLine();
+  }
   
   long turnTime = millis();  // Used to monitor timeout
   int motorSpeed = 0;
@@ -57,6 +61,12 @@ int driveTurn(double newTheta, boolean useLines) {
       // Escape conditions
       if (abs(remainingTheta) > umbrella + UMBRELLA_THETA) break; // Umbrella escape
       if (millis() > turnTime + TURN_TIMEOUT) {globalError = 5; break;} // Timeout escape
+      sensorTime = millis();
+      if (lineSensors() > 4 && useLines) {
+          // We see a line
+          break;
+      }
+      sensorTime = millis() - sensorTime;
       // Will need to add useLines conditions
       
       // Accelleration Algorithm (not currently used)
@@ -87,10 +97,10 @@ int driveTurn(double newTheta, boolean useLines) {
   analogWrite(P_RIGHT_MOTOR_EN, 0);
   
   // Check odometry one last time
-  if (odometry() > 0) return globalError;
+  odometry();
   
   // Success
-  return 0;
+  return globalError;
 }
 
 int driveStraight(location target, boolean useLines) {
@@ -128,8 +138,12 @@ int driveStraight(location target, boolean useLines) {
       if (odometry() > 0) return globalError;
       
       // Update motor Speed
-      analogWrite(P_LEFT_MOTOR_EN, motorSpeed+PIDOutput * constrain(1-1/remainingDist, 0, 100)*backwardCorrection); // Added two correction factors, one for a backward move and the other to avoid last second quick adjustments
-      analogWrite(P_RIGHT_MOTOR_EN, motorSpeed-PIDOutput * constrain(1-1/remainingDist, 0, 100)*backwardCorrection);
+      //analogWrite(P_LEFT_MOTOR_EN, motorSpeed+PIDOutput * constrain(1-1/remainingDist, 0, 100)*backwardCorrection); // Added two correction factors, one for a backward move and the other to avoid last second quick adjustments
+      //analogWrite(P_RIGHT_MOTOR_EN, motorSpeed-PIDOutput * constrain(1-1/remainingDist, 0, 100)*backwardCorrection);
+      analogWrite(P_LEFT_MOTOR_EN, FW_CONST_SPEED_L + PIDOutput * constrain(1-1/remainingDist, 0, 100) * backwardCorrection); // Added two correction factors, one for a backward move and the other to avoid last second quick adjustments
+      analogWrite(P_RIGHT_MOTOR_EN, FW_CONST_SPEED_R - PIDOutput * constrain(1-1/remainingDist, 0, 100) * backwardCorrection);
+      //analogWrite(P_LEFT_MOTOR_EN, FW_CONST_SPEED_L);
+      //analogWrite(P_RIGHT_MOTOR_EN, FW_CONST_SPEED_R);
       
       // Dynamic variable update
       if (remainingDist < umbrella) umbrella = remainingDist; // Umbrella update
@@ -138,6 +152,12 @@ int driveStraight(location target, boolean useLines) {
       
       // Escape conditions
       if (millis() > straightTime + STRAIGHT_TIMEOUT) {globalError = 5; break;}
+      if (remainingDist < 0.05 * maxDist) break; // Break if very close
+      if (lineSensors() > 0 && useLines) {
+          // We see a line
+          break;
+      }
+      
       // Will need to add useLines conditions
             
       // Accelleration Algorithm (calculation version)
@@ -224,4 +244,51 @@ double dist(location a, location b) {
 
 double arcdist(double theta1, double theta2, double radius) {
   return (theta2 - theta1)*radius;
+}
+
+int adjustToFullLine() {
+  
+  long timeStart = millis();
+  analogWrite(P_LEFT_MOTOR_EN, LINE_ADJUST_MOTOR_SPEED);
+  analogWrite(P_RIGHT_MOTOR_EN, LINE_ADJUST_MOTOR_SPEED); 
+  
+  while(millis() < timeStart + 200) {
+    setMotorPosition(M_BACKWARD);
+    odometry();
+  }
+  
+  int sensorHappiness = lineSensors(); 
+  
+  while(sensorHappiness < 8) {
+    if (sensorHappiness == 0) {
+      setMotorPosition(M_FORWARD);
+    }
+    else if (lineSensorValues[8] < LINE_BOUNDARY) {
+      setMotorPosition(M_FORWARD_RIGHT);
+    }
+    else if (lineSensorValues[0] < LINE_BOUNDARY) {
+      setMotorPosition(M_FORWARD_LEFT);
+    }
+    else {
+      setMotorPosition(M_BACKWARD);
+      delay(200);
+    }
+    odometry();
+    sensorHappiness = lineSensors();
+    
+    if (millis() > timeStart + 5000) {globalError = 5; break;}
+  }
+  
+  // Brake sequence
+  setMotorPosition(M_BRAKE);
+  delay(10);
+  analogWrite(P_LEFT_MOTOR_EN, 255);
+  analogWrite(P_RIGHT_MOTOR_EN, 255);
+  delay(100); 
+  
+  // Finished breaking, set output to zero
+  analogWrite(P_LEFT_MOTOR_EN, 0);
+  analogWrite(P_RIGHT_MOTOR_EN, 0);
+  
+  return globalError;
 }

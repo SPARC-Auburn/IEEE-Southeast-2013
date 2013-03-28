@@ -56,6 +56,8 @@ void debugging() {
     
       Serial.print("Motor state 1: ");
       Serial.println(motorPath[0]);
+      Serial.print("Use Lines 1: ");
+      Serial.println(linesPath[0]);
       Serial.print("Part One: to (");
       Serial.print(partOneDest.x);
       Serial.print(", ");
@@ -65,6 +67,8 @@ void debugging() {
       Serial.println(")");
       Serial.print("Motor state 2: ");
       Serial.println(motorPath[1]);
+      Serial.print("Use Lines 2: ");
+      Serial.println(linesPath[1]);
       Serial.print("Part Two: to (");
       Serial.print(partTwoDest.x);
       Serial.print(", ");
@@ -73,7 +77,9 @@ void debugging() {
       Serial.print(partTwoDest.theta);
       Serial.println(")");
       Serial.print("Motor state 3: ");
-      Serial.println(motorPath[2]);      
+      Serial.println(motorPath[2]);   
+      Serial.print("Use Lines 3: ");
+      Serial.println(linesPath[2]);   
     
       prompt();
     
@@ -146,6 +152,9 @@ void debugging() {
     
     Serial.print("Out of loop: ");
     Serial.println(globalError);
+    
+    Serial.print("Sensor time: ");
+    Serial.println(sensorTime);
     
   }
   Serial.println("Escaped");

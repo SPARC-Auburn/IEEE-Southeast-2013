@@ -41,6 +41,7 @@ void rcTest() {
 // Incoming messages
 int processIn()
 {
+  int onLines;
   if (Serial.available() > 0)
   {
     char incoming = Serial.read();
@@ -75,13 +76,76 @@ int processIn()
         break;
       case 'r': // Exit remote mode permanently
         return 1;
+      case 'l': 
+        // calibrateLineSensor() for each of the 10 line sensors
+        calibrateLineSensor(P_LINE_FRONT_1);
+        calibrateLineSensor(P_LINE_FRONT_2);
+        calibrateLineSensor(P_LINE_FRONT_3);
+        calibrateLineSensor(P_LINE_FRONT_4);
+        calibrateLineSensor(P_LINE_FRONT_5);
+        calibrateLineSensor(P_LINE_FRONT_6);
+        calibrateLineSensor(P_LINE_FRONT_7);
+        calibrateLineSensor(P_LINE_FRONT_8);
+        calibrateLineSensor(P_LINE_BACK_L);
+        calibrateLineSensor(P_LINE_BACK_R);
+        break;
+      case 'k':
+        onLines = lineSensors();
+        Serial.print("Front 1: ");
+        Serial.println(lineSensorValues[0]);
+        Serial.print("Front 2: ");
+        Serial.println(lineSensorValues[1]);
+        Serial.print("Front 3: ");
+        Serial.println(lineSensorValues[2]);
+        Serial.print("Front 4: ");
+        Serial.println(lineSensorValues[3]);
+        Serial.print("Front 5: ");
+        Serial.println(lineSensorValues[4]);
+        Serial.print("Front 6: ");
+        Serial.println(lineSensorValues[5]);
+        Serial.print("Front 7: ");
+        Serial.println(lineSensorValues[6]);
+        Serial.print("Front 8: ");
+        Serial.println(lineSensorValues[7]);
+        Serial.print("Back left: ");
+        Serial.println(lineSensorValues[8]);
+        Serial.print("Back right: ");
+        Serial.println(lineSensorValues[9]);
+        Serial.print("Total lines detected: ");
+        Serial.println(onLines);
+        break;
       case 'h': // HELP.
         Serial.print("HELP:\n\tw: Move forward.\n\ta: Turn left.\n\ts: Move backward. \n\td: Turn left.\n");
         Serial.print("\tq: Move forward and left (right wheel drive only).\n\te: Move forward and right (left wheel drive only).\n");
         Serial.print("\tz: Move backwards and left (left wheel drive only).\n\tc: Move backwards and right (right wheel drive only).\n\tx: Wait.\n");
+        Serial.print("\tr: Exit Remote mode permanently\n");
+        Serial.print("\tl: Calibrate line sensors\n");
+        Serial.print("\tk: Debug line sensors\n");
         delay(1000);
         break;
     }
   }
   return 0;
+}
+
+void calibrateLineSensor(int pin)
+{
+  // Do 10 reads, and find max/min of that set of reads
+  int j;
+  int currentMax = 0, currentMin = 10000;
+  for(j = 0; j < 20; j++)
+  {
+    int rawSensorValue = readLineSensor(pin);
+    if (rawSensorValue > currentMax)
+      currentMax = rawSensorValue;
+    if (rawSensorValue < currentMin)
+      currentMin = rawSensorValue;
+  }
+  Serial.print("Pin: ");
+  Serial.println(pin);
+  Serial.print("Lowest Value: ");
+  Serial.println(currentMin);
+  Serial.print("Highest Value: ");
+  Serial.println(currentMax);
+  return;
 }

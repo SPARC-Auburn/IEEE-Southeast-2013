@@ -24,7 +24,9 @@ void openHandshake() {
   currentLocation.x = 7;
   currentLocation.y = 7;
   currentLocation.theta = 3.14;
-    
+  
+  return;
+  
   // Poll comm until Greeting is received
   while(true) {
     if(Serial3.available()) {
@@ -33,6 +35,7 @@ void openHandshake() {
       }
     }
   }
+  
   
   // Prepare opening move  
   setMotorPosition(M_BACKWARD);

@@ -17,8 +17,13 @@ void getBackupCommand() {
   */
   
   // Nothing exciting right now, just go to where you are.
+  delay(100);
+  odometry();
   destination.x = currentLocation.x;
   destination.y = currentLocation.y;
   destination.theta = currentLocation.theta;
+  linesPath[0] = 0;
+  linesPath[1] = 0;
+  linesPath[2] = 0;
   return;
 }

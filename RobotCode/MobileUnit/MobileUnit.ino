@@ -4,7 +4,7 @@
  * Student Project and Research Committee (SPaRC)
  * MobileUnit Code for IEEE Secon 2013 Hardware Competition
  * 
- * Version: 3/7/2013
+ * Version: 3/26/2013
  *
  * To debug: Go to first lines of loop() and uncomment rcTest() or debugging(),
  * and change prompt() in debugging_loop to step through program.
@@ -30,6 +30,8 @@
 #define STRAIGHT_TIMEOUT   20000    // No more than this many milliseconds spent moving straight
 #define TURN_TIMEOUT       15000    // No more than this many milliseconds spent turning
 #define MIN_SPEED             60    // PWM minimum, except for PID
+#define FW_CONST_SPEED_R      80    // This will be constant speed for straight move
+#define FW_CONST_SPEED_L      62    // This will be constant speed for straight move
 #define MAX_SPEED            195    // PWM maximum, except for PID
 #define ADDED_DISTANCE       0.3    // in inches, the amount to add to the forward distance to have the effect of adding some initial velocity
 #define ADDED_DISTANCE_REV     0
@@ -49,6 +51,11 @@
 #define HANDSHAKE_TURN_TIME 2000
 #define HS_BACK_SPEED_LEFT    67
 #define HS_BACK_SPEED_RIGHT   80
+#define LINE_BOUNDARY        500    // Percent that marks boundary
+#define LINE_TIMEOUT        5000  // Micros timeout
+#define LINE_CALIB_LOW      2000     // Low calibration indicator
+#define LINE_CALIB_HIGH     4000 // High calibration indicator
+#define LINE_ADJUST_MOTOR_SPEED 60 // The speed of motors when adjusting for line
 
 // Pin Definitions begin with P_
 #define P_XBEE_IN          14
@@ -67,6 +74,17 @@
 #define P_ENC_LEFT_B       19 // Encoders
 #define P_ENC_RIGHT_A      20 // Encoders
 #define P_ENC_RIGHT_B      21 // Encoders
+#define P_LINE_FRONT_1     38
+#define P_LINE_FRONT_2     40
+#define P_LINE_FRONT_3     42
+#define P_LINE_FRONT_4     44
+#define P_LINE_FRONT_5     46
+#define P_LINE_FRONT_6     48
+#define P_LINE_FRONT_7     50
+#define P_LINE_FRONT_8     52
+#define P_LINE_BACK_L      37
+#define P_LINE_BACK_R      39
+#define P_LINE_EN          41
 
 // Enumerations
 enum Motor_State {
@@ -104,13 +122,15 @@ End_action commandEndAction; // The end action of the current command (high 3 bi
 int commandEndColor;         // The color block as reported from base station (middle 3 bits of end action byte)
 int commandEndLength;        // The length of block as reported from base station (low 2 bits of end action byte)
 double PIDSetpoint, PIDInput, PIDOutput;
-PID odomPID(&PIDInput, &PIDOutput, &PIDSetpoint, 3, 2, 20, DIRECT); //
+PID odomPID(&PIDInput, &PIDOutput, &PIDSetpoint, 3, 2, 15, DIRECT); //
+int lineSensorValues[10];     // 1 for line detected, 0 for no line detected
 
 // Debug-related Global Variables
 int debugIntData[2][500];    // For storing info for debugging purposes
 double debugDoubleData[2][500];  // For storing info for debugging purposes
 int dataIndex;               // For storing info for debugging purposes
 int commTimesSent, commPacketsReceived; // For debugging
+long sensorTime;
 
 // Method Declarations
 void getBackupCommand();     // Figures out best command from backup list.
@@ -121,6 +141,7 @@ void correctTurn(int whichSegment);  // Sets motorPath variable saved as M_CORRE
 void setMotorPosition(int whichPosition);  // Just changes motor directions.
 int driveTurn(double newTheta, boolean useLines);  // Return error
 int driveStraight(location target, boolean useLines);  // Return error
+int adjustToFullLine(); // Makes small adjustments to be sure at least all line sensors are satisfied, then resets odometry
 boolean getBaseCommand();    // Communicates with base station and gets command, returns false if timeout with failed communication.
 int odometry();              // Runs the math to update currentLocation, returns global error (0 = success)
 int endAction();             // Manages claw and color, length sensors to pick up or drop off blocks.
@@ -158,6 +179,7 @@ void setup() {
    pinMode(P_LEFT_MOTOR_L1, OUTPUT);
    pinMode(P_LEFT_MOTOR_L2, OUTPUT);
    pinMode(P_LEFT_MOTOR_EN, OUTPUT);
+   pinMode(P_LINE_EN, OUTPUT);
    
    // Initialize global variables.
    PIDSetpoint = 0;
@@ -168,9 +190,9 @@ void setup() {
    odomPID.SetOutputLimits(-60, 60);
    odomPID.SetMode(AUTOMATIC);
    odomPID.SetSampleTime(50);
-   
+   digitalWrite(P_LINE_EN, HIGH);   
   
-   //rcTest();       // Uncomment to enter RC mode on startup
+   rcTest();       // Uncomment to enter RC mode on startup
   
    // Call opening handshake sequence
    openHandshake();
@@ -189,7 +211,7 @@ void setup() {
  * command in case commmunication fails, and report to base station.
  */
 void loop() {
-  //debugging();    // Uncomment to use Debug mode, this is an infinite loop that cannot be escaped
+  debugging();    // Uncomment to use Debug mode, this is an infinite loop that cannot be escaped
   
   // Communicate with base station and determine next move.  
   if (!getBaseCommand()) {
