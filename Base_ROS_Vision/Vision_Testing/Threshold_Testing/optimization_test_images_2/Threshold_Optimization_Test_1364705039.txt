@@ -1,0 +1,95 @@
+YCR_CB Optimization
+
+
+Seed	527085	green	(0, 255, 0)	[  0  83 164]	[ 91 135 213]
+1	516630	green	(0, 255, 0)	[  0  83 166]	[ 89 134 214]
+2	501585	green	(0, 255, 0)	[  1  81 168]	[ 86 134 214]
+3	486540	green	(0, 255, 0)	[  0  80 171]	[ 85 132 213]
+4	475320	green	(0, 255, 0)	[  1  79 173]	[ 83 130 212]
+5	463335	green	(0, 255, 0)	[  2  79 175]	[ 80 129 211]
+6	459000	green	(0, 255, 0)	[  2  81 176]	[ 77 129 211]
+7	454920	green	(0, 255, 0)	[  1  80 177]	[ 75 128 212]
+8	453135	green	(0, 255, 0)	[  0  80 177]	[ 72 128 212]
+9	452370	green	(0, 255, 0)	[  0  80 179]	[ 70 127 210]
+10	451350	green	(0, 255, 0)	[  0  79 180]	[ 68 126 210]
+13	451095	green	(0, 255, 0)	[  0  80 183]	[ 67 126 210]
+Stale generation:	114	sigma: 2
+Stale generation:	215	sigma: 3
+Stale generation:	316	sigma: 4
+Stale generation:	417	sigma: 5
+Stale generation:	518	sigma: 6
+Stale generation:	619	sigma: 7
+Stale generation:	720	sigma: 8
+Stale generation:	821	sigma: 9
+Stale generation:	922	sigma: 10
+Stale generation:	1023	sigma: 11
+Stale generation:	1124	sigma: 12
+Stale generation:	1225	sigma: 13
+Stale generation:	1326	sigma: 14
+1380	435795	green	(0, 255, 0)	[  0  61 130]	[ 47 116 215]
+1381	235875	green	(0, 255, 0)	[ 12  59 114]	[ 51 121 223]
+1382	232815	green	(0, 255, 0)	[  9  48 107]	[ 61 121 216]
+1383	223635	green	(0, 255, 0)	[11 66 98]	[ 58 121 219]
+1392	222870	green	(0, 255, 0)	[  0 100  83]	[ 61 121 246]
+1393	222105	green	(0, 255, 0)	[ 12 105  55]	[ 53 121 255]
+1395	218025	green	(0, 255, 0)	[  9 106  59]	[ 54 121 255]
+1396	212925	green	(0, 255, 0)	[  0 105  80]	[ 59 121 239]
+1450	212415	green	(0, 255, 0)	[  3 106  60]	[ 57 121 255]
+1495	209355	green	(0, 255, 0)	[ 17 109  82]	[ 58 121 241]
+1549	209100	green	(0, 255, 0)	[ 16 109  83]	[ 59 121 253]
+Stale generation:	1650	sigma: 15
+Stale generation:	1751	sigma: 16
+Stale generation:	1852	sigma: 17
+Stale generation:	1953	sigma: 18
+BEST!
+score: 209100	threshold: green	(0, 255, 0)	[ 17 109  82]	[ 58 121 241]
+
+
+Seed	287130	brown	(0, 77, 108)	[ 32 134 122]	[ 47 144 134]
+7	286875	brown	(0, 77, 108)	[ 32 134 122]	[ 47 144 132]
+Stale generation:	108	sigma: 2
+Stale generation:	209	sigma: 3
+Stale generation:	310	sigma: 4
+Stale generation:	411	sigma: 5
+Stale generation:	512	sigma: 6
+Stale generation:	613	sigma: 7
+Stale generation:	714	sigma: 8
+Stale generation:	815	sigma: 9
+Stale generation:	916	sigma: 10
+Stale generation:	1017	sigma: 11
+Stale generation:	1118	sigma: 12
+Stale generation:	1219	sigma: 13
+Stale generation:	1320	sigma: 14
+Stale generation:	1421	sigma: 15
+Stale generation:	1522	sigma: 16
+Stale generation:	1623	sigma: 17
+Stale generation:	1724	sigma: 18
+Stale generation:	1825	sigma: 19
+Stale generation:	1926	sigma: 20
+BEST!
+score: 286875	threshold: brown	(0, 77, 108)	[ 32 134 122]	[ 47 144 134]
+
+
+Seed	287385	white	(255, 255, 255)	[237  45  78]	[255 132 129]
+1	286620	white	(255, 255, 255)	[238  44  77]	[255 132 129]
+Stale generation:	102	sigma: 2
+Stale generation:	203	sigma: 3
+Stale generation:	304	sigma: 4
+Stale generation:	405	sigma: 5
+Stale generation:	506	sigma: 6
+Stale generation:	607	sigma: 7
+Stale generation:	708	sigma: 8
+Stale generation:	809	sigma: 9
+Stale generation:	910	sigma: 10
+Stale generation:	1011	sigma: 11
+Stale generation:	1112	sigma: 12
+Stale generation:	1213	sigma: 13
+Stale generation:	1314	sigma: 14
+Stale generation:	1415	sigma: 15
+Stale generation:	1516	sigma: 16
+Stale generation:	1617	sigma: 17
+Stale generation:	1718	sigma: 18
+Stale generation:	1819	sigma: 19
+Stale generation:	1920	sigma: 20
+BEST!
+score: 286620	threshold: white	(255, 255, 255)	[237  45  78]	[255 132 129]

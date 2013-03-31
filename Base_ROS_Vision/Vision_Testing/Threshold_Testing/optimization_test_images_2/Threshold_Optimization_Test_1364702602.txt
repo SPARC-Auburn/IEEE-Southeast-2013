@@ -1,0 +1,359 @@
+YCR_CB Optimization
+
+
+Seed	6963540	black	(0, 0, 0)	[ 24  75 128]	[101 129 144]
+Stale generation:	101	sigma: 2
+Stale generation:	202	sigma: 3
+Stale generation:	303	sigma: 4
+Stale generation:	404	sigma: 5
+Stale generation:	505	sigma: 6
+Stale generation:	606	sigma: 7
+Stale generation:	707	sigma: 8
+Stale generation:	808	sigma: 9
+Stale generation:	909	sigma: 10
+Stale generation:	1010	sigma: 11
+Stale generation:	1111	sigma: 12
+Stale generation:	1212	sigma: 13
+Stale generation:	1313	sigma: 14
+Stale generation:	1414	sigma: 15
+Stale generation:	1515	sigma: 16
+Stale generation:	1616	sigma: 17
+Stale generation:	1717	sigma: 18
+Stale generation:	1818	sigma: 19
+Stale generation:	1919	sigma: 20
+BEST!
+score: 6963540	threshold: black	(0, 0, 0)	[ 24  75 128]	[101 129 144]
+
+
+Seed	49277475	red	(0, 0, 255)	[  6 139 118]	[ 72 195 126]
+1	49209645	red	(0, 0, 255)	[  6 139 120]	[ 71 196 125]
+2	49037520	red	(0, 0, 255)	[  6 138 123]	[ 71 195 126]
+3	48967905	red	(0, 0, 255)	[  6 138 124]	[ 70 196 124]
+4	48958725	red	(0, 0, 255)	[  6 136 124]	[ 71 196 122]
+57	48945210	red	(0, 0, 255)	[  6 132 123]	[ 71 194 123]
+58	48686640	red	(0, 0, 255)	[  6 129 122]	[ 70 194 123]
+59	47920365	red	(0, 0, 255)	[  6 128 120]	[ 71 192 125]
+60	45371895	red	(0, 0, 255)	[  5 126 121]	[ 71 191 127]
+61	44068080	red	(0, 0, 255)	[  4 125 121]	[ 72 190 128]
+62	39597930	red	(0, 0, 255)	[  6 124 120]	[ 71 190 130]
+63	37708890	red	(0, 0, 255)	[  6 124 119]	[ 73 191 131]
+64	36155175	red	(0, 0, 255)	[  6 122 120]	[ 73 191 133]
+65	34960245	red	(0, 0, 255)	[  4 121 120]	[ 73 190 135]
+66	34398480	red	(0, 0, 255)	[  4 118 120]	[ 74 190 135]
+67	33256080	red	(0, 0, 255)	[  5 117 118]	[ 76 190 135]
+68	31836240	red	(0, 0, 255)	[  5 116 118]	[ 77 190 137]
+69	30129525	red	(0, 0, 255)	[  5 115 117]	[ 79 190 137]
+70	28468710	red	(0, 0, 255)	[  4 115 117]	[ 80 187 138]
+71	24805890	red	(0, 0, 255)	[  2 114 117]	[ 83 186 138]
+72	23465100	red	(0, 0, 255)	[  0 113 115]	[ 84 185 138]
+73	20829675	red	(0, 0, 255)	[  0 113 114]	[ 85 184 140]
+74	18650700	red	(0, 0, 255)	[  0 112 113]	[ 87 185 140]
+75	17065875	red	(0, 0, 255)	[  0 111 112]	[ 89 185 140]
+76	16506150	red	(0, 0, 255)	[  0 111 113]	[ 90 184 140]
+77	15856155	red	(0, 0, 255)	[  0 111 112]	[ 91 184 141]
+78	15243390	red	(0, 0, 255)	[  0 111 112]	[ 92 183 142]
+79	14521230	red	(0, 0, 255)	[  0 109 112]	[ 94 181 143]
+80	14143830	red	(0, 0, 255)	[  0 109 110]	[ 96 180 142]
+81	13722315	red	(0, 0, 255)	[  0 108 108]	[ 98 179 142]
+82	13332165	red	(0, 0, 255)	[  0 108 110]	[100 178 144]
+83	13219710	red	(0, 0, 255)	[  0 107 110]	[101 178 144]
+84	12937425	red	(0, 0, 255)	[  0 106 109]	[103 176 145]
+85	12783405	red	(0, 0, 255)	[  0 106 107]	[104 176 145]
+86	12546510	red	(0, 0, 255)	[  0 106 106]	[106 175 145]
+87	12354240	red	(0, 0, 255)	[  0 105 105]	[107 172 146]
+88	12156360	red	(0, 0, 255)	[  0 105 104]	[109 172 145]
+89	11985255	red	(0, 0, 255)	[  0 105 103]	[111 169 143]
+90	11821545	red	(0, 0, 255)	[  0 104 102]	[112 170 145]
+91	11687415	red	(0, 0, 255)	[  0 104 100]	[113 169 146]
+92	11512995	red	(0, 0, 255)	[  0 104  99]	[115 171 147]
+93	11347755	red	(0, 0, 255)	[  0 103  98]	[117 171 146]
+94	11173845	red	(0, 0, 255)	[  0 104  98]	[119 172 145]
+95	10950720	red	(0, 0, 255)	[  0 104  98]	[121 171 145]
+96	10782930	red	(0, 0, 255)	[  0 103  98]	[123 172 144]
+97	10656450	red	(0, 0, 255)	[  0 104  97]	[124 170 144]
+98	10485090	red	(0, 0, 255)	[  0 104  97]	[126 170 144]
+99	10254570	red	(0, 0, 255)	[  0 104  96]	[128 169 145]
+100	10019205	red	(0, 0, 255)	[  0 102  97]	[130 166 145]
+101	9783330	red	(0, 0, 255)	[  0 102  98]	[132 167 146]
+102	9432450	red	(0, 0, 255)	[  0 101  96]	[135 167 145]
+103	9300615	red	(0, 0, 255)	[  0 100  95]	[136 166 146]
+104	9150420	red	(0, 0, 255)	[ 1 99 95]	[138 165 146]
+105	8935710	red	(0, 0, 255)	[ 0 99 93]	[140 164 144]
+106	8802345	red	(0, 0, 255)	[ 0 98 91]	[141 163 145]
+107	8718450	red	(0, 0, 255)	[ 0 98 92]	[142 162 145]
+108	8642205	red	(0, 0, 255)	[ 0 99 93]	[143 161 145]
+109	8468040	red	(0, 0, 255)	[  0 100  92]	[145 163 146]
+110	8234715	red	(0, 0, 255)	[ 0 99 92]	[148 163 145]
+111	8090385	red	(0, 0, 255)	[ 0 97 92]	[150 162 144]
+112	7920300	red	(0, 0, 255)	[ 0 96 93]	[152 161 144]
+113	7732620	red	(0, 0, 255)	[ 0 95 93]	[154 162 145]
+114	7575540	red	(0, 0, 255)	[ 0 93 92]	[156 160 145]
+115	7423815	red	(0, 0, 255)	[ 0 92 90]	[158 161 145]
+116	7299120	red	(0, 0, 255)	[ 0 90 88]	[160 161 145]
+117	7188960	red	(0, 0, 255)	[ 0 89 87]	[162 160 145]
+118	7076760	red	(0, 0, 255)	[ 0 89 86]	[164 160 146]
+119	6964305	red	(0, 0, 255)	[ 0 87 86]	[166 159 147]
+120	6876075	red	(0, 0, 255)	[ 0 88 85]	[168 159 147]
+121	6812070	red	(0, 0, 255)	[ 0 87 84]	[169 158 148]
+122	6716955	red	(0, 0, 255)	[ 0 86 82]	[171 157 148]
+123	6623625	red	(0, 0, 255)	[ 0 87 80]	[172 155 150]
+124	6465780	red	(0, 0, 255)	[ 0 86 79]	[173 152 152]
+125	6294420	red	(0, 0, 255)	[ 0 87 78]	[176 151 152]
+126	6198030	red	(0, 0, 255)	[ 0 88 77]	[177 149 152]
+127	6077925	red	(0, 0, 255)	[ 0 89 78]	[179 147 152]
+128	6009330	red	(0, 0, 255)	[ 0 90 77]	[180 146 153]
+129	5954505	red	(0, 0, 255)	[ 0 88 77]	[182 144 153]
+130	5917275	red	(0, 0, 255)	[ 0 88 75]	[183 144 154]
+131	5871885	red	(0, 0, 255)	[ 0 87 75]	[184 144 156]
+132	5838480	red	(0, 0, 255)	[ 0 86 75]	[185 144 157]
+133	5795385	red	(0, 0, 255)	[ 0 84 73]	[186 144 157]
+134	5703075	red	(0, 0, 255)	[ 0 84 73]	[189 144 157]
+135	5629635	red	(0, 0, 255)	[ 0 82 72]	[191 144 156]
+136	5601585	red	(0, 0, 255)	[ 0 81 72]	[192 144 155]
+137	5545230	red	(0, 0, 255)	[ 0 80 71]	[193 144 156]
+138	5389680	red	(0, 0, 255)	[ 0 79 70]	[196 144 155]
+139	5318025	red	(0, 0, 255)	[ 0 78 68]	[197 144 154]
+140	5231070	red	(0, 0, 255)	[ 0 79 69]	[198 145 156]
+141	5128815	red	(0, 0, 255)	[ 0 78 67]	[199 144 157]
+142	4981425	red	(0, 0, 255)	[ 0 79 65]	[201 143 156]
+143	4848315	red	(0, 0, 255)	[ 1 80 64]	[203 143 155]
+144	4569600	red	(0, 0, 255)	[ 0 79 62]	[205 144 156]
+145	4394925	red	(0, 0, 255)	[ 0 79 62]	[207 144 155]
+146	4241160	red	(0, 0, 255)	[ 1 79 61]	[209 143 153]
+147	4022115	red	(0, 0, 255)	[ 3 78 59]	[211 143 153]
+148	3771960	red	(0, 0, 255)	[ 2 79 58]	[213 142 155]
+149	3594225	red	(0, 0, 255)	[ 2 81 56]	[214 143 154]
+150	3293580	red	(0, 0, 255)	[ 1 81 55]	[216 143 153]
+151	3051585	red	(0, 0, 255)	[ 0 80 54]	[217 144 155]
+152	2606610	red	(0, 0, 255)	[ 0 80 55]	[220 146 157]
+153	2300610	red	(0, 0, 255)	[ 0 80 54]	[222 146 156]
+154	1950240	red	(0, 0, 255)	[ 0 80 54]	[225 146 156]
+155	1677900	red	(0, 0, 255)	[ 0 80 52]	[228 146 157]
+156	1607010	red	(0, 0, 255)	[ 0 79 51]	[229 145 157]
+157	1495575	red	(0, 0, 255)	[ 0 78 50]	[231 145 158]
+158	1429275	red	(0, 0, 255)	[ 0 77 49]	[233 144 159]
+159	1375470	red	(0, 0, 255)	[ 0 78 49]	[235 144 159]
+160	1319370	red	(0, 0, 255)	[ 1 77 47]	[237 144 159]
+161	1233945	red	(0, 0, 255)	[ 0 78 47]	[238 145 159]
+162	1181160	red	(0, 0, 255)	[ 0 77 46]	[239 145 160]
+163	1135515	red	(0, 0, 255)	[ 0 75 45]	[240 144 161]
+164	1106700	red	(0, 0, 255)	[ 0 74 44]	[242 144 160]
+165	1077120	red	(0, 0, 255)	[ 0 73 44]	[243 144 161]
+166	1045245	red	(0, 0, 255)	[ 0 71 43]	[244 144 162]
+167	1029690	red	(0, 0, 255)	[ 0 70 43]	[243 145 164]
+168	1007760	red	(0, 0, 255)	[ 0 69 42]	[243 146 165]
+169	980730	red	(0, 0, 255)	[ 0 69 42]	[244 146 166]
+170	912900	red	(0, 0, 255)	[ 0 67 40]	[246 146 167]
+171	882810	red	(0, 0, 255)	[ 0 66 38]	[247 145 167]
+172	843285	red	(0, 0, 255)	[ 0 66 37]	[249 145 167]
+173	809625	red	(0, 0, 255)	[ 0 65 34]	[249 146 168]
+174	782085	red	(0, 0, 255)	[ 0 64 33]	[249 144 169]
+175	735930	red	(0, 0, 255)	[ 0 65 32]	[248 146 171]
+176	706095	red	(0, 0, 255)	[ 0 65 30]	[249 145 171]
+177	673455	red	(0, 0, 255)	[ 0 66 29]	[250 144 172]
+178	655860	red	(0, 0, 255)	[ 0 63 29]	[251 145 171]
+179	600270	red	(0, 0, 255)	[ 0 64 30]	[253 144 171]
+180	520455	red	(0, 0, 255)	[ 0 63 29]	[254 145 171]
+181	285600	red	(0, 0, 255)	[ 0 62 29]	[255 145 173]
+182	260865	red	(0, 0, 255)	[ 0 60 27]	[255 146 174]
+183	239445	red	(0, 0, 255)	[ 0 62 25]	[255 144 175]
+184	225930	red	(0, 0, 255)	[ 0 62 23]	[255 144 175]
+185	218790	red	(0, 0, 255)	[ 0 62 21]	[255 144 175]
+186	209865	red	(0, 0, 255)	[ 0 61 20]	[255 145 176]
+187	205530	red	(0, 0, 255)	[ 0 61 18]	[255 146 177]
+188	200430	red	(0, 0, 255)	[ 0 60 15]	[255 146 176]
+189	198645	red	(0, 0, 255)	[ 0 61 13]	[255 146 177]
+190	197880	red	(0, 0, 255)	[ 0 60 12]	[255 145 178]
+191	197625	red	(0, 0, 255)	[ 0 60 11]	[255 145 178]
+192	194820	red	(0, 0, 255)	[ 0 59 10]	[255 146 180]
+193	194310	red	(0, 0, 255)	[ 0 58 11]	[255 146 181]
+194	193545	red	(0, 0, 255)	[ 0 58  9]	[255 146 182]
+195	193035	red	(0, 0, 255)	[ 0 57  9]	[255 146 183]
+196	191505	red	(0, 0, 255)	[ 0 58  8]	[255 146 185]
+197	190995	red	(0, 0, 255)	[ 0 57  8]	[255 146 186]
+198	190740	red	(0, 0, 255)	[ 0 58  6]	[255 145 187]
+201	188700	red	(0, 0, 255)	[ 0 57  4]	[255 145 189]
+202	187935	red	(0, 0, 255)	[ 0 55  5]	[255 146 189]
+203	187680	red	(0, 0, 255)	[ 0 55  6]	[255 146 190]
+204	185895	red	(0, 0, 255)	[ 0 55  4]	[255 146 191]
+205	181050	red	(0, 0, 255)	[ 0 55  4]	[255 145 193]
+206	175695	red	(0, 0, 255)	[ 0 54  3]	[255 146 195]
+207	172380	red	(0, 0, 255)	[ 0 52  3]	[255 145 197]
+208	171615	red	(0, 0, 255)	[ 0 51  2]	[255 145 198]
+209	170595	red	(0, 0, 255)	[ 0 49  1]	[255 145 201]
+210	169830	red	(0, 0, 255)	[ 0 49  1]	[255 146 201]
+Stale generation:	311	sigma: 2
+Stale generation:	412	sigma: 3
+Stale generation:	513	sigma: 4
+Stale generation:	614	sigma: 5
+Stale generation:	715	sigma: 6
+Stale generation:	816	sigma: 7
+Stale generation:	917	sigma: 8
+Stale generation:	1018	sigma: 9
+Stale generation:	1119	sigma: 10
+Stale generation:	1220	sigma: 11
+Stale generation:	1321	sigma: 12
+Stale generation:	1422	sigma: 13
+Stale generation:	1523	sigma: 14
+Stale generation:	1624	sigma: 15
+Stale generation:	1725	sigma: 16
+Stale generation:	1826	sigma: 17
+Stale generation:	1927	sigma: 18
+BEST!
+score: 169830	threshold: red	(0, 0, 255)	[ 0 49  1]	[255 145 201]
+
+
+Seed	8160	orange	(0, 100, 230)	[ 37 163  37]	[174 210 108]
+1	7905	orange	(0, 100, 230)	[ 34 165  36]	[173 210 107]
+Stale generation:	102	sigma: 2
+Stale generation:	203	sigma: 3
+Stale generation:	304	sigma: 4
+Stale generation:	405	sigma: 5
+Stale generation:	506	sigma: 6
+Stale generation:	607	sigma: 7
+Stale generation:	708	sigma: 8
+Stale generation:	809	sigma: 9
+Stale generation:	910	sigma: 10
+Stale generation:	1011	sigma: 11
+Stale generation:	1112	sigma: 12
+Stale generation:	1213	sigma: 13
+Stale generation:	1314	sigma: 14
+Stale generation:	1415	sigma: 15
+Stale generation:	1516	sigma: 16
+Stale generation:	1617	sigma: 17
+Stale generation:	1718	sigma: 18
+Stale generation:	1819	sigma: 19
+Stale generation:	1920	sigma: 20
+BEST!
+score: 7905	threshold: orange	(0, 100, 230)	[ 37 163  37]	[174 210 108]
+
+
+Seed	25245	yellow	(0, 255, 255)	[ 29 120   8]	[242 148  86]
+1	24990	yellow	(0, 255, 255)	[ 28 119   7]	[243 149  86]
+Stale generation:	102	sigma: 2
+Stale generation:	203	sigma: 3
+Stale generation:	304	sigma: 4
+Stale generation:	405	sigma: 5
+Stale generation:	506	sigma: 6
+Stale generation:	607	sigma: 7
+Stale generation:	708	sigma: 8
+Stale generation:	809	sigma: 9
+Stale generation:	910	sigma: 10
+Stale generation:	1011	sigma: 11
+Stale generation:	1112	sigma: 12
+Stale generation:	1213	sigma: 13
+Stale generation:	1314	sigma: 14
+Stale generation:	1415	sigma: 15
+Stale generation:	1516	sigma: 16
+Stale generation:	1617	sigma: 17
+Stale generation:	1718	sigma: 18
+Stale generation:	1819	sigma: 19
+Stale generation:	1920	sigma: 20
+BEST!
+score: 24990	threshold: yellow	(0, 255, 255)	[ 29 120   8]	[242 148  86]
+
+
+Seed	125970	green	(0, 255, 0)	[ 1 92 93]	[ 65 122 133]
+1	125460	green	(0, 255, 0)	[ 0 92 93]	[ 66 122 133]
+Stale generation:	102	sigma: 2
+Stale generation:	203	sigma: 3
+Stale generation:	304	sigma: 4
+354	125205	green	(0, 255, 0)	[10 96 90]	[ 66 122 133]
+Stale generation:	455	sigma: 5
+Stale generation:	556	sigma: 6
+Stale generation:	657	sigma: 7
+Stale generation:	758	sigma: 8
+Stale generation:	859	sigma: 9
+Stale generation:	960	sigma: 10
+Stale generation:	1061	sigma: 11
+Stale generation:	1162	sigma: 12
+Stale generation:	1263	sigma: 13
+Stale generation:	1364	sigma: 14
+Stale generation:	1465	sigma: 15
+Stale generation:	1566	sigma: 16
+Stale generation:	1667	sigma: 17
+Stale generation:	1768	sigma: 18
+Stale generation:	1869	sigma: 19
+Stale generation:	1970	sigma: 20
+BEST!
+score: 125205	threshold: green	(0, 255, 0)	[ 0 92 93]	[ 66 122 133]
+
+
+Seed	22185	blue	(255, 0, 0)	[  0  83 164]	[ 91 135 213]
+Stale generation:	101	sigma: 2
+Stale generation:	202	sigma: 3
+Stale generation:	303	sigma: 4
+Stale generation:	404	sigma: 5
+Stale generation:	505	sigma: 6
+Stale generation:	606	sigma: 7
+Stale generation:	707	sigma: 8
+Stale generation:	808	sigma: 9
+Stale generation:	909	sigma: 10
+Stale generation:	1010	sigma: 11
+Stale generation:	1111	sigma: 12
+Stale generation:	1212	sigma: 13
+Stale generation:	1313	sigma: 14
+Stale generation:	1414	sigma: 15
+Stale generation:	1515	sigma: 16
+Stale generation:	1616	sigma: 17
+Stale generation:	1717	sigma: 18
+Stale generation:	1818	sigma: 19
+Stale generation:	1919	sigma: 20
+BEST!
+score: 22185	threshold: blue	(255, 0, 0)	[  0  83 164]	[ 91 135 213]
+
+
+Seed	289425	brown	(0, 77, 108)	[ 28 135 118]	[ 46 144 144]
+1	289170	brown	(0, 77, 108)	[ 28 135 118]	[ 46 143 143]
+2	288915	brown	(0, 77, 108)	[ 28 134 119]	[ 46 144 144]
+3	288660	brown	(0, 77, 108)	[ 28 134 119]	[ 46 143 143]
+7	288150	brown	(0, 77, 108)	[ 28 134 121]	[ 47 143 142]
+21	287895	brown	(0, 77, 108)	[ 28 134 122]	[ 47 143 140]
+Stale generation:	122	sigma: 2
+141	287130	brown	(0, 77, 108)	[ 32 134 122]	[ 47 144 134]
+193	286875	brown	(0, 77, 108)	[ 32 134 122]	[ 47 144 132]
+Stale generation:	294	sigma: 3
+Stale generation:	395	sigma: 4
+Stale generation:	496	sigma: 5
+Stale generation:	597	sigma: 6
+Stale generation:	698	sigma: 7
+Stale generation:	799	sigma: 8
+Stale generation:	900	sigma: 9
+Stale generation:	1001	sigma: 10
+Stale generation:	1102	sigma: 11
+Stale generation:	1203	sigma: 12
+Stale generation:	1304	sigma: 13
+Stale generation:	1405	sigma: 14
+Stale generation:	1506	sigma: 15
+Stale generation:	1607	sigma: 16
+Stale generation:	1708	sigma: 17
+Stale generation:	1809	sigma: 18
+Stale generation:	1910	sigma: 19
+BEST!
+score: 286875	threshold: brown	(0, 77, 108)	[ 32 134 122]	[ 47 144 134]
+
+
+Seed	288405	white	(255, 255, 255)	[236  47  77]	[255 133 131]
+1	287385	white	(255, 255, 255)	[237  45  78]	[255 132 129]
+3	286620	white	(255, 255, 255)	[238  44  79]	[255 132 129]
+Stale generation:	104	sigma: 2
+Stale generation:	205	sigma: 3
+Stale generation:	306	sigma: 4
+Stale generation:	407	sigma: 5
+Stale generation:	508	sigma: 6
+Stale generation:	609	sigma: 7
+Stale generation:	710	sigma: 8
+Stale generation:	811	sigma: 9
+Stale generation:	912	sigma: 10
+Stale generation:	1013	sigma: 11
+Stale generation:	1114	sigma: 12
+Stale generation:	1215	sigma: 13
+Stale generation:	1316	sigma: 14
+Stale generation:	1417	sigma: 15
+Stale generation:	1518	sigma: 16
+Stale generation:	1619	sigma: 17
+Stale generation:	1720	sigma: 18
+Stale generation:	1821	sigma: 19
+Stale generation:	1922	sigma: 20
+BEST!
+score: 286620	threshold: white	(255, 255, 255)	[237  45  78]	[255 132 129]

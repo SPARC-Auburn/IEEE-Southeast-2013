@@ -1,0 +1,337 @@
+YCR_CB Optimization
+
+
+Seed	11160585	black	(0, 0, 0)	[ 15  94 129]	[ 86 130 140]
+1	10279560	black	(0, 0, 0)	[ 14  92 129]	[ 87 129 141]
+2	8845695	black	(0, 0, 0)	[ 15  91 128]	[ 89 129 142]
+3	8805915	black	(0, 0, 0)	[ 14  89 128]	[ 90 129 140]
+4	8267865	black	(0, 0, 0)	[ 14  88 128]	[ 92 129 140]
+5	8111550	black	(0, 0, 0)	[ 14  88 128]	[ 93 130 140]
+6	7872615	black	(0, 0, 0)	[ 12  88 128]	[ 95 130 141]
+7	7730835	black	(0, 0, 0)	[ 10  88 128]	[ 94 130 143]
+8	7719870	black	(0, 0, 0)	[  8  87 128]	[ 95 129 142]
+10	7614300	black	(0, 0, 0)	[  7  85 128]	[ 97 129 142]
+11	7519695	black	(0, 0, 0)	[  6  85 128]	[ 98 130 143]
+12	7474815	black	(0, 0, 0)	[  9  83 128]	[ 98 129 144]
+15	7465635	black	(0, 0, 0)	[ 10  82 128]	[ 98 129 144]
+17	7419990	black	(0, 0, 0)	[ 12  81 128]	[ 99 129 144]
+18	7403670	black	(0, 0, 0)	[ 12  81 128]	[100 129 144]
+19	7320795	black	(0, 0, 0)	[ 14  79 128]	[100 130 143]
+20	7265970	black	(0, 0, 0)	[ 15  79 128]	[100 129 143]
+23	7180035	black	(0, 0, 0)	[ 17  79 128]	[101 129 144]
+24	7147650	black	(0, 0, 0)	[ 18  78 128]	[101 129 144]
+25	7130820	black	(0, 0, 0)	[ 19  77 128]	[103 130 143]
+27	7091550	black	(0, 0, 0)	[ 20  77 128]	[102 130 143]
+28	7034175	black	(0, 0, 0)	[ 21  78 128]	[103 129 144]
+29	6990060	black	(0, 0, 0)	[ 22  76 128]	[101 129 144]
+32	6971445	black	(0, 0, 0)	[ 23  75 128]	[102 129 144]
+33	6968640	black	(0, 0, 0)	[ 23  76 128]	[101 129 144]
+34	6963540	black	(0, 0, 0)	[ 24  76 128]	[101 129 144]
+Stale generation:	135	sigma: 2
+Stale generation:	236	sigma: 3
+Stale generation:	337	sigma: 4
+Stale generation:	438	sigma: 5
+Stale generation:	539	sigma: 6
+Stale generation:	640	sigma: 7
+Stale generation:	741	sigma: 8
+Stale generation:	842	sigma: 9
+Stale generation:	943	sigma: 10
+Stale generation:	1044	sigma: 11
+Stale generation:	1145	sigma: 12
+Stale generation:	1246	sigma: 13
+Stale generation:	1347	sigma: 14
+Stale generation:	1448	sigma: 15
+Stale generation:	1549	sigma: 16
+Stale generation:	1650	sigma: 17
+Stale generation:	1751	sigma: 18
+Stale generation:	1852	sigma: 19
+Stale generation:	1953	sigma: 20
+BEST!
+score: 6963540	threshold: black	(0, 0, 0)	[ 23  76 128]	[101 129 144]
+
+
+Seed	1224510	red	(0, 0, 255)	[  6 139 118]	[ 72 195 126]
+1	1122255	red	(0, 0, 255)	[  7 139 119]	[ 72 193 124]
+2	921570	red	(0, 0, 255)	[  6 139 118]	[ 73 192 120]
+3	799680	red	(0, 0, 255)	[  5 139 119]	[ 74 190 117]
+Stale generation:	104	sigma: 2
+Stale generation:	205	sigma: 3
+Stale generation:	306	sigma: 4
+Stale generation:	407	sigma: 5
+Stale generation:	508	sigma: 6
+Stale generation:	609	sigma: 7
+Stale generation:	710	sigma: 8
+Stale generation:	811	sigma: 9
+Stale generation:	912	sigma: 10
+Stale generation:	1013	sigma: 11
+Stale generation:	1114	sigma: 12
+Stale generation:	1215	sigma: 13
+Stale generation:	1316	sigma: 14
+Stale generation:	1417	sigma: 15
+Stale generation:	1518	sigma: 16
+Stale generation:	1619	sigma: 17
+Stale generation:	1720	sigma: 18
+1722	799170	red	(0, 0, 255)	[  2 131  81]	[ 99 168  94]
+1723	793560	red	(0, 0, 255)	[ 29 126  24]	[128 173  90]
+1724	458745	red	(0, 0, 255)	[  0 138  14]	[174 164  85]
+1725	326145	red	(0, 0, 255)	[  0 132  28]	[207 147  85]
+1726	39015	red	(0, 0, 255)	[ 17 128  19]	[253 154  89]
+1728	36210	red	(0, 0, 255)	[  3 102   0]	[242 160  91]
+1729	25245	red	(0, 0, 255)	[36 77  0]	[255 162  86]
+1787	24990	red	(0, 0, 255)	[18 58  2]	[255 148  86]
+Stale generation:	1888	sigma: 19
+Stale generation:	1989	sigma: 20
+BEST!
+score: 24990	threshold: red	(0, 0, 255)	[36 77  0]	[255 162  86]
+
+
+Seed	16065	orange	(0, 100, 230)	[ 41 154  44]	[176 202 102]
+1	10455	orange	(0, 100, 230)	[ 41 152  44]	[176 203 104]
+2	9690	orange	(0, 100, 230)	[ 43 152  41]	[174 204 104]
+47	9435	orange	(0, 100, 230)	[ 43 153  40]	[174 204 107]
+48	9180	orange	(0, 100, 230)	[ 42 154  38]	[174 204 107]
+56	8925	orange	(0, 100, 230)	[ 42 156  37]	[173 204 107]
+69	8670	orange	(0, 100, 230)	[ 41 158  37]	[171 204 107]
+73	8415	orange	(0, 100, 230)	[ 39 161  36]	[170 204 108]
+Stale generation:	174	sigma: 2
+198	8160	orange	(0, 100, 230)	[ 37 163  37]	[174 210 108]
+201	7905	orange	(0, 100, 230)	[ 38 165  32]	[175 205 107]
+Stale generation:	302	sigma: 3
+Stale generation:	403	sigma: 4
+Stale generation:	504	sigma: 5
+Stale generation:	605	sigma: 6
+Stale generation:	706	sigma: 7
+Stale generation:	807	sigma: 8
+Stale generation:	908	sigma: 9
+Stale generation:	1009	sigma: 10
+Stale generation:	1110	sigma: 11
+Stale generation:	1211	sigma: 12
+Stale generation:	1312	sigma: 13
+Stale generation:	1413	sigma: 14
+Stale generation:	1514	sigma: 15
+Stale generation:	1615	sigma: 16
+Stale generation:	1716	sigma: 17
+Stale generation:	1817	sigma: 18
+Stale generation:	1918	sigma: 19
+BEST!
+score: 7905	threshold: orange	(0, 100, 230)	[ 37 163  37]	[174 210 108]
+
+
+Seed	1128120	yellow	(0, 255, 255)	[ 37 122  14]	[243 141 108]
+1	674220	yellow	(0, 255, 255)	[ 35 121  14]	[242 141 106]
+2	302685	yellow	(0, 255, 255)	[ 34 121  13]	[242 143 104]
+3	171105	yellow	(0, 255, 255)	[ 35 121  13]	[241 144 102]
+4	120870	yellow	(0, 255, 255)	[ 33 120  13]	[240 146 100]
+5	97155	yellow	(0, 255, 255)	[ 33 121  14]	[240 147  98]
+6	65280	yellow	(0, 255, 255)	[ 32 121  13]	[240 148  95]
+7	52275	yellow	(0, 255, 255)	[ 33 121  13]	[240 146  93]
+8	41565	yellow	(0, 255, 255)	[ 32 120  13]	[240 146  91]
+9	31110	yellow	(0, 255, 255)	[ 31 121  14]	[241 146  88]
+10	26265	yellow	(0, 255, 255)	[ 31 120  11]	[242 147  86]
+11	26010	yellow	(0, 255, 255)	[ 31 119  11]	[243 147  86]
+12	25755	yellow	(0, 255, 255)	[ 30 120   9]	[244 147  86]
+13	25245	yellow	(0, 255, 255)	[ 29 120   8]	[242 148  86]
+14	24990	yellow	(0, 255, 255)	[ 28 119   7]	[243 148  86]
+Stale generation:	115	sigma: 2
+Stale generation:	216	sigma: 3
+Stale generation:	317	sigma: 4
+Stale generation:	418	sigma: 5
+Stale generation:	519	sigma: 6
+Stale generation:	620	sigma: 7
+Stale generation:	721	sigma: 8
+Stale generation:	822	sigma: 9
+Stale generation:	923	sigma: 10
+Stale generation:	1024	sigma: 11
+Stale generation:	1125	sigma: 12
+Stale generation:	1226	sigma: 13
+Stale generation:	1327	sigma: 14
+Stale generation:	1428	sigma: 15
+Stale generation:	1529	sigma: 16
+Stale generation:	1630	sigma: 17
+Stale generation:	1731	sigma: 18
+Stale generation:	1832	sigma: 19
+Stale generation:	1933	sigma: 20
+BEST!
+score: 24990	threshold: yellow	(0, 255, 255)	[ 29 120   8]	[242 148  86]
+
+
+Seed	371790	green	(0, 255, 0)	[  3  98 109]	[ 37 124 130]
+1	325125	green	(0, 255, 0)	[  1  99 108]	[ 37 123 131]
+2	305745	green	(0, 255, 0)	[  0  99 107]	[ 38 123 133]
+3	296820	green	(0, 255, 0)	[  0 101 106]	[ 39 123 132]
+4	286875	green	(0, 255, 0)	[  0 101 106]	[ 41 122 131]
+5	260100	green	(0, 255, 0)	[  0 100 105]	[ 43 122 131]
+7	249390	green	(0, 255, 0)	[  1 100 104]	[ 43 123 133]
+8	232050	green	(0, 255, 0)	[  1 100 105]	[ 44 122 134]
+9	202725	green	(0, 255, 0)	[  0 100 104]	[ 47 123 133]
+10	187935	green	(0, 255, 0)	[  0  99 102]	[ 48 122 132]
+11	179010	green	(0, 255, 0)	[  0  98 102]	[ 49 122 132]
+12	171105	green	(0, 255, 0)	[  0  96 101]	[ 50 122 132]
+13	162945	green	(0, 255, 0)	[  0  94 100]	[ 51 122 132]
+14	157590	green	(0, 255, 0)	[  0  93 100]	[ 52 122 132]
+15	154530	green	(0, 255, 0)	[  0  93 101]	[ 53 122 132]
+16	144840	green	(0, 255, 0)	[  0  93 100]	[ 54 122 133]
+17	141015	green	(0, 255, 0)	[  0  93 100]	[ 55 122 133]
+18	139485	green	(0, 255, 0)	[ 0 93 99]	[ 56 122 133]
+19	134385	green	(0, 255, 0)	[ 0 94 98]	[ 58 122 133]
+21	132855	green	(0, 255, 0)	[ 0 95 97]	[ 59 122 133]
+22	131070	green	(0, 255, 0)	[ 0 94 96]	[ 61 122 133]
+23	126735	green	(0, 255, 0)	[ 0 93 94]	[ 63 122 133]
+25	126225	green	(0, 255, 0)	[ 0 92 92]	[ 64 122 133]
+26	125970	green	(0, 255, 0)	[ 1 92 93]	[ 65 122 133]
+27	125460	green	(0, 255, 0)	[ 1 91 93]	[ 66 122 133]
+Stale generation:	128	sigma: 2
+Stale generation:	229	sigma: 3
+Stale generation:	330	sigma: 4
+Stale generation:	431	sigma: 5
+Stale generation:	532	sigma: 6
+Stale generation:	633	sigma: 7
+Stale generation:	734	sigma: 8
+Stale generation:	835	sigma: 9
+Stale generation:	936	sigma: 10
+Stale generation:	1037	sigma: 11
+Stale generation:	1138	sigma: 12
+Stale generation:	1239	sigma: 13
+Stale generation:	1340	sigma: 14
+Stale generation:	1441	sigma: 15
+Stale generation:	1542	sigma: 16
+Stale generation:	1643	sigma: 17
+Stale generation:	1744	sigma: 18
+Stale generation:	1845	sigma: 19
+Stale generation:	1946	sigma: 20
+BEST!
+score: 125460	threshold: green	(0, 255, 0)	[ 1 92 93]	[ 65 122 133]
+
+
+Seed	82365	blue	(255, 0, 0)	[  2  74 154]	[ 43 143 129]
+Stale generation:	101	sigma: 2
+Stale generation:	202	sigma: 3
+Stale generation:	303	sigma: 4
+Stale generation:	404	sigma: 5
+Stale generation:	505	sigma: 6
+Stale generation:	606	sigma: 7
+Stale generation:	707	sigma: 8
+Stale generation:	808	sigma: 9
+905	82110	blue	(255, 0, 0)	[  5  78 157]	[ 38 126 162]
+906	74970	blue	(255, 0, 0)	[ 27  79 165]	[ 50 124 170]
+907	62985	blue	(255, 0, 0)	[ 20  84 157]	[ 51 129 176]
+908	54060	blue	(255, 0, 0)	[  8  69 160]	[ 61 128 179]
+909	42585	blue	(255, 0, 0)	[  5  74 162]	[ 78 122 188]
+910	32385	blue	(255, 0, 0)	[  0  79 161]	[ 92 116 200]
+911	31365	blue	(255, 0, 0)	[  0  83 161]	[ 89 114 198]
+913	27285	blue	(255, 0, 0)	[  0  80 163]	[ 93 122 201]
+914	26520	blue	(255, 0, 0)	[  0  81 163]	[ 88 118 207]
+915	26265	blue	(255, 0, 0)	[  7  85 164]	[ 85 127 209]
+919	24480	blue	(255, 0, 0)	[  0  79 165]	[ 89 125 205]
+946	23715	blue	(255, 0, 0)	[  8  86 162]	[ 91 133 201]
+953	23460	blue	(255, 0, 0)	[  1  83 162]	[ 90 122 198]
+1012	23205	blue	(255, 0, 0)	[  3  82 162]	[ 91 123 198]
+1112	22695	blue	(255, 0, 0)	[  0  83 164]	[ 91 121 203]
+Stale generation:	1213	sigma: 10
+Stale generation:	1314	sigma: 11
+Stale generation:	1415	sigma: 12
+1435	22440	blue	(255, 0, 0)	[  5  82 164]	[ 91 135 213]
+Stale generation:	1536	sigma: 13
+Stale generation:	1637	sigma: 14
+Stale generation:	1738	sigma: 15
+Stale generation:	1839	sigma: 16
+Stale generation:	1940	sigma: 17
+BEST!
+score: 22440	threshold: blue	(255, 0, 0)	[  0  83 164]	[ 91 121 203]
+
+
+Seed	317985	brown	(0, 77, 108)	[ 14 133 127]	[ 43 143 129]
+1	304470	brown	(0, 77, 108)	[ 13 133 124]	[ 43 143 129]
+2	302940	brown	(0, 77, 108)	[ 14 133 123]	[ 43 144 129]
+3	300900	brown	(0, 77, 108)	[ 16 133 123]	[ 44 144 130]
+4	297840	brown	(0, 77, 108)	[ 18 134 122]	[ 44 144 131]
+5	296565	brown	(0, 77, 108)	[ 17 134 123]	[ 45 144 130]
+6	292995	brown	(0, 77, 108)	[ 16 134 122]	[ 46 143 130]
+7	292740	brown	(0, 77, 108)	[ 15 135 121]	[ 46 143 130]
+8	292230	brown	(0, 77, 108)	[ 14 135 121]	[ 47 143 130]
+22	291975	brown	(0, 77, 108)	[ 14 135 121]	[ 47 143 128]
+30	291720	brown	(0, 77, 108)	[ 12 135 121]	[ 47 143 128]
+Stale generation:	131	sigma: 2
+Stale generation:	232	sigma: 3
+Stale generation:	333	sigma: 4
+Stale generation:	434	sigma: 5
+Stale generation:	535	sigma: 6
+Stale generation:	636	sigma: 7
+680	290445	brown	(0, 77, 108)	[ 24 135 121]	[ 46 143 131]
+706	289425	brown	(0, 77, 108)	[ 28 135 118]	[ 46 144 144]
+Stale generation:	807	sigma: 8
+Stale generation:	908	sigma: 9
+Stale generation:	1009	sigma: 10
+1104	288150	brown	(0, 77, 108)	[ 33 134 121]	[ 46 144 143]
+Stale generation:	1205	sigma: 11
+Stale generation:	1306	sigma: 12
+Stale generation:	1407	sigma: 13
+Stale generation:	1508	sigma: 14
+Stale generation:	1609	sigma: 15
+Stale generation:	1710	sigma: 16
+Stale generation:	1811	sigma: 17
+Stale generation:	1912	sigma: 18
+BEST!
+score: 288150	threshold: brown	(0, 77, 108)	[ 28 135 118]	[ 46 144 144]
+
+
+Seed	1229610	white	(255, 255, 255)	[150  94 129]	[225 130 140]
+1	868275	white	(255, 255, 255)	[150  95 130]	[225 129 139]
+2	754800	white	(255, 255, 255)	[150  95 131]	[224 129 137]
+3	678300	white	(255, 255, 255)	[148  93 133]	[223 128 135]
+4	621435	white	(255, 255, 255)	[147  93 134]	[223 129 134]
+5	596445	white	(255, 255, 255)	[146  93 134]	[224 131 133]
+Stale generation:	106	sigma: 2
+Stale generation:	207	sigma: 3
+Stale generation:	308	sigma: 4
+371	595680	white	(255, 255, 255)	[146  94 124]	[233 125 124]
+386	595425	white	(255, 255, 255)	[141  93 118]	[238 127 120]
+388	593895	white	(255, 255, 255)	[143  94 111]	[242 130 119]
+389	590835	white	(255, 255, 255)	[138  99 113]	[245 129 119]
+390	583440	white	(255, 255, 255)	[142  96 108]	[249 131 118]
+391	563295	white	(255, 255, 255)	[149  92 112]	[253 130 119]
+394	562785	white	(255, 255, 255)	[148  90 111]	[255 130 119]
+395	561765	white	(255, 255, 255)	[148  81 107]	[255 131 121]
+396	552585	white	(255, 255, 255)	[153  86 106]	[252 131 120]
+401	546465	white	(255, 255, 255)	[155  87 104]	[254 131 120]
+408	544425	white	(255, 255, 255)	[157  84 105]	[254 131 120]
+424	542895	white	(255, 255, 255)	[160  84 102]	[253 131 120]
+438	541110	white	(255, 255, 255)	[166  96  99]	[255 131 120]
+449	538305	white	(255, 255, 255)	[172  93  99]	[255 131 121]
+456	537540	white	(255, 255, 255)	[174  92  97]	[255 131 121]
+460	537285	white	(255, 255, 255)	[181  79  94]	[254 131 120]
+461	535755	white	(255, 255, 255)	[176  79  96]	[255 131 121]
+466	534990	white	(255, 255, 255)	[179  83  91]	[255 131 121]
+469	533970	white	(255, 255, 255)	[186  80  90]	[255 131 122]
+473	533205	white	(255, 255, 255)	[190  74  88]	[255 129 122]
+475	526320	white	(255, 255, 255)	[197  75  81]	[254 130 121]
+476	513060	white	(255, 255, 255)	[197  74  81]	[254 131 122]
+480	506175	white	(255, 255, 255)	[201  70  78]	[255 130 122]
+482	495210	white	(255, 255, 255)	[204  70  77]	[254 132 122]
+489	461040	white	(255, 255, 255)	[213  70  73]	[255 132 123]
+490	459510	white	(255, 255, 255)	[217  68  78]	[255 135 123]
+491	441405	white	(255, 255, 255)	[223  68  74]	[255 136 124]
+492	424065	white	(255, 255, 255)	[228  64  79]	[255 132 124]
+493	319260	white	(255, 255, 255)	[233  64  77]	[255 132 130]
+494	295035	white	(255, 255, 255)	[240  59  80]	[255 134 134]
+495	289935	white	(255, 255, 255)	[239  59  76]	[255 132 130]
+497	289170	white	(255, 255, 255)	[236  57  72]	[255 132 130]
+500	288660	white	(255, 255, 255)	[236  54  76]	[255 133 132]
+502	288405	white	(255, 255, 255)	[236  47  77]	[255 133 131]
+509	286620	white	(255, 255, 255)	[238  50  74]	[255 132 129]
+Stale generation:	610	sigma: 5
+Stale generation:	711	sigma: 6
+Stale generation:	812	sigma: 7
+Stale generation:	913	sigma: 8
+Stale generation:	1014	sigma: 9
+Stale generation:	1115	sigma: 10
+Stale generation:	1216	sigma: 11
+Stale generation:	1317	sigma: 12
+Stale generation:	1418	sigma: 13
+Stale generation:	1519	sigma: 14
+Stale generation:	1620	sigma: 15
+Stale generation:	1721	sigma: 16
+Stale generation:	1822	sigma: 17
+Stale generation:	1923	sigma: 18
+BEST!
+score: 286620	threshold: white	(255, 255, 255)	[236  47  77]	[255 133 131]

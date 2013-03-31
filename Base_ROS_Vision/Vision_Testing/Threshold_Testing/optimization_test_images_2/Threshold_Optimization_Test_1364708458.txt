@@ -1,0 +1,39 @@
+YCR_CB Optimization
+
+
+Seed	294525	red	(0, 0, 255)	[  6 139 118]	[ 72 195 126]
+1	195585	red	(0, 0, 255)	[  5 140 115]	[ 71 194 127]
+2	118320	red	(0, 0, 255)	[  5 140 112]	[ 70 193 126]
+3	98940	red	(0, 0, 255)	[  4 141 110]	[ 71 194 126]
+4	84660	red	(0, 0, 255)	[  2 143 110]	[ 70 192 126]
+5	74460	red	(0, 0, 255)	[  1 144 110]	[ 71 191 126]
+6	65790	red	(0, 0, 255)	[  0 144 109]	[ 73 192 128]
+7	61455	red	(0, 0, 255)	[  0 144 109]	[ 75 191 128]
+8	58650	red	(0, 0, 255)	[  0 145 108]	[ 77 190 127]
+9	55590	red	(0, 0, 255)	[  0 144 109]	[ 78 189 129]
+10	54315	red	(0, 0, 255)	[  1 145 109]	[ 78 188 130]
+13	53805	red	(0, 0, 255)	[  0 145 109]	[ 79 187 130]
+14	53550	red	(0, 0, 255)	[  0 145 109]	[ 80 188 130]
+15	53040	red	(0, 0, 255)	[  0 145 109]	[ 81 189 131]
+16	52785	red	(0, 0, 255)	[  0 145 109]	[ 82 188 133]
+Stale generation:	117	sigma: 2
+Stale generation:	218	sigma: 3
+Stale generation:	319	sigma: 4
+Stale generation:	420	sigma: 5
+Stale generation:	521	sigma: 6
+Stale generation:	622	sigma: 7
+Stale generation:	723	sigma: 8
+Stale generation:	824	sigma: 9
+Stale generation:	925	sigma: 10
+Stale generation:	1026	sigma: 11
+Stale generation:	1127	sigma: 12
+Stale generation:	1228	sigma: 13
+Stale generation:	1329	sigma: 14
+Stale generation:	1430	sigma: 15
+Stale generation:	1531	sigma: 16
+Stale generation:	1632	sigma: 17
+Stale generation:	1733	sigma: 18
+Stale generation:	1834	sigma: 19
+Stale generation:	1935	sigma: 20
+BEST!
+score: 52785	threshold: red	(0, 0, 255)	[  0 145 109]	[ 81 189 131]

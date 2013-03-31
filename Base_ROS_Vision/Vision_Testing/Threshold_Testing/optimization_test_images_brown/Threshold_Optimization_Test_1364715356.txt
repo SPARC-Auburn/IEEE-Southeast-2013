@@ -1,0 +1,25 @@
+YCR_CB Optimization
+
+
+Seed	147900	brown	(0, 77, 108)	[  0 129 119]	[ 47 147 130]
+Stale generation:	101	sigma: 1.75
+Stale generation:	202	sigma: 2.75
+Stale generation:	303	sigma: 3.75
+Stale generation:	404	sigma: 4.75
+Stale generation:	505	sigma: 5.75
+Stale generation:	606	sigma: 6.75
+Stale generation:	707	sigma: 7.75
+Stale generation:	808	sigma: 8.75
+Stale generation:	909	sigma: 9.75
+Stale generation:	1010	sigma: 10.75
+Stale generation:	1111	sigma: 11.75
+Stale generation:	1212	sigma: 12.75
+Stale generation:	1313	sigma: 13.75
+Stale generation:	1414	sigma: 14.75
+Stale generation:	1515	sigma: 15.75
+Stale generation:	1616	sigma: 16.75
+Stale generation:	1717	sigma: 17.75
+Stale generation:	1818	sigma: 18.75
+Stale generation:	1919	sigma: 19.75
+BEST!
+score: 147900	threshold: brown	(0, 77, 108)	[  0 129 119]	[ 47 147 130]
