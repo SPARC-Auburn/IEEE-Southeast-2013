@@ -104,8 +104,8 @@ class BlockFinder():
 		##Lambdas because these formulas are annoying
 		self.distance = lambda a,b: sqrt(((a[0]-b[0])**2+(a[1]-b[1])**2))
 		self.angleBetweenPlusAndMinus90 = lambda x: x-180*floor(x/90)+180*floor(x/180)
-		self.angleBetweenPoints = lambda a,b: atan(1.0*(b[1]-a[1])/(b[0]-b[0]))*180/pi
-		self.validMinorLine = lambda a,b: (abs(angleBetweenPoints(a,b)-self.minorDir)<self.DEFECT_ANGLE_DELTA)
+		self.angleBetweenPoints = lambda a,b: atan(1.0*(b[1]-a[1])/(b[0]-a[0]))*180/pi
+		self.validMinorLine = lambda a,b: (abs(self.angleBetweenPoints(a,b)-self.minorDir)<self.DEFECT_ANGLE_DELTA)
 		########
 
 
@@ -160,6 +160,7 @@ class BlockFinder():
 			waitForKeyPress()
 			print "DONE!"
 		except:
+			waitForKeyPress()
 			raise
 		####
 	####
@@ -320,8 +321,8 @@ class BlockFinder():
 			####
 
 			for defect in self.filterDefects(c):
-				x = c.contour[defect[0][2]][0][0] + offset[0]
-				y = c.contour[defect[0][2]][0][1] + offset[1]
+				x = defect[2][0] + offset[0]
+				y = defect[2][1] + offset[1]
 				p = (x,y)
 				cv2.circle(canvas,p,3,(0,0,255),thickness=0)
 			####
@@ -385,8 +386,8 @@ class BlockFinder():
 		where defect = (array(x,y), array(x,y), array(x,y), float)
 		"""
 		filtered = []
-		defects = [(candidate.contour[x[0][0]][0],candidate[x[0][1]][0], \
-				candidate[x[0][2]][0],x[0][3]/256.0) for x in candidate.defects]
+		defects = [(candidate.contour[x[0][0]][0],candidate.contour[x[0][1]][0], \
+				candidate.contour[x[0][2]][0],x[0][3]/256.0) for x in candidate.defects]
 		print candidate.id
 		for defect in defects:
 			pt1 = defect[0]
@@ -400,9 +401,9 @@ class BlockFinder():
 
 				filtered.append(defect)
 			####
-			print defect[3],"\t",self.angleBetweenPoints(f,pth),"\t",self.validMinorLine(f,pth)
+			print defect,"\t",self.angleBetweenPoints(f,pth),"\t",self.validMinorLine(f,pth)
 		####
-		print ""
+
 		return filtered
 	####
 
@@ -411,8 +412,8 @@ class BlockFinder():
 
 		##Find the defect-farthest-points that is closest
 		## to the normal line from the current-farthest-point to the hull
+		## and is the pairing is a valid minor line
 		## for all the defect points
-		print "FILTERED FREAKING DEFECTS"
 		for (i,defect) in enumerate(defects):
 			defects_copy = list(defects)
 			defects_copy.pop(i)
@@ -425,20 +426,26 @@ class BlockFinder():
 
 			points = [x[2] for x in defects_copy]
 			while( 1 ):
-				closest_point = self.findClosestPointToLine(point_along_hull,farthest,points)
-				if( self.validMinorLine(farthest,defects
-			if( closest_index>=i ): 
-				#fix the index because defects_copy popped an element
-				closest_index+=1
+				closest_index = self.findClosestPointToLine(point_along_hull,farthest,points)
+				if( self.validMinorLine(farthest,points[closest_index]) ):
+					defect_pairs[tuple(farthest)] = tuple(points[closest_index])
+					break
+				####
+
+				points.pop(closest_index)
+				if( points.__len__() == 0):
+					break
+				####
 			####
-			defect_pairs[i]=closest_index
-			
-			closest_point = candidate.contour[filteredDefects[closest_index][0][2]][0]
+
 		####
 		########
 
 		##Only keep the pairs that point to themselves
 		connected_pairs = [] 
+		print "FREAKING DEFECT PAIRS"
+		print candidate.id
+		print defect_pairs
 		for (i,j) in defect_pairs.items():
 			if( i == defect_pairs[j] and \
 				(i,j) not in connected_pairs and \
@@ -446,31 +453,35 @@ class BlockFinder():
 				connected_pairs.append((i,j))
 			####
 		####
+		print "FREAKING CONNECTED PAIRS"
+		print connected_pairs
 
 		##Eliminate points that do not point along the minorDir
-		valid_pairs = []
-		print ""
-		print "Buliding defect pairs for ",candidate.id
-		for (i,j) in connected_pairs:
-			d1 = candidate.contour[filteredDefects[i][0][2]] [0]
-			d2 = candidate.contour[filteredDefects[j][0][2]] [0]
-
-			if( self.validMinorLine(d1,d2) ):
-				valid_pairs.append((i,j))
-			####
-			print d2,"\t",d1,"\t",self.angleBetweenPoints(d1,d2),"\t",self.validMinorLine(d1,d2)
-		####
-		print "done building defect pairs."
+#		valid_pairs = []
+#		print ""
+#		print "Buliding defect pairs for ",candidate.id
+#		for (i,j) in connected_pairs:
+#			d1 = candidate.contour[filteredDefects[i][0][2]] [0]
+#			d2 = candidate.contour[filteredDefects[j][0][2]] [0]
+#
+#			if( self.validMinorLine(d1,d2) ):
+#				valid_pairs.append((i,j))
+#			####
+#			print d2,"\t",d1,"\t",self.angleBetweenPoints(d1,d2),"\t",self.validMinorLine(d1,d2)
+#		####
+#		print "done building defect pairs."
 
 		##Convert defect indices into x,y points
-		valid_points = [(filteredDefects[i][0][2],filteredDefects[j][0][2]) \
-					for (i,j) in valid_pairs]
+		valid_points = connected_pairs
+#		valid_points = [(filteredDefects[i][0][2],filteredDefects[j][0][2]) \
+#					for (i,j) in valid_pairs]
 
 		return valid_points
 	####
 
 	def drawOnMask(self,candidate,pairs):
 		mask = candidate.mask.copy()
+		print pairs
 		for (p1,p2) in pairs:
 			p1 = (p1[0],p1[1])
 			p2 = (p2[0],p2[1])
@@ -501,7 +512,7 @@ class BlockFinder():
 			return (-1,candidate)		
 		elif( defects.__len__()==2 ):
 
-			pairs = [x[2] for x in defects]
+			pairs = [(defects[0][2],defects[1][2])]
 			mask = self.drawOnMask(candidate,pairs)
 			splitCandidates = self.createBlockCandidates(mask)
 
@@ -570,7 +581,7 @@ class BlockFinder():
 			t = (-1.0*(v*(pt1-point)).sum())/((v**2).sum())
 			d.append(self.distance(v*t+pt1,point))
 		####
-		return points[d.index(min(d))]
+		return d.index(min(d))
 	####
 	
 	def convertIndexedHull2Contour(self,hull,contour):
