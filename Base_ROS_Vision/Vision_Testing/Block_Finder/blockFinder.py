@@ -30,9 +30,9 @@ class BlockFinder():
 		#########
 		####Constants
 		##Draft#3
-		##HSV
+		##YCR_CB
 		##color = (B,G,R)
-		##lower/upperb =(Hue,Sat,Val)
+		##lower/upperb =(Y,CR,CB)
 		self.BLACK_YCR_CB_D3 = Threshold( name = "black", \
 			color = (0,0,0), \
 			lowerb = ( 24, 75,128), \
@@ -89,8 +89,8 @@ class BlockFinder():
 
 		########
 		##Candidate thresholds
-		self.MIN_CANDIDATE_AREA = 250
-		self.MIN_CANDIDATE_SOLIDARITY = 0.65
+		self.MIN_CANDIDATE_AREA = 170
+		self.MIN_CANDIDATE_SOLIDARITY = 0.70
 
 		self.DEFECT_ANGLE_DELTA = 50
 		self.DEFECT_FARTHEST_THRESHOLD = 2.0
@@ -119,6 +119,7 @@ class BlockFinder():
 		self.store_results = int(argv[1])
 		fileName = argv[2]
 		self.original = cv2.imread(fileName)
+		self.IMAGE_AREA = (self.original.shape[0])*(self.original.shape[1])
 
 		if( self.original == None ):
 			raise Exception("\nError\ncould not open <"+fileName+">")
@@ -235,7 +236,7 @@ class BlockFinder():
 #			color = (90), \
 #			thickness = 2, \
 #			lineType = cv2.CV_AA)
-		print e
+#		print e
 		if( e[1][1] > e[1][0] ): ##height > width
 			minor = self.angleBetweenPlusAndMinus90(e[2])
 			major = self.angleBetweenPlusAndMinus90(minor+90)
@@ -278,7 +279,7 @@ class BlockFinder():
 		canvas = cv2.merge((canvas,canvas,canvas))
 		t = str(time.time())
 		u = ''
-		#print t
+#		print t
 		for (i,c) in enumerate(candidates):
 			offset = (c.x-imgoffset[0],c.y-imgoffset[1])
 #			offset = (c.boundingRect[0]-imgoffset[0],c.boundingRect[1]-imgoffset[1])			
@@ -286,7 +287,7 @@ class BlockFinder():
 
 			shifted_hull = self.convertIndexedHull2Contour(c.hull,c.contour)
 			shifted_hull = shifted_hull + offset
-		#	print shifted_hull
+#			print shifted_hull
 			cv2.drawContours( image = canvas, \
 				contours = [shifted_contour], \
 				contourIdx = -1, \
@@ -346,9 +347,11 @@ class BlockFinder():
 		i = 0
 		while( 1 ):
 			multiple_blocks = []
+			multiple_blocks = round_candidates
+			"""
 			for candidate in (round_candidates):
 				print candidate.id," ",candidate.x,candidate.y,candidate.w,candidate.h
-				if( round(candidate.hull_area/num)>1 and candidate<0.90):
+				if( round(candidate.hull_area/num)>1 or candidate<0.95):
 					multiple_blocks.append(candidate)
 				else:
 					print "Candidate: ",candidate.id," finalized because..."
@@ -357,6 +360,7 @@ class BlockFinder():
 					final_candidates.append(candidate)
 				####
 			####
+			"""
 			print "Round #",i," Final: ",final_candidates.__len__()," Multiples: ",multiple_blocks.__len__()
 			if( multiple_blocks.__len__() == 0 ):
 				break
@@ -401,7 +405,7 @@ class BlockFinder():
 
 				filtered.append(defect)
 			####
-			print defect,"\t",self.angleBetweenPoints(f,pth),"\t",self.validMinorLine(f,pth)
+#			print defect,"\t",self.angleBetweenPoints(f,pth),"\t",self.validMinorLine(f,pth)
 		####
 
 		return filtered
