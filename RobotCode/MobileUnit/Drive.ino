@@ -252,22 +252,30 @@ int adjustToFullLine() {
   analogWrite(P_LEFT_MOTOR_EN, LINE_ADJUST_MOTOR_SPEED);
   analogWrite(P_RIGHT_MOTOR_EN, LINE_ADJUST_MOTOR_SPEED); 
   
-  while(millis() < timeStart + 200) {
-    setMotorPosition(M_BACKWARD);
-    odometry();
-  }
-  
   int sensorHappiness = lineSensors(); 
   
-  while(sensorHappiness < 8) {
-    if (sensorHappiness == 0) {
-      setMotorPosition(M_FORWARD);
+  setMotorPosition(M_BACKWARD);
+  if (sensorHappiness > 0) {
+    while(millis() < timeStart + 500) {
+      odometry();
+    }
+  }
+  
+  sensorHappiness = lineSensors();
+  
+  int lastMove = M_FORWARD;
+  
+  while(sensorHappiness < 5) {
+    if (sensorHappiness == 0 ) {
+      setMotorPosition(lastMove);
     }
     else if (lineSensorValues[8] < LINE_BOUNDARY) {
       setMotorPosition(M_FORWARD_RIGHT);
+      lastMove = M_FORWARD_RIGHT;
     }
     else if (lineSensorValues[0] < LINE_BOUNDARY) {
       setMotorPosition(M_FORWARD_LEFT);
+      lastMove = M_FORWARD_LEFT;
     }
     else {
       setMotorPosition(M_BACKWARD);
@@ -276,7 +284,7 @@ int adjustToFullLine() {
     odometry();
     sensorHappiness = lineSensors();
     
-    if (millis() > timeStart + 5000) {globalError = 5; break;}
+    if (millis() > timeStart + 6000) {globalError = 5; break;}
   }
   
   // Brake sequence
@@ -289,6 +297,18 @@ int adjustToFullLine() {
   // Finished breaking, set output to zero
   analogWrite(P_LEFT_MOTOR_EN, 0);
   analogWrite(P_RIGHT_MOTOR_EN, 0);
+  
+  
+  // Now adjust current position to line
+  if (lineSensors() == 6) {
+    currentLocation.theta = destination.theta;
+    if (abs2(sin(currentLocation.theta)) > .5) {
+      currentLocation.y = destination.y;
+    }
+    else {
+      currentLocation.x = destination.x;
+    }
+  }  
   
   return globalError;
 }

@@ -22,6 +22,10 @@ void getBackupCommand() {
   destination.x = currentLocation.x;
   destination.y = currentLocation.y;
   destination.theta = currentLocation.theta;
+  commandStatus = 0;
+  commandEndAction = EA_NONE;
+  commandEndColor = EC_NONE;
+  commandEndLength = 0;
   linesPath[0] = 0;
   linesPath[1] = 0;
   linesPath[2] = 0;

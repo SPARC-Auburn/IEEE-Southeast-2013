@@ -21,7 +21,7 @@
 byte commandConversion() {
   
   // First, see if this should be a special move
-  if (bitRead(commandStatus, CS_SPECIAL) && destination.x == 0) {
+  if (bitRead(commandStatus, CS_SPECIAL)) {
     
     // Do special straight backwards move
     destination.x = currentLocation.x - SPECIAL_MOVE_DISTANCE * cos(currentLocation.theta);
@@ -66,7 +66,7 @@ byte commandConversion() {
   }
 
   // For now, just use the double spin simple calculation
-  if (dist(currentLocation, destination) < 12) {
+  if (dist(currentLocation, destination) < 12 || (commandEndAction == EA_NONE && bitRead(commandStatus, CS_EXPECT_LINE))) {
     doubleSpin();
   }
   else {
